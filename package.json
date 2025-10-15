@@ -1,0 +1,51 @@
+{
+  "name": "kavan-new",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "build:win": "node --max-old-space-size=4096 node_modules/next/dist/bin/next build",
+    "build:safe": "set NODE_OPTIONS=--max-old-space-size=4096 && next build",
+    "build:no-lint": "next build --no-lint",
+    "start": "next start",
+    "clean": "rm -rf .next node_modules package-lock.json && npm cache clean --force",
+    "clean:win": "rd /s /q .next node_modules && del package-lock.json && npm cache clean --force",
+    "reinstall": "npm run clean && npm install",
+    "reinstall:win": "npm run clean:win && npm install"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^6.33.0",
+    "@paystack/inline-js": "^2.22.7",
+    "@reduxjs/toolkit": "^2.9.0",
+    "@sanity/client": "^7.11.2",
+    "@sanity/image-url": "^1.2.0",
+    "@sanity/vision": "^4.10.1",
+    "easymde": "^2.20.0",
+    "embla-carousel-react": "^8.6.0",
+    "firebase": "^12.4.0",
+    "framer-motion": "^12.23.22",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.3",
+    "next": "15.5.4",
+    "next-sanity": "^11.4.2",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-icons": "^5.5.0",
+    "react-redux": "^9.2.0",
+    "redux-persist": "^6.0.0",
+    "sanity": "^4.10.1",
+    "sanity-plugin-markdown": "^6.0.0",
+    "styled-components": "^6.1.19"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.4",
+    "tailwindcss": "^4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
