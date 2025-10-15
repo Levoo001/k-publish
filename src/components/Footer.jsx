@@ -7,7 +7,7 @@ const Footer = () => {
   const date = new Date().getFullYear();
 
   return (
-    <footer className="py-8 container mx-auto max-w-7xl bg-gray-200">
+    <footer className="py-8 container mx-auto max-w-7xl bg-slate-200">
       <div className="grid md:grid-cols-3 gap-8 mb-8 px-4">
         {/* Contact Info */}
         <div className="text-[0.88rem] space-y-3">
@@ -88,7 +88,7 @@ const Footer = () => {
       </div>
 
       {/* Copyright */}
-      <p className="border-t border-gray-700 pt-4 text-center text-xs font-cormorant">
+      <p className="border-t border-slate-700 pt-4 text-center text-xs font-cormorant">
         Copyright © Kavan The Brand {date}. All rights reserved.
       </p>
     </footer>

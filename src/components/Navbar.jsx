@@ -28,7 +28,7 @@ const Navbar = () => {
 
   const renderUserIcon = () => {
     if (!isLoaded) {
-      return <FaUserCircle size={28} className="text-gray-400 animate-pulse" />;
+      return <FaUserCircle size={28} className="text-slate-400 animate-pulse" />;
     }
 
     if (isSignedIn) {
@@ -39,7 +39,7 @@ const Navbar = () => {
       <SignInButton mode="modal">
         <FaUserCircle
           size={28}
-          className="cursor-pointer text-gray-600 hover:text-black transition-colors"
+          className="cursor-pointer text-slate-600 hover:text-black transition-colors"
         />
       </SignInButton>
     );
@@ -55,7 +55,7 @@ const Navbar = () => {
         {/* Cart Icon */}
         <button
           onClick={openCart}
-          className="relative text-gray-600 hover:text-black transition-colors"
+          className="relative text-slate-600 hover:text-black transition-colors"
         >
           {isHydrated && cartCount > 0 && (
             <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center font-medium">

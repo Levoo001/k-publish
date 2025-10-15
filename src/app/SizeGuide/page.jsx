@@ -2,17 +2,17 @@
 
 const SizeGuide = () => {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-50 to-pink-50 py-12">
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 to-pink-50 py-12">
       <div className="container-custom max-w-6xl mx-auto px-4">
         {/* Hero Section */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center justify-center w-24 h-24 bg-white rounded-full shadow-lg mb-6 border border-pink-200">
             <span className="text-4xl">📏</span>
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 font-playfair">
+          <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6 font-playfair">
             Size Guide
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed font-cormorant">
+          <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed font-cormorant">
             Find your perfect fit with our comprehensive sizing charts. We believe in flattering fits for all bodies.
           </p>
         </div>
@@ -34,13 +34,13 @@ const SizeGuide = () => {
         </div>
 
         {/* Size Guide Section */}
-        <section className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-12 hover:shadow-xl transition-all duration-300">
+        <section className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8 mb-12 hover:shadow-xl transition-all duration-300">
           <div className="flex items-center mb-8">
             <div className="w-16 h-16 bg-gradient-to-br from-pink-100 to-pink-200 rounded-2xl flex items-center justify-center mr-6 flex-shrink-0">
               <span className="text-2xl">👗</span>
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2 font-playfair">
+              <h2 className="text-3xl font-bold text-slate-900 mb-2 font-playfair">
                 Clothing Size Guide
               </h2>
               <div className="w-12 h-1 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full"></div>
@@ -57,7 +57,7 @@ const SizeGuide = () => {
                   <th className="p-4 text-center font-semibold font-playfair">HIPS</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-slate-200">
                 {[
                   { size: '6', bust: '32', waist: '25', hips: '36' },
                   { size: '8', bust: '34', waist: '37', hips: '38' },
@@ -73,32 +73,32 @@ const SizeGuide = () => {
                   <tr 
                     key={row.size} 
                     className={`hover:bg-pink-50 transition-colors duration-200 ${
-                      index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                      index % 2 === 0 ? 'bg-slate-50' : 'bg-white'
                     }`}
                   >
-                    <td className="p-4 font-semibold text-gray-900 font-playfair">{row.size}</td>
-                    <td className="p-4 text-center text-gray-700 font-cormorant">{row.bust}"</td>
-                    <td className="p-4 text-center text-gray-700 font-cormorant">{row.waist}"</td>
-                    <td className="p-4 text-center text-gray-700 font-cormorant">{row.hips}"</td>
+                    <td className="p-4 font-semibold text-slate-900 font-playfair">{row.size}</td>
+                    <td className="p-4 text-center text-slate-700 font-cormorant">{row.bust}"</td>
+                    <td className="p-4 text-center text-slate-700 font-cormorant">{row.waist}"</td>
+                    <td className="p-4 text-center text-slate-700 font-cormorant">{row.hips}"</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          <div className="mt-6 text-sm text-gray-600 text-center font-cormorant">
+          <div className="mt-6 text-sm text-slate-600 text-center font-cormorant">
             <p>All measurements are in inches. We recommend measuring your bust, waist, and hips to find your perfect size.</p>
           </div>
         </section>
 
         {/* Length Guide Section */}
-        <section className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-12 hover:shadow-xl transition-all duration-300">
+        <section className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8 mb-12 hover:shadow-xl transition-all duration-300">
           <div className="flex items-center mb-8">
             <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl flex items-center justify-center mr-6 flex-shrink-0">
               <span className="text-2xl">📐</span>
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2 font-playfair">
+              <h2 className="text-3xl font-bold text-slate-900 mb-2 font-playfair">
                 Length Guide
               </h2>
               <div className="w-12 h-1 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full"></div>
@@ -115,35 +115,35 @@ const SizeGuide = () => {
                   <th className="p-4 text-center font-semibold font-playfair">AVERAGE+</th>
                   <th className="p-4 text-center font-semibold font-playfair">VERY TALL</th>
                 </tr>
-                <tr className="bg-gray-100">
-                  <th className="p-3 text-left text-sm font-semibold text-gray-700 font-playfair">HEIGHT</th>
-                  <th className="p-3 text-center text-sm font-semibold text-gray-700 font-playfair">5'0"-5'3FT</th>
-                  <th className="p-3 text-center text-sm font-semibold text-gray-700 font-playfair">5'4"-5'7FT</th>
-                  <th className="p-3 text-center text-sm font-semibold text-gray-700 font-playfair">5'8"-5'9FT</th>
-                  <th className="p-3 text-center text-sm font-semibold text-gray-700 font-playfair">6FT+</th>
+                <tr className="bg-slate-100">
+                  <th className="p-3 text-left text-sm font-semibold text-slate-700 font-playfair">HEIGHT</th>
+                  <th className="p-3 text-center text-sm font-semibold text-slate-700 font-playfair">5'0"-5'3FT</th>
+                  <th className="p-3 text-center text-sm font-semibold text-slate-700 font-playfair">5'4"-5'7FT</th>
+                  <th className="p-3 text-center text-sm font-semibold text-slate-700 font-playfair">5'8"-5'9FT</th>
+                  <th className="p-3 text-center text-sm font-semibold text-slate-700 font-playfair">6FT+</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-slate-200">
                 <tr className="hover:bg-purple-50 transition-colors duration-200 bg-white">
-                  <td className="p-4 font-semibold text-gray-900 font-playfair">PANTS/SKIRT LENGTH</td>
-                  <td className="p-4 text-center text-gray-700 font-cormorant">42"</td>
-                  <td className="p-4 text-center text-gray-700 font-cormorant">45"</td>
-                  <td className="p-4 text-center text-gray-700 font-cormorant">47"</td>
-                  <td className="p-4 text-center text-gray-700 font-cormorant">52"</td>
+                  <td className="p-4 font-semibold text-slate-900 font-playfair">PANTS/SKIRT LENGTH</td>
+                  <td className="p-4 text-center text-slate-700 font-cormorant">42"</td>
+                  <td className="p-4 text-center text-slate-700 font-cormorant">45"</td>
+                  <td className="p-4 text-center text-slate-700 font-cormorant">47"</td>
+                  <td className="p-4 text-center text-slate-700 font-cormorant">52"</td>
                 </tr>
-                <tr className="hover:bg-purple-50 transition-colors duration-200 bg-gray-50">
-                  <td className="p-4 font-semibold text-gray-900 font-playfair">DRESS LENGTH</td>
-                  <td className="p-4 text-center text-gray-700 font-cormorant">56"</td>
-                  <td className="p-4 text-center text-gray-700 font-cormorant">58"</td>
-                  <td className="p-4 text-center text-gray-700 font-cormorant">60"</td>
-                  <td className="p-4 text-center text-gray-700 font-cormorant">65"</td>
+                <tr className="hover:bg-purple-50 transition-colors duration-200 bg-slate-50">
+                  <td className="p-4 font-semibold text-slate-900 font-playfair">DRESS LENGTH</td>
+                  <td className="p-4 text-center text-slate-700 font-cormorant">56"</td>
+                  <td className="p-4 text-center text-slate-700 font-cormorant">58"</td>
+                  <td className="p-4 text-center text-slate-700 font-cormorant">60"</td>
+                  <td className="p-4 text-center text-slate-700 font-cormorant">65"</td>
                 </tr>
-                  <tr className="hover:bg-purple-50 transition-colors duration-200 bg-gray-50">
-                  <td className="p-4 font-semibold text-gray-900 font-playfair">DRESS LENGTH</td>
-                  <td className="p-4 text-center text-gray-700 font-cormorant">56"</td>
-                  <td className="p-4 text-center text-gray-700 font-cormorant">57"</td>
-                  <td className="p-4 text-center text-gray-700 font-cormorant">63"</td>
-                  <td className="p-4 text-center text-gray-700 font-cormorant">65"</td>
+                  <tr className="hover:bg-purple-50 transition-colors duration-200 bg-slate-50">
+                  <td className="p-4 font-semibold text-slate-900 font-playfair">DRESS LENGTH</td>
+                  <td className="p-4 text-center text-slate-700 font-cormorant">56"</td>
+                  <td className="p-4 text-center text-slate-700 font-cormorant">57"</td>
+                  <td className="p-4 text-center text-slate-700 font-cormorant">63"</td>
+                  <td className="p-4 text-center text-slate-700 font-cormorant">65"</td>
                 </tr>
               </tbody>
             </table>
@@ -158,7 +158,7 @@ const SizeGuide = () => {
         </section>
 
         {/* How to Measure Section */}
-        <section className="bg-gradient-to-br from-gray-900 to-black text-white rounded-2xl shadow-2xl p-8 mb-12">
+        <section className="bg-gradient-to-br from-slate-900 to-black text-white rounded-2xl shadow-2xl p-8 mb-12">
           <div className="text-center mb-8">
             <div className="text-5xl mb-4">🎯</div>
             <h2 className="text-3xl font-bold mb-4 font-playfair">How to Measure</h2>
@@ -169,7 +169,7 @@ const SizeGuide = () => {
             <div className="bg-white/10 p-6 rounded-xl border border-white/20 hover:transform hover:scale-105 transition-all duration-300">
               <div className="text-3xl mb-4 text-center">📏</div>
               <h3 className="font-semibold text-lg mb-3 text-center font-playfair">Bust</h3>
-              <p className="text-gray-300 text-center text-sm font-cormorant">
+              <p className="text-slate-300 text-center text-sm font-cormorant">
                 Measure around the fullest part of your bust, keeping the tape parallel to the floor
               </p>
             </div>
@@ -177,7 +177,7 @@ const SizeGuide = () => {
             <div className="bg-white/10 p-6 rounded-xl border border-white/20 hover:transform hover:scale-105 transition-all duration-300">
               <div className="text-3xl mb-4 text-center">⏳</div>
               <h3 className="font-semibold text-lg mb-3 text-center font-playfair">Waist</h3>
-              <p className="text-gray-300 text-center text-sm font-cormorant">
+              <p className="text-slate-300 text-center text-sm font-cormorant">
                 Measure around the narrowest part of your waist, typically above your belly button
               </p>
             </div>
@@ -185,7 +185,7 @@ const SizeGuide = () => {
             <div className="bg-white/10 p-6 rounded-xl border border-white/20 hover:transform hover:scale-105 transition-all duration-300">
               <div className="text-3xl mb-4 text-center">🍐</div>
               <h3 className="font-semibold text-lg mb-3 text-center font-playfair">Hips</h3>
-              <p className="text-gray-300 text-center text-sm font-cormorant">
+              <p className="text-slate-300 text-center text-sm font-cormorant">
                 Measure around the fullest part of your hips, approximately 7-8 inches below your waist
               </p>
             </div>
@@ -202,7 +202,7 @@ const SizeGuide = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="/contact-us"
-              className="inline-flex items-center justify-center bg-white text-purple-600 hover:bg-gray-100 px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 font-inter"
+              className="inline-flex items-center justify-center bg-white text-purple-600 hover:bg-slate-100 px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 font-inter"
             >
               <span className="mr-3">✂️</span>
               Request Custom Sizing

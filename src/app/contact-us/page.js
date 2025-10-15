@@ -130,29 +130,29 @@ const Page = () => {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-50 to-purple-50 py-8 px-4">
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 to-purple-50 py-8">
       <div className="container-custom max-w-6xl mx-auto">
         {/* Enhanced Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-full shadow-lg mb-6">
             <span className="text-3xl">💌</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-playfair">
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4 font-playfair">
             Get In Touch
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-cormorant">
+          <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-cormorant">
             We're here to help you embrace your strength and softness. Reach out with any questions about our collections, sizing, or custom orders.
           </p>
           <div className="flex flex-wrap justify-center gap-4 mt-6">
-            <div className="flex items-center text-sm text-gray-500 font-inter">
+            <div className="flex items-center text-sm text-slate-500 font-inter">
               <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
               Response within 24 hours
             </div>
-            <div className="flex items-center text-sm text-gray-500 font-inter">
+            <div className="flex items-center text-sm text-slate-500 font-inter">
               <span className="w-2 h-2 bg-purple-400 rounded-full mr-2"></span>
               Personalized assistance
             </div>
-            <div className="flex items-center text-sm text-gray-500 font-inter">
+            <div className="flex items-center text-sm text-slate-500 font-inter">
               <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
               Worldwide shipping support
             </div>
@@ -162,16 +162,16 @@ const Page = () => {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Enhanced Contact Form */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8 hover:shadow-xl transition-shadow duration-300">
+            <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-6 md:p-8 hover:shadow-xl transition-shadow duration-300">
               <div className="flex items-center mb-6">
                 <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center mr-4">
                   <span className="text-white text-xl">✍️</span>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 font-playfair">
+                  <h2 className="text-2xl font-bold text-slate-900 font-playfair">
                     Send Us a Message
                   </h2>
-                  <p className="text-gray-600 font-cormorant">All fields marked * are required</p>
+                  <p className="text-slate-600 font-cormorant">All fields marked * are required</p>
                 </div>
               </div>
 
@@ -180,25 +180,22 @@ const Page = () => {
                   <div className="w-24 h-24 bg-gradient-to-br from-green-100 to-emerald-200 rounded-full flex items-center justify-center mx-auto mb-6">
                     <span className="text-3xl">📧</span>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3 font-playfair">
+                  <h3 className="text-2xl font-bold text-slate-900 mb-3 font-playfair">
                     Message Sent Successfully!
                   </h3>
-                  <p className="text-gray-600 mb-6 max-w-md mx-auto leading-relaxed font-cormorant">
+                  <p className="text-slate-600 mb-6 max-w-md mx-auto leading-relaxed font-cormorant">
                     Thank you for reaching out! We've received your message and will get back to you within 24 hours.
-                  </p>
-                  <p className="text-sm text-gray-500 mb-6 font-inter">
-                    📧 Check your console for the submitted data
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <button
                       onClick={() => setIsSubmitted(false)}
-                      className="px-8 py-3 bg-black text-white rounded-xl hover:bg-gray-800 transition-colors font-medium font-inter"
+                      className="px-8 py-3 bg-black text-white rounded-xl hover:bg-slate-800 transition-colors font-medium font-inter"
                     >
                       Send Another Message
                     </button>
                     <a
                       href="/"
-                      className="px-8 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors font-medium font-inter"
+                      className="px-8 py-3 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-colors font-medium font-inter"
                     >
                       Continue Shopping
                     </a>
@@ -212,26 +209,12 @@ const Page = () => {
                     </div>
                   )}
 
-                  {/* Development Notice */}
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-                    <div className="flex items-start">
-                      <span className="text-yellow-600 text-lg mr-3">🚧</span>
-                      <div>
-                        <h4 className="font-semibold text-yellow-900 text-sm mb-1 font-inter">
-                          Development Mode
-                        </h4>
-                        <p className="text-yellow-700 text-xs font-inter">
-                          Form data will be logged to console. Email integration can be added later.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <label
                         htmlFor="name"
-                        className="block text-sm font-semibold text-gray-700 mb-2 font-inter"
+                        className="block text-sm font-semibold text-slate-700 mb-2 font-inter"
                       >
                         Full Name *
                       </label>
@@ -245,7 +228,7 @@ const Page = () => {
                         className={`w-full p-4 border rounded-xl focus:outline-none focus:ring-2 transition-all font-inter ${
                           errors.name 
                             ? "border-red-300 focus:ring-red-200" 
-                            : "border-gray-300 focus:border-black focus:ring-gray-200"
+                            : "border-slate-300 focus:border-black focus:ring-slate-200"
                         }`}
                         placeholder="Enter your full name"
                       />
@@ -257,7 +240,7 @@ const Page = () => {
                     <div>
                       <label
                         htmlFor="email"
-                        className="block text-sm font-semibold text-gray-700 mb-2 font-inter"
+                        className="block text-sm font-semibold text-slate-700 mb-2 font-inter"
                       >
                         Email Address *
                       </label>
@@ -271,7 +254,7 @@ const Page = () => {
                         className={`w-full p-4 border rounded-xl focus:outline-none focus:ring-2 transition-all font-inter ${
                           errors.email 
                             ? "border-red-300 focus:ring-red-200" 
-                            : "border-gray-300 focus:border-black focus:ring-gray-200"
+                            : "border-slate-300 focus:border-black focus:ring-slate-200"
                         }`}
                         placeholder="your@email.com"
                       />
@@ -285,7 +268,7 @@ const Page = () => {
                     <div>
                       <label
                         htmlFor="phone"
-                        className="block text-sm font-semibold text-gray-700 mb-2 font-inter"
+                        className="block text-sm font-semibold text-slate-700 mb-2 font-inter"
                       >
                         Phone Number
                       </label>
@@ -295,7 +278,7 @@ const Page = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:border-black focus:ring-2 focus:ring-gray-200 transition-all font-inter"
+                        className="w-full p-4 border border-slate-300 rounded-xl focus:outline-none focus:border-black focus:ring-2 focus:ring-slate-200 transition-all font-inter"
                         placeholder="+234 000 000 0000"
                       />
                     </div>
@@ -303,7 +286,7 @@ const Page = () => {
                     <div>
                       <label
                         htmlFor="subject"
-                        className="block text-sm font-semibold text-gray-700 mb-2 font-inter"
+                        className="block text-sm font-semibold text-slate-700 mb-2 font-inter"
                       >
                         Subject
                       </label>
@@ -312,7 +295,7 @@ const Page = () => {
                         name="subject"
                         value={formData.subject}
                         onChange={handleInputChange}
-                        className="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:border-black focus:ring-2 focus:ring-gray-200 transition-all bg-white font-inter"
+                        className="w-full p-4 border border-slate-300 rounded-xl focus:outline-none focus:border-black focus:ring-2 focus:ring-slate-200 transition-all bg-white font-inter"
                       >
                         <option value="">Select a subject</option>
                         <option value="general">General Inquiry</option>
@@ -328,7 +311,7 @@ const Page = () => {
                   <div>
                     <label
                       htmlFor="message"
-                      className="block text-sm font-semibold text-gray-700 mb-2 font-inter"
+                      className="block text-sm font-semibold text-slate-700 mb-2 font-inter"
                     >
                       Your Message *
                     </label>
@@ -342,7 +325,7 @@ const Page = () => {
                       className={`w-full p-4 border rounded-xl focus:outline-none focus:ring-2 transition-all resize-vertical font-inter ${
                         errors.message 
                           ? "border-red-300 focus:ring-red-200" 
-                          : "border-gray-300 focus:border-black focus:ring-gray-200"
+                          : "border-slate-300 focus:border-black focus:ring-slate-200"
                       }`}
                       placeholder="Tell us about your inquiry, custom order request, or how we can help you embrace your Kavan style..."
                     />
@@ -350,7 +333,7 @@ const Page = () => {
                       <p className="mt-2 text-sm text-red-600 font-inter">{errors.message}</p>
                     )}
                     <div className="flex justify-between items-center mt-2">
-                      <span className="text-sm text-gray-500 font-inter">
+                      <span className="text-sm text-slate-500 font-inter">
                         Minimum 10 characters
                       </span>
                       <span className={`text-sm font-inter ${
@@ -366,7 +349,7 @@ const Page = () => {
                     disabled={isSubmitting}
                     className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-300 font-inter ${
                       isSubmitting
-                        ? "bg-gray-400 cursor-not-allowed transform scale-95"
+                        ? "bg-slate-400 cursor-not-allowed transform scale-95"
                         : "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg transform hover:scale-[1.02]"
                     }`}
                   >
@@ -409,8 +392,8 @@ const Page = () => {
           {/* Enhanced Sidebar */}
           <div className="space-y-6">
             {/* Contact Methods */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center font-playfair">
+            <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-6">
+              <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center font-playfair">
                 <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
                 Connect With Us
               </h3>
@@ -450,7 +433,7 @@ const Page = () => {
             </div>
 
             {/* Enhanced Business Hours */}
-            <div className="bg-gradient-to-br from-gray-900 to-black text-white rounded-2xl shadow-lg p-6">
+            <div className="bg-gradient-to-br from-slate-900 to-black text-white rounded-2xl shadow-lg p-6">
               <h3 className="text-xl font-bold mb-4 flex items-center font-playfair">
                 <span className="w-2 h-2 bg-white rounded-full mr-2"></span>
                 Business Hours
@@ -461,21 +444,21 @@ const Page = () => {
                   { days: "Saturday", hours: "10:00 AM – 4:00 PM", status: "open" },
                   { days: "Sunday", hours: "Closed", status: "closed" },
                 ].map((schedule, index) => (
-                  <div key={index} className="flex justify-between items-center py-2 border-b border-gray-700 last:border-b-0">
-                    <span className={`text-sm ${schedule.status === 'closed' ? 'text-gray-400' : 'text-gray-200'} font-cormorant`}>
+                  <div key={index} className="flex justify-between items-center py-2 border-b border-slate-700 last:border-b-0">
+                    <span className={`text-sm ${schedule.status === 'closed' ? 'text-slate-400' : 'text-slate-200'} font-cormorant`}>
                       {schedule.days}
                     </span>
                     <span className={`font-semibold text-sm ${
-                      schedule.status === 'closed' ? 'text-gray-500' : 'text-white'
+                      schedule.status === 'closed' ? 'text-slate-500' : 'text-white'
                     } font-cormorant`}>
                       {schedule.hours}
                     </span>
                   </div>
                 ))}
               </div>
-              <div className="mt-4 pt-4 border-t border-gray-700">
+              <div className="mt-4 pt-4 border-t border-slate-700">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-400 font-cormorant">Current Status</span>
+                  <span className="text-slate-400 font-cormorant">Current Status</span>
                   <span className="flex items-center text-green-400 font-inter">
                     <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
                     Online • WAT

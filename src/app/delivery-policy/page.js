@@ -6,17 +6,17 @@ const DeliveryPolicy = () => {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4 font-playfair">
+          <h1 className="text-4xl font-bold text-slate-900 mb-4 font-playfair">
             Delivery Policy – Kavan The Brand
           </h1>
           <div className="w-24 h-1 bg-[#8B4513] mx-auto"></div>
         </div>
 
         {/* Content Sections */}
-        <div className="space-y-8 text-gray-700">
+        <div className="space-y-8 text-slate-700">
           {/* Order & Production */}
-          <section className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4 font-playfair">
+          <section className="bg-slate-50 p-6 rounded-lg">
+            <h2 className="text-2xl font-semibold text-slate-900 mb-4 font-playfair">
               Order & Production
             </h2>
             <ul className="space-y-3 list-disc list-inside font-cormorant">
@@ -29,8 +29,8 @@ const DeliveryPolicy = () => {
           </section>
 
           {/* Domestic Shipping */}
-          <section className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4 font-playfair">
+          <section className="bg-slate-50 p-6 rounded-lg">
+            <h2 className="text-2xl font-semibold text-slate-900 mb-4 font-playfair">
               Domestic Shipping (Nigeria)
             </h2>
             <ul className="space-y-3 list-disc list-inside font-cormorant">
@@ -45,8 +45,8 @@ const DeliveryPolicy = () => {
           </section>
 
           {/* International Shipping */}
-          <section className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4 font-playfair">
+          <section className="bg-slate-50 p-6 rounded-lg">
+            <h2 className="text-2xl font-semibold text-slate-900 mb-4 font-playfair">
               International Shipping
             </h2>
             <ul className="space-y-3 list-disc list-inside font-cormorant">
@@ -64,8 +64,8 @@ const DeliveryPolicy = () => {
           </section>
 
           {/* Tracking & Responsibility */}
-          <section className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4 font-playfair">
+          <section className="bg-slate-50 p-6 rounded-lg">
+            <h2 className="text-2xl font-semibold text-slate-900 mb-4 font-playfair">
               Tracking & Responsibility
             </h2>
             <ul className="space-y-3 list-disc list-inside font-cormorant">
@@ -100,7 +100,7 @@ const DeliveryPolicy = () => {
         </div>
 
         {/* Additional Info */}
-        <div className="mt-8 text-center text-gray-600">
+        <div className="mt-8 text-center text-slate-600">
           <p className="text-sm font-cormorant">
             Thank you for choosing Kavan The Brand. We appreciate your business
             and look forward to serving you!

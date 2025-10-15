@@ -2,14 +2,14 @@
 
 const Page = () => {
   return (
-    <main className="min-h-screen bg-gray-50 py-8">
+    <main className="min-h-screen bg-slate-50 py-8">
       <div className="container-custom max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4 font-playfair">
+          <h1 className="text-4xl font-bold text-slate-900 mb-4 font-playfair">
             Privacy Policy
           </h1>
-          <p className="text-gray-600 text-lg font-cormorant">
+          <p className="text-slate-600 text-lg font-cormorant">
             Last updated:{" "}
             {new Date().toLocaleDateString("en-US", {
               year: "numeric",
@@ -20,8 +20,8 @@ const Page = () => {
         </div>
 
         {/* Introduction */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:p-8 mb-6">
-          <p className="text-gray-700 text-lg leading-relaxed font-cormorant">
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 md:p-8 mb-6">
+          <p className="text-slate-700 text-lg leading-relaxed font-cormorant">
             At <strong className="font-playfair">Kavan The Brand</strong> ("Kavan," "we," "our," "us"), we
             respect your privacy and are committed to protecting your personal
             information. This policy explains how we collect, use, and safeguard
@@ -32,10 +32,10 @@ const Page = () => {
         {/* Main Content */}
         <div className="space-y-6">
           {/* Section 1: Information We Collect */}
-          <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:p-8">
+          <section className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 md:p-8">
             <div className="flex items-start mb-4">
-              <span className="text-2xl font-bold text-gray-900 mr-3 font-playfair">1</span>
-              <h2 className="text-2xl font-bold text-gray-900 font-playfair">
+              <span className="text-2xl font-bold text-slate-900 mr-3 font-playfair">1</span>
+              <h2 className="text-2xl font-bold text-slate-900 font-playfair">
                 Information We Collect
               </h2>
             </div>
@@ -97,10 +97,10 @@ const Page = () => {
           </section>
 
           {/* Section 2: How We Use Your Information */}
-          <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:p-8">
+          <section className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 md:p-8">
             <div className="flex items-start mb-4">
-              <span className="text-2xl font-bold text-gray-900 mr-3 font-playfair">2</span>
-              <h2 className="text-2xl font-bold text-gray-900 font-playfair">
+              <span className="text-2xl font-bold text-slate-900 mr-3 font-playfair">2</span>
+              <h2 className="text-2xl font-bold text-slate-900 font-playfair">
                 How We Use Your Information
               </h2>
             </div>
@@ -111,10 +111,10 @@ const Page = () => {
                   <span className="text-purple-600 font-bold">📦</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-1 font-playfair">
+                  <h3 className="font-semibold text-slate-900 mb-1 font-playfair">
                     Order Processing & Delivery
                   </h3>
-                  <p className="text-gray-700 font-cormorant">
+                  <p className="text-slate-700 font-cormorant">
                     To process and deliver your orders efficiently
                   </p>
                 </div>
@@ -125,10 +125,10 @@ const Page = () => {
                   <span className="text-blue-600 font-bold">💬</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-1 font-playfair">
+                  <h3 className="font-semibold text-slate-900 mb-1 font-playfair">
                     Customer Communication
                   </h3>
-                  <p className="text-gray-700 font-cormorant">
+                  <p className="text-slate-700 font-cormorant">
                     To send updates about your purchase and respond to inquiries
                   </p>
                 </div>
@@ -139,10 +139,10 @@ const Page = () => {
                   <span className="text-green-600 font-bold">✨</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-1 font-playfair">
+                  <h3 className="font-semibold text-slate-900 mb-1 font-playfair">
                     Service Improvement
                   </h3>
-                  <p className="text-gray-700 font-cormorant">
+                  <p className="text-slate-700 font-cormorant">
                     To enhance our website, products, and customer experience
                   </p>
                 </div>
@@ -153,13 +153,13 @@ const Page = () => {
                   <span className="text-orange-600 font-bold">📢</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-1 font-playfair">
+                  <h3 className="font-semibold text-slate-900 mb-1 font-playfair">
                     Marketing Communications
                   </h3>
-                  <p className="text-gray-700 font-cormorant">
+                  <p className="text-slate-700 font-cormorant">
                     For marketing emails or texts only with your opt-in consent
                   </p>
-                  <p className="text-gray-600 text-sm mt-1 font-cormorant">
+                  <p className="text-slate-600 text-sm mt-1 font-cormorant">
                     You can unsubscribe at any time
                   </p>
                 </div>
@@ -168,10 +168,10 @@ const Page = () => {
           </section>
 
           {/* Section 3: Sharing Your Information */}
-          <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:p-8">
+          <section className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 md:p-8">
             <div className="flex items-start mb-4">
-              <span className="text-2xl font-bold text-gray-900 mr-3 font-playfair">3</span>
-              <h2 className="text-2xl font-bold text-gray-900 font-playfair">
+              <span className="text-2xl font-bold text-slate-900 mr-3 font-playfair">3</span>
+              <h2 className="text-2xl font-bold text-slate-900 font-playfair">
                 Sharing Your Information
               </h2>
             </div>
@@ -182,25 +182,25 @@ const Page = () => {
               </p>
             </div>
 
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="font-semibold text-gray-900 mb-2 font-playfair">
+            <div className="bg-slate-50 p-4 rounded-lg">
+              <h3 className="font-semibold text-slate-900 mb-2 font-playfair">
                 Trusted Service Providers
               </h3>
-              <p className="text-gray-700 mb-3 font-cormorant">
+              <p className="text-slate-700 mb-3 font-cormorant">
                 We only share necessary details with trusted partners to fulfill
                 your orders:
               </p>
-              <ul className="text-gray-700 text-sm space-y-1 font-cormorant">
+              <ul className="text-slate-700 text-sm space-y-1 font-cormorant">
                 <li className="flex items-center">
-                  <span className="text-gray-500 mr-2">•</span>
+                  <span className="text-slate-500 mr-2">•</span>
                   Payment processors for secure transactions
                 </li>
                 <li className="flex items-center">
-                  <span className="text-gray-500 mr-2">•</span>
+                  <span className="text-slate-500 mr-2">•</span>
                   Shipping carriers like DHL for delivery
                 </li>
                 <li className="flex items-center">
-                  <span className="text-gray-500 mr-2">•</span>
+                  <span className="text-slate-500 mr-2">•</span>
                   Service providers essential for order fulfillment
                 </li>
               </ul>
@@ -208,10 +208,10 @@ const Page = () => {
           </section>
 
           {/* Section 4: Data Security */}
-          <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:p-8">
+          <section className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 md:p-8">
             <div className="flex items-start mb-4">
-              <span className="text-2xl font-bold text-gray-900 mr-3 font-playfair">4</span>
-              <h2 className="text-2xl font-bold text-gray-900 font-playfair">
+              <span className="text-2xl font-bold text-slate-900 mr-3 font-playfair">4</span>
+              <h2 className="text-2xl font-bold text-slate-900 font-playfair">
                 Data Security
               </h2>
             </div>
@@ -221,10 +221,10 @@ const Page = () => {
                 <span className="text-green-600 font-bold">🛡️</span>
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900 mb-1 font-playfair">
+                <h3 className="font-semibold text-slate-900 mb-1 font-playfair">
                   Industry-Standard Protection
                 </h3>
-                <p className="text-gray-700 font-cormorant">
+                <p className="text-slate-700 font-cormorant">
                   We use industry-standard security measures to protect your
                   personal data
                 </p>
@@ -242,13 +242,13 @@ const Page = () => {
           </section>
 
           {/* Section 5: Your Rights */}
-          <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:p-8">
+          <section className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 md:p-8">
             <div className="flex items-start mb-4">
-              <span className="text-2xl font-bold text-gray-900 mr-3 font-playfair">5</span>
-              <h2 className="text-2xl font-bold text-gray-900 font-playfair">Your Rights</h2>
+              <span className="text-2xl font-bold text-slate-900 mr-3 font-playfair">5</span>
+              <h2 className="text-2xl font-bold text-slate-900 font-playfair">Your Rights</h2>
             </div>
 
-            <p className="text-gray-700 mb-4 font-cormorant">
+            <p className="text-slate-700 mb-4 font-cormorant">
               You have the right to access, correct, or delete your personal
               data at any time.
             </p>
@@ -283,17 +283,17 @@ const Page = () => {
               </div>
             </div>
 
-            <p className="text-gray-600 text-sm mt-4 text-center font-cormorant">
+            <p className="text-slate-600 text-sm mt-4 text-center font-cormorant">
               Contact us for any privacy-related requests or questions about
               your data.
             </p>
           </section>
 
           {/* Section 6: Cookies */}
-          <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:p-8">
+          <section className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 md:p-8">
             <div className="flex items-start mb-4">
-              <span className="text-2xl font-bold text-gray-900 mr-3 font-playfair">6</span>
-              <h2 className="text-2xl font-bold text-gray-900 font-playfair">Cookies</h2>
+              <span className="text-2xl font-bold text-slate-900 mr-3 font-playfair">6</span>
+              <h2 className="text-2xl font-bold text-slate-900 font-playfair">Cookies</h2>
             </div>
 
             <div className="flex items-start">
@@ -301,12 +301,12 @@ const Page = () => {
                 <span className="text-purple-600 font-bold">🍪</span>
               </div>
               <div>
-                <p className="text-gray-700 mb-3 font-cormorant">
+                <p className="text-slate-700 mb-3 font-cormorant">
                   Our site uses cookies to enhance your browsing experience and
                   analyze website traffic.
                 </p>
-                <div className="bg-gray-50 p-3 rounded">
-                  <p className="text-gray-600 text-sm font-cormorant">
+                <div className="bg-slate-50 p-3 rounded">
+                  <p className="text-slate-600 text-sm font-cormorant">
                     You can disable cookies in your browser settings, but please
                     note that some site features may not function properly
                     without them.
@@ -317,16 +317,16 @@ const Page = () => {
           </section>
 
           {/* Section 7: Updates */}
-          <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:p-8">
+          <section className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 md:p-8">
             <div className="flex items-start mb-4">
-              <span className="text-2xl font-bold text-gray-900 mr-3 font-playfair">7</span>
-              <h2 className="text-2xl font-bold text-gray-900 font-playfair">
+              <span className="text-2xl font-bold text-slate-900 mr-3 font-playfair">7</span>
+              <h2 className="text-2xl font-bold text-slate-900 font-playfair">
                 Policy Updates
               </h2>
             </div>
 
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-gray-700 mb-3 font-cormorant">
+            <div className="bg-slate-50 p-4 rounded-lg">
+              <p className="text-slate-700 mb-3 font-cormorant">
                 We may update this privacy policy occasionally to reflect
                 changes in our practices or for other operational, legal, or
                 regulatory reasons.
@@ -353,7 +353,7 @@ const Page = () => {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a
                 href="mailto:admin@kavanthebrand.com"
-                className="inline-flex items-center bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors font-inter"
+                className="inline-flex items-center bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-lg font-medium transition-colors font-inter"
               >
                 <span className="mr-2">📧</span>
                 Email Us

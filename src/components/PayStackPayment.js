@@ -262,7 +262,7 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
       <button
         onClick={handlePayment}
         disabled={isProcessing}
-        className="bg-black text-white text-lg rounded-xl w-full py-3 cursor-pointer hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+        className="bg-black text-white text-lg rounded-xl w-full py-3 cursor-pointer hover:bg-slate-800 disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors"
       >
         {isProcessing ? (
           <div className="flex items-center justify-center">
@@ -278,7 +278,7 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
         <div className="fixed top-0 left-0 bg-black bg-opacity-50 h-screen w-screen flex items-center justify-center z-50">
           <div className="relative rounded-xl bg-black py-10 px-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
             <span
-              className="absolute top-4 right-4 py-1 px-3 border rounded-full border-gray-500 text-gray-300 text-xl cursor-pointer hover:bg-gray-800 transition-colors"
+              className="absolute top-4 right-4 py-1 px-3 border rounded-full border-slate-500 text-slate-300 text-xl cursor-pointer hover:bg-slate-800 transition-colors"
               onClick={handleCloseSuccessModal}
             >
               ×
@@ -291,26 +291,26 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
               <p className="text-green-400 text-xl font-medium">
                 Order Confirmed!
               </p>
-              <p className="text-gray-300 text-sm text-center">
+              <p className="text-slate-300 text-sm text-center">
                 Thank you for your order. Your payment has been processed successfully and your order has been saved.
               </p>
             </div>
 
             <div
               id="receipt"
-              className="my-7 p-4 flex flex-col gap-4 bg-gray-800 rounded-xl text-sm text-gray-400"
+              className="my-7 p-4 flex flex-col gap-4 bg-slate-800 rounded-xl text-sm text-slate-400"
             >
               {/* Store Information */}
-              <div className="text-center mb-2 border-b border-gray-700 pb-2">
+              <div className="text-center mb-2 border-b border-slate-700 pb-2">
                 <h3 className="text-white text-lg font-semibold">{metadata?.store_name || "Your Fashion Brand"}</h3>
-                <p className="text-xs text-gray-400">{metadata?.store_contact || "+234 123 456 7890"}</p>
-                <p className="text-xs text-gray-400">{metadata?.store_email || "support@yourbrand.com"}</p>
-                <p className="text-xs text-gray-400 mt-1">Reference: {paymentReference}</p>
+                <p className="text-xs text-slate-400">{metadata?.store_contact || "+234 123 456 7890"}</p>
+                <p className="text-xs text-slate-400">{metadata?.store_email || "support@yourbrand.com"}</p>
+                <p className="text-xs text-slate-400 mt-1">Reference: {paymentReference}</p>
               </div>
 
               {/* Customer Information */}
               <div className="space-y-2">
-                <h4 className="text-white font-medium border-b border-gray-700 pb-1">Customer Information</h4>
+                <h4 className="text-white font-medium border-b border-slate-700 pb-1">Customer Information</h4>
                 <p className="flex justify-between">
                   <span>Name:</span>
                   <span className="text-white">{metadata?.customer_name || "N/A"}</span>
@@ -327,7 +327,7 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
 
               {/* Shipping Information */}
               <div className="space-y-2">
-                <h4 className="text-white font-medium border-b border-gray-700 pb-1">Shipping Information</h4>
+                <h4 className="text-white font-medium border-b border-slate-700 pb-1">Shipping Information</h4>
                 <p className="flex justify-between">
                   <span>Location:</span>
                   <span className="text-white text-right">{metadata?.shipping_location || "N/A"}</span>
@@ -358,7 +358,7 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
 
               {/* Order Items */}
               <div className="space-y-2">
-                <h4 className="text-white font-medium border-b border-gray-700 pb-1">Order Items</h4>
+                <h4 className="text-white font-medium border-b border-slate-700 pb-1">Order Items</h4>
                 {metadata?.items?.map((item, index) => (
                   <div key={index} className="flex justify-between text-xs">
                     <span className="flex-1">
@@ -371,11 +371,11 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
                 ))}
               </div>
 
-              <hr className="border-gray-700" />
+              <hr className="border-slate-700" />
 
               {/* Payment Summary */}
               <div className="space-y-2">
-                <h4 className="text-white font-medium border-b border-gray-700 pb-1">Payment Summary</h4>
+                <h4 className="text-white font-medium border-b border-slate-700 pb-1">Payment Summary</h4>
                 <p className="flex justify-between">
                   <span>Subtotal:</span>
                   <span className="text-white">{formatter.format(metadata?.subtotal || 0)}</span>
@@ -384,17 +384,17 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
                   <span>Shipping Fee:</span>
                   <span className="text-white">{formatter.format(metadata?.shipping_fee || 0)}</span>
                 </p>
-                <p className="flex justify-between text-base font-semibold border-t border-gray-700 pt-2">
+                <p className="flex justify-between text-base font-semibold border-t border-slate-700 pt-2">
                   <span>Total Paid:</span>
                   <span className="text-white">{formatter.format(amount / 100)}</span>
                 </p>
               </div>
 
-              <hr className="border-gray-700" />
+              <hr className="border-slate-700" />
 
               {/* Payment Details */}
               <div className="space-y-2">
-                <h4 className="text-white font-medium border-b border-gray-700 pb-1">Payment Details</h4>
+                <h4 className="text-white font-medium border-b border-slate-700 pb-1">Payment Details</h4>
                 <p className="flex justify-between">
                   <span>Payment Status:</span>
                   <span className="py-1 px-2 text-xs bg-green-200/20 text-green-500 rounded-full">
@@ -449,7 +449,7 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
               <Link
                 href="/shop"
                 onClick={handleCloseSuccessModal}
-                className="w-full p-3 rounded-xl border border-gray-500 text-gray-300 text-center hover:bg-gray-800 transition-colors"
+                className="w-full p-3 rounded-xl border border-slate-500 text-slate-300 text-center hover:bg-slate-800 transition-colors"
               >
                 Continue Shopping
               </Link>

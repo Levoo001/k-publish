@@ -172,7 +172,7 @@ const NewsletterPopup = () => {
                 {/* Close Button */}
                 <button
                   onClick={handleClose}
-                  className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center border bg-gray-100 hover:bg-gray-200 rounded-full transition-colors duration-200"
+                  className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center border bg-slate-100 hover:bg-slate-200 rounded-full transition-colors duration-200"
                   aria-label="Close newsletter popup"
                 >
                   <svg
@@ -191,7 +191,7 @@ const NewsletterPopup = () => {
                 </button>
 
                 {/* Background Pattern */}
-                <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-white opacity-50" />
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-white opacity-50" />
 
                 <div className="relative p-6">
                   {/* Success State */}
@@ -210,12 +210,12 @@ const NewsletterPopup = () => {
                           />
                         </svg>
                       </div>
-                      <h3 className="text-xl font-light text-gray-900 mb-2">
+                      <h3 className="text-xl font-light text-slate-900 mb-2">
                         {subscriptionStatus === "success" 
                           ? "Welcome to Our Community!" 
                           : "Already Subscribed!"}
                       </h3>
-                      <p className="text-gray-600 text-sm">
+                      <p className="text-slate-600 text-sm">
                         {subscriptionStatus === "success"
                           ? "Thank you for subscribing to our newsletter!"
                           : "You're already part of our style community!"}
@@ -247,10 +247,10 @@ const NewsletterPopup = () => {
 
                       {/* Text Content */}
                       <div className="text-center mb-6">
-                        <h3 className="text-xl font-light text-gray-900 mb-2">
+                        <h3 className="text-xl font-light text-slate-900 mb-2">
                           Join Our Style Community
                         </h3>
-                        <p className="text-gray-600 text-sm leading-relaxed">
+                        <p className="text-slate-600 text-sm leading-relaxed">
                           Get exclusive access to new collections, styling tips, and
                           special offers delivered straight to your inbox.
                         </p>
@@ -285,7 +285,7 @@ const NewsletterPopup = () => {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="Enter your email address"
-                          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 placeholder-gray-500 text-sm transition-all duration-200"
+                          className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-slate-900 placeholder-slate-500 text-sm transition-all duration-200"
                           required
                           disabled={isSubmitting}
                         />
@@ -294,7 +294,7 @@ const NewsletterPopup = () => {
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full bg-black text-white py-3 px-6 rounded-xl font-semibold text-sm hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+                        className="w-full bg-black text-white py-3 px-6 rounded-xl font-semibold text-sm hover:bg-slate-800 disabled:bg-slate-400 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
                       >
                         {isSubmitting ? (
                           <div className="flex items-center justify-center">
@@ -309,7 +309,7 @@ const NewsletterPopup = () => {
                   )}
 
                   {/* Footer Text */}
-                  <p className="text-center text-gray-500 text-xs mt-4">
+                  <p className="text-center text-slate-500 text-xs mt-4">
                     No spam, unsubscribe at any time
                   </p>
                 </div>

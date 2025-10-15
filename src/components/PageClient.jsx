@@ -262,7 +262,7 @@ export default function Home({ products }) {
 
           {/* Video Loading State */}
           {!isVideoLoaded && !videoError && (
-            <div className="absolute inset-0 bg-gray-900 flex items-center justify-center z-10">
+            <div className="absolute inset-0 bg-slate-900 flex items-center justify-center z-10">
               <div className="text-white text-center">
                 <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                 <p>Loading video...</p>
@@ -272,7 +272,7 @@ export default function Home({ products }) {
 
           {/* Video Error State - Show fallback image */}
           {videoError && (
-            <div className="absolute inset-0 bg-gray-900 flex items-center justify-center z-10">
+            <div className="absolute inset-0 bg-slate-900 flex items-center justify-center z-10">
               <Image
                 src="/5b.jpg"
                 alt="Kavan The Brand"
@@ -331,13 +331,13 @@ export default function Home({ products }) {
       </section>
 
       {/* Enhanced Featured Collections - Fixed overflow */}
-      <section className="py-10 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
+      <section className="py-10 bg-gradient-to-b from-white to-slate-50 overflow-hidden">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="mb-20 text-center">
-            <h2 className="text-2xl md:text-5xl mb-3 font-bold bg-gradient-to-r from-gray-800 to-black bg-clip-text text-transparent">
+            <h2 className="text-2xl md:text-5xl mb-3 font-bold bg-gradient-to-r from-slate-800 to-black bg-clip-text text-transparent">
               Curated Collection
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto font-semibold">
+            <p className="text-slate-600 max-w-2xl mx-auto font-semibold">
               Discover pieces that transform your wardrobe and elevate your
               style
             </p>
@@ -374,16 +374,16 @@ export default function Home({ products }) {
                       </span>
                     </div>
                     <div className="absolute bottom-4 left-4 right-4 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                      <button className="cursor-pointer w-full bg-white text-black py-3 font-semibold rounded-lg shadow-lg hover:bg-gray-100 transition-colors">
+                      <button className="cursor-pointer w-full bg-white text-black py-3 font-semibold rounded-lg shadow-lg hover:bg-slate-100 transition-colors">
                         Quick View
                       </button>
                     </div>
                   </div>
                   <div className="text-center p-2">
-                    <h3 className="font-light text-xl mb-2 text-gray-900 line-clamp-1">
+                    <h3 className="font-light text-xl mb-2 text-slate-900 line-clamp-1">
                       {product.name}
                     </h3>
-                    <p className="text-lg font-bold text-gray-900">
+                    <p className="text-lg font-bold text-slate-900">
                       ₦{product.price.toLocaleString()}
                     </p>
                   </div>
@@ -395,7 +395,7 @@ export default function Home({ products }) {
       </section>
 
       {/* Enhanced Brand Story Section - Fixed layout */}
-      <section className="py-16 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
+      <section className="py-16 bg-gradient-to-br from-slate-50 to-white overflow-hidden">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="grid grid-cols-2 gap-4">
@@ -469,49 +469,49 @@ export default function Home({ products }) {
                 <span className="inline-block bg-black text-white px-4 py-2 rounded-full text-sm font-medium mb-4">
                   Our Philosophy
                 </span>
-                <h2 className="text-4xl font-light mb-6 text-gray-900">
+                <h2 className="text-4xl font-light mb-6 text-slate-900">
                   Designed for Life's Moments
                 </h2>
               </div>
 
               <div className="space-y-4">
                 <div className="flex items-start space-x-4 p-4 rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300">
-                  <div className="w-12 h-12 bg-gradient-to-br from-black to-gray-800 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-black to-slate-800 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
                     <span className="text-white text-xl">✓</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg mb-2 text-gray-900">
+                    <h3 className="font-semibold text-lg mb-2 text-slate-900">
                       Quality Craftsmanship
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-slate-600">
                       Every stitch tells a story of dedication and excellence
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start space-x-4 p-4 rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300">
-                  <div className="w-12 h-12 bg-gradient-to-br from-black to-gray-800 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-black to-slate-800 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
                     <span className="text-white text-xl">♻</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg mb-2 text-gray-900">
+                    <h3 className="font-semibold text-lg mb-2 text-slate-900">
                       Sustainable Choices
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-slate-600">
                       Materials that respect both people and planet
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start space-x-4 p-4 rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300">
-                  <div className="w-12 h-12 bg-gradient-to-br from-black to-gray-800 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-black to-slate-800 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
                     <span className="text-white text-xl">✨</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg mb-2 text-gray-900">
+                    <h3 className="font-semibold text-lg mb-2 text-slate-900">
                       Timeless Appeal
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-slate-600">
                       Pieces designed to transcend seasonal trends
                     </p>
                   </div>
@@ -523,12 +523,12 @@ export default function Home({ products }) {
       </section>
 
       {/* Enhanced Newsletter Section */}
-      <section className="py-16 bg-gradient-to-r from-black via-gray-900 to-black text-white overflow-hidden">
+      <section className="py-16 bg-gradient-to-r from-black via-slate-900 to-black text-white overflow-hidden">
         <div className="container mx-auto px-4 text-center max-w-4xl">
-          <h2 className="text-3xl font-light mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-light mb-6 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
             Join Our Style Community
           </h2>
-          <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-slate-300 mb-8 max-w-2xl mx-auto">
             Get exclusive access to new collections, styling tips, and special
             offers
           </p>
@@ -540,13 +540,13 @@ export default function Home({ products }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isSubmitting}
-              className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl focus:outline-none focus:border-white text-white placeholder-gray-400 disabled:opacity-50"
+              className="flex-1 px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl focus:outline-none focus:border-white text-white placeholder-slate-400 disabled:opacity-50"
               required
             />
             <button 
               type="submit"
               disabled={isSubmitting}
-              className="bg-white text-black px-6 py-3 rounded-xl hover:bg-gray-200 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-white text-black px-6 py-3 rounded-xl hover:bg-slate-200 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <span className="flex items-center justify-center">
@@ -585,7 +585,7 @@ export default function Home({ products }) {
             </div>
           )}
 
-          <p className="text-gray-500 text-xs">
+          <p className="text-slate-500 text-xs">
             By subscribing, you agree to our Privacy Policy. Unsubscribe at any time.
           </p>
         </div>

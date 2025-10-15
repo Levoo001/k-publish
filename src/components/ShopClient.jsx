@@ -44,13 +44,13 @@ export default function ShopClient({ products }) {
   return (
     <main className="min-h-screen bg-white">
       {/* Shop Header */}
-      <section className="bg-gradient-to-r from-gray-50 to-white py-16">
+      <section className="bg-gradient-to-r from-slate-50 to-white py-16">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="">
-            <h1 className="text-2xl md:text-6xl font-playfair mb-4 text-gray-900 text-center">
+            <h1 className="text-2xl md:text-6xl font-playfair mb-4 text-slate-900 text-center">
               The Rebirth Collection 
             </h1>
-            <p className="text-[1.05rem] font-cormornt text-gray-600 max-w-2xl mx-auto text-center">
+            <p className="text-[1.05rem] font-cormornt text-slate-600 max-w-2xl mx-auto text-center">
               Softness. Strength.
               <br />
               <br />
@@ -101,10 +101,10 @@ export default function ShopClient({ products }) {
               </div>
 
               <div className="text-center p-2 space-y-2">
-                <h3 className="font-light text-base md:text-lg text-gray-900 line-clamp-2">
+                <h3 className="font-light text-base md:text-lg text-slate-900 line-clamp-2">
                   {product.name}
                 </h3>
-                <p className="text-lg font-bold text-gray-900">
+                <p className="text-lg font-bold text-slate-900">
                   ₦{product.price?.toLocaleString()}
                 </p>
 
@@ -124,12 +124,12 @@ export default function ShopClient({ products }) {
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-slate-50">
         <div className="container mx-auto px-4 text-center max-w-4xl">
-          <h2 className="text-2xl md:text-3xl font-light mb-4 text-gray-900">
+          <h2 className="text-2xl md:text-3xl font-light mb-4 text-slate-900">
             Stay Updated
           </h2>
-          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-slate-600 mb-8 max-w-2xl mx-auto">
             Be the first to know about new arrivals, exclusive offers, and
             styling tips
           </p>
@@ -138,9 +138,9 @@ export default function ShopClient({ products }) {
             <input
               type="email"
               placeholder="Enter your email"
-              className="flex-1 px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-black text-gray-900 placeholder-gray-500"
+              className="flex-1 px-4 py-3 bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-black text-slate-900 placeholder-slate-500"
             />
-            <button className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors duration-300 font-medium">
+            <button className="bg-black text-white px-6 py-3 rounded-lg hover:bg-slate-800 transition-colors duration-300 font-medium">
               Subscribe
             </button>
           </div>

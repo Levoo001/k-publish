@@ -217,7 +217,7 @@ const CartDrawer = () => {
             <h2 className="text-xl font-semibold">Your Cart ({cartItems.length})</h2>
             <button
               onClick={closeCart}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
             >
               <IoMdClose size={20} />
             </button>
@@ -227,14 +227,14 @@ const CartDrawer = () => {
           <div className="flex-1 overflow-y-auto">
             {cartItems.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                  <HiOutlineShoppingCart size={32} className="text-gray-400" />
+                <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                  <HiOutlineShoppingCart size={32} className="text-slate-400" />
                 </div>
                 <h3 className="text-lg font-medium mb-2">Your cart is empty</h3>
-                <p className="text-gray-600 mb-6">Add some items to get started</p>
+                <p className="text-slate-600 mb-6">Add some items to get started</p>
                 <button
                   onClick={closeCart}
-                  className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                  className="bg-black text-white px-6 py-3 rounded-lg hover:bg-slate-800 transition-colors"
                 >
                   Continue Shopping
                 </button>
@@ -245,7 +245,7 @@ const CartDrawer = () => {
                 {cartItems.map((item, index) => (
                   <div
                     key={item.id || item._id || `cart-item-${index}`}
-                    className="flex gap-3 p-3 bg-gray-50 rounded-lg"
+                    className="flex gap-3 p-3 bg-slate-50 rounded-lg"
                   >
                     <div className="w-16 h-16 relative flex-shrink-0">
                       <Image
@@ -269,7 +269,7 @@ const CartDrawer = () => {
                         <div className="flex items-center border rounded">
                           <button
                             onClick={() => handleDecrement(item.id)}
-                            className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 disabled:opacity-30"
+                            className="w-8 h-8 flex items-center justify-center hover:bg-slate-100 disabled:opacity-30"
                             disabled={item.quantity <= 1}
                           >
                             <span className="text-lg">−</span>
@@ -279,7 +279,7 @@ const CartDrawer = () => {
                           </span>
                           <button
                             onClick={() => handleIncrement(item.id)}
-                            className="w-8 h-8 flex items-center justify-center hover:bg-gray-100"
+                            className="w-8 h-8 flex items-center justify-center hover:bg-slate-100"
                           >
                             <span className="text-lg">+</span>
                           </button>
@@ -287,7 +287,7 @@ const CartDrawer = () => {
 
                         <button
                           onClick={() => handleRemove(item.id)}
-                          className="text-gray-400 hover:text-red-500 p-1"
+                          className="text-slate-400 hover:text-red-500 p-1"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -421,7 +421,7 @@ const CartDrawer = () => {
                 {/* Action Buttons */}
                 <div className="space-y-3 pt-2">
                   {!isLoaded ? (
-                    <div className="w-full bg-gray-400 text-white py-3 px-6 rounded-lg text-center">
+                    <div className="w-full bg-slate-400 text-white py-3 px-6 rounded-lg text-center">
                       Loading...
                     </div>
                   ) : isSignedIn ? (
@@ -430,7 +430,7 @@ const CartDrawer = () => {
                         <button
                           onClick={handlePayStackPayment}
                           disabled={isProcessing}
-                          className="w-full bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                          className="w-full bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors disabled:bg-slate-400 disabled:cursor-not-allowed"
                         >
                           {isProcessing ? (
                             <div className="flex items-center justify-center">
@@ -444,7 +444,7 @@ const CartDrawer = () => {
                       ) : (
                         <button
                           disabled
-                          className="w-full bg-gray-300 text-gray-500 py-3 px-6 rounded-lg cursor-not-allowed"
+                          className="w-full bg-slate-300 text-slate-500 py-3 px-6 rounded-lg cursor-not-allowed"
                         >
                           {!selectedLocation ? 'Select Delivery Location' : 'Complete Delivery Information'}
                         </button>
@@ -452,7 +452,7 @@ const CartDrawer = () => {
                     </>
                   ) : (
                     <SignInButton mode="modal">
-                      <button className="w-full bg-black text-white py-3 px-6 rounded-lg hover:bg-gray-800 transition-colors cursor-pointer">
+                      <button className="w-full bg-black text-white py-3 px-6 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer">
                         Sign In to Checkout
                       </button>
                     </SignInButton>
@@ -461,7 +461,7 @@ const CartDrawer = () => {
                   <Link
                     href="/shop"
                     onClick={closeCart}
-                    className="w-full block border border-gray-300 text-gray-700 py-3 px-6 rounded-lg text-center font-medium hover:bg-gray-50 transition-colors"
+                    className="w-full block border border-slate-300 text-slate-700 py-3 px-6 rounded-lg text-center font-medium hover:bg-slate-50 transition-colors"
                   >
                     Continue Shopping
                   </Link>

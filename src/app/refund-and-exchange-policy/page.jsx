@@ -2,27 +2,27 @@
 
 const Page = () => {
   return (
-    <main className="min-h-screen bg-gray-50 py-8">
+    <main className="min-h-screen bg-slate-50 py-8">
       <div className="container-custom max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4 font-playfair">
+          <h1 className="text-4xl font-bold text-slate-900 mb-4 font-playfair">
             Delivery and Return Conditions
           </h1>
-          <p className="text-gray-600 text-lg font-cormorant">
+          <p className="text-slate-600 text-lg font-cormorant">
             Understanding our policies for a seamless shopping experience
           </p>
         </div>
 
         {/* Main Content */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:p-8">
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 md:p-8">
           {/* Refund & Exchange Policy Section */}
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center font-playfair">
+            <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center font-playfair">
               <span className="w-3 h-3 bg-black rounded-full mr-3"></span>
               Refund & Exchange Policy
             </h2>
-            <p className="text-gray-700 mb-4 leading-relaxed font-cormorant">
+            <p className="text-slate-700 mb-4 leading-relaxed font-cormorant">
               At Kavan The Brand, each piece is made to order with care. Because
               of the time and resources involved, we do not offer monetary
               refunds except in cases where the item arrives damaged.
@@ -39,32 +39,32 @@ const Page = () => {
 
           {/* Exchanges & Store Credit Section */}
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center font-playfair">
+            <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center font-playfair">
               <span className="w-3 h-3 bg-black rounded-full mr-3"></span>
               Exchanges & Store Credit
             </h2>
-            <p className="text-gray-700 mb-4 leading-relaxed font-cormorant">
+            <p className="text-slate-700 mb-4 leading-relaxed font-cormorant">
               Eligible only if you receive the wrong item, size, color, or a
               defective piece.
             </p>
 
             <div className="grid md:grid-cols-2 gap-6 mb-4">
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="font-semibold text-gray-900 mb-2 font-playfair">
+              <div className="bg-slate-50 p-4 rounded-lg">
+                <h3 className="font-semibold text-slate-900 mb-2 font-playfair">
                   Contact Requirements
                 </h3>
-                <ul className="text-sm text-gray-700 space-y-1 font-cormorant">
+                <ul className="text-sm text-slate-700 space-y-1 font-cormorant">
                   <li>• Email: admin@kavanthebrand.com</li>
                   <li>• WhatsApp/Call: +234 703 621 0107</li>
                   <li>• Contact within 48 hours of delivery</li>
                 </ul>
               </div>
 
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="font-semibold text-gray-900 mb-2 font-playfair">
+              <div className="bg-slate-50 p-4 rounded-lg">
+                <h3 className="font-semibold text-slate-900 mb-2 font-playfair">
                   Return Conditions
                 </h3>
-                <ul className="text-sm text-gray-700 space-y-1 font-cormorant">
+                <ul className="text-sm text-slate-700 space-y-1 font-cormorant">
                   <li>• Items must be unworn and unwashed</li>
                   <li>• Original packaging with tags intact</li>
                   <li>• Store credit valid for 6 months</li>
@@ -75,7 +75,7 @@ const Page = () => {
 
           {/* Fit Issues Section */}
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center font-playfair">
+            <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center font-playfair">
               <span className="w-3 h-3 bg-black rounded-full mr-3"></span>
               Fit Issues
             </h2>
@@ -91,7 +91,7 @@ const Page = () => {
 
           {/* Final Sale Section */}
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center font-playfair">
+            <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center font-playfair">
               <span className="w-3 h-3 bg-black rounded-full mr-3"></span>
               Final Sale Items
             </h2>
@@ -105,35 +105,35 @@ const Page = () => {
 
           {/* Production & Shipping Section */}
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center font-playfair">
+            <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center font-playfair">
               <span className="w-3 h-3 bg-black rounded-full mr-3"></span>
               Production & Shipping
             </h2>
 
             <div className="space-y-4">
               <div className="flex items-start">
-                <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mr-3 mt-1 flex-shrink-0">
+                <div className="w-6 h-6 bg-slate-100 rounded-full flex items-center justify-center mr-3 mt-1 flex-shrink-0">
                   <span className="text-xs font-bold">⚡</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 font-playfair">
+                  <h3 className="font-semibold text-slate-900 font-playfair">
                     Production Time
                   </h3>
-                  <p className="text-gray-700 font-cormorant">
+                  <p className="text-slate-700 font-cormorant">
                     4–7 business days (excluding weekends & holidays)
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start">
-                <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mr-3 mt-1 flex-shrink-0">
+                <div className="w-6 h-6 bg-slate-100 rounded-full flex items-center justify-center mr-3 mt-1 flex-shrink-0">
                   <span className="text-xs font-bold">🚫</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 font-playfair">
+                  <h3 className="font-semibold text-slate-900 font-playfair">
                     Order Cancellation
                   </h3>
-                  <p className="text-gray-700 font-cormorant">
+                  <p className="text-slate-700 font-cormorant">
                     Orders cannot be cancelled once production starts. Please
                     confirm before you order.
                   </p>
@@ -141,12 +141,12 @@ const Page = () => {
               </div>
 
               <div className="flex items-start">
-                <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mr-3 mt-1 flex-shrink-0">
+                <div className="w-6 h-6 bg-slate-100 rounded-full flex items-center justify-center mr-3 mt-1 flex-shrink-0">
                   <span className="text-xs font-bold">📞</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 font-playfair">Urgent Orders</h3>
-                  <p className="text-gray-700 font-cormorant">
+                  <h3 className="font-semibold text-slate-900 font-playfair">Urgent Orders</h3>
+                  <p className="text-slate-700 font-cormorant">
                     For urgent orders, special requests, and pickup, please
                     message us on WhatsApp.
                   </p>
@@ -157,7 +157,7 @@ const Page = () => {
 
           {/* Shipping Timeline Section */}
           <section className="mb-8">
-            <h3 className="text-xl font-bold text-gray-900 mb-4 font-playfair">
+            <h3 className="text-xl font-bold text-slate-900 mb-4 font-playfair">
               Shipping Timeline
             </h3>
             <div className="grid md:grid-cols-3 gap-4">
@@ -182,7 +182,7 @@ const Page = () => {
                 </p>
               </div>
             </div>
-            <p className="text-gray-600 text-sm mt-3 text-center font-cormorant">
+            <p className="text-slate-600 text-sm mt-3 text-center font-cormorant">
               * Customs/duties are the responsibility of the customer for
               international orders
             </p>
