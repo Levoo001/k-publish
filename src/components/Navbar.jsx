@@ -46,7 +46,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-gray-200 p-4 flex justify-between items-center shadow-md">
+    <header className="sticky top-0 z-40 w-full bg-white p-4 flex justify-between items-center shadow-md">
       <Link href="/" className="text-2xl font-bold tracking-tight text-black">
         KAVAN
       </Link>

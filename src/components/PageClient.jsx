@@ -241,7 +241,7 @@ export default function Home({ products }) {
   };
 
   return (
-    <main className="min-h-screen overflow-x-hidden">
+    <main className="min-h-screen">
       {/* Enhanced Hero Section with Video - Fixed */}
       <section className="relative h-[60vh] lg:h-[90vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 w-full h-full">
@@ -326,7 +326,7 @@ export default function Home({ products }) {
           </div>
 
           {/* Gradient Overlay for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/20 z-0" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/20" />
         </div>
       </section>
 

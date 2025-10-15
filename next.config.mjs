@@ -17,18 +17,8 @@ const nextConfig = {
   // Your existing image configurations
   images: {
     domains: ["cdn.sanity.io", "img.clerk.com"],
-    unoptimized: process.env.NODE_ENV === "development" ? true : false,
+    unoptimized: process.env.NODE_ENV === "development",
   },
-
-  // Your existing turbopack configuration (for development)
-    turbopack: {
-      rules: {
-        "*.md": {
-          loaders: ["markdown-loader"],
-          as: "*.md",
-        },
-      },
-    },
 
   // Additional optimizations
   poweredByHeader: false,
