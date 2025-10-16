@@ -8,6 +8,7 @@ import ReduxProvider from "./ReduxProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 import UserSync from '@/components/UserSync';
 import { CartProvider } from "@/components/CartProvider";
+import { PopupProvider } from "@/components/PopupContext";
 
 export const metadata = {
   title: "Kavan The Brand - Luxury Fashion Brand",

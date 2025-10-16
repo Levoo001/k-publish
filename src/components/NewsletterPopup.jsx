@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { subscribeToNewsletter } from "@/services/newsletterService";
 import { useAuth, useUser } from "@clerk/nextjs";
-import { usePopup } from "@/contexts/PopupContext";
+import { usePopup } from "./PopupContext";
 
 const NewsletterPopup = () => {
   const [email, setEmail] = useState("");
