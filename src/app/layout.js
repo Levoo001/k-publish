@@ -1,4 +1,5 @@
 // src/app/layout.js
+
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import CartDrawer from "@/components/CartDrawer"; // Import CartDrawer
@@ -9,21 +10,20 @@ import UserSync from '@/components/UserSync';
 import { CartProvider } from "@/components/CartProvider";
 
 export const metadata = {
-  title: "Kavan The Brand - Luxury Turkish Fashion",
+  title: "Kavan The Brand - Luxury Fashion Brand",
   description:
-    "Discover exquisite Turkish luxury dresses and fashion. Handcrafted elegance with Ottoman-inspired designs.",
+    "Discover exquisite luxury dresses and fashion. Handcrafted elegance with Ottoman-inspired designs.",
   keywords: [
     "Kavan The Brand",
-    "Turkish fashion",
+    "luxury fashion",
     "luxury dresses",
     "Ottoman designs",
     "handcrafted clothing",
-    "Turkish luxury",
     "boutique fashion",
   ].join(", "),
   openGraph: {
-    title: "Kavan The Brand - Luxury Turkish Fashion",
-    description: "Exquisite Turkish luxury dresses and fashion collections",
+    title: "Kavan The Brand - Luxury Fashion Brand",
+    description: "Exquisite luxury dresses and fashion collections",
     url: "https://www.kavanthebrand.com",
     siteName: "Kavan The Brand",
     locale: "en_US",

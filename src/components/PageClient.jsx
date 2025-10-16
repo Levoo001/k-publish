@@ -91,6 +91,8 @@ export default function Home({ products }) {
   const [subscriptionStatus, setSubscriptionStatus] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const VIDEO_URL = "https://ck7vajewsn9hvwtw.public.blob.vercel-storage.com/Video.mp4"
+
   // Fix video loading and overflow issues
   useEffect(() => {
     const video = videoRef.current;
@@ -256,7 +258,7 @@ export default function Home({ products }) {
             preload="auto"
             poster="/5b.jpg" // Using your actual fallback image
           >
-            <source src="/Video.mp4" type="video/mp4" /> {/* Capital V */}
+            <source src={VIDEO_URL} type="video/mp4" /> {/* Capital V */}
             Your browser does not support the video tag.
           </video>
 
