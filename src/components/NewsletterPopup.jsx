@@ -1,28 +1,32 @@
 // src/components/NewsletterPopup.jsx
+// src/components/NewsletterPopup.jsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { subscribeToNewsletter } from "@/services/newsletterService";
 import { useAuth, useUser } from "@clerk/nextjs";
+import { usePopup } from "@/contexts/PopupContext";
 
 const NewsletterPopup = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [subscriptionStatus, setSubscriptionStatus] = useState("");
   
   const { isSignedIn, isLoaded } = useAuth();
   const { user } = useUser();
+  const { popupInitialized, isPopupOpen, openPopup, closePopup } = usePopup();
+
+  const hasSetupPopup = useRef(false);
 
   useEffect(() => {
-    // Don't show popup until auth is loaded
-    if (!isLoaded) return;
+    // Only run this once when auth is loaded and popup is initialized
+    if (!popupInitialized || !isLoaded || hasSetupPopup.current) return;
+    hasSetupPopup.current = true;
 
     // Check if user is signed in
     if (isSignedIn) {
       // User is signed in - close popup and mark as subscribed
-      setIsOpen(false);
       localStorage.setItem("newsletterSubscribed", "true");
       return;
     }
@@ -34,29 +38,27 @@ const NewsletterPopup = () => {
     if (!hasSubscribed && !hasDismissed) {
       // Show popup after 10 seconds for signed-out users
       const timer = setTimeout(() => {
-        setIsOpen(true);
+        openPopup();
       }, 10000);
 
       return () => clearTimeout(timer);
     }
-  }, [isSignedIn, isLoaded]);
+  }, [isSignedIn, isLoaded, popupInitialized, openPopup]);
 
-  // Listen for sign-out events to show popup again
+  // Listen for sign-out events
   useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      // User just signed out - clear subscription status to show popup again
+    if (isLoaded && !isSignedIn && popupInitialized) {
       const hasDismissed = localStorage.getItem("newsletterDismissed");
       
       if (!hasDismissed) {
-        // Show popup after a short delay when user signs out
         const timer = setTimeout(() => {
-          setIsOpen(true);
-        }, 5000); // Show faster after sign-out (5 seconds)
+          openPopup();
+        }, 5000);
         
         return () => clearTimeout(timer);
       }
     }
-  }, [isSignedIn, isLoaded]);
+  }, [isSignedIn, isLoaded, popupInitialized, openPopup]);
 
   // Pre-fill email if user is signed in but hasn't subscribed
   useEffect(() => {
@@ -69,7 +71,6 @@ const NewsletterPopup = () => {
     e.preventDefault();
     if (!email) return;
 
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setSubscriptionStatus('Please enter a valid email address');
@@ -84,13 +85,11 @@ const NewsletterPopup = () => {
       const result = await subscribeToNewsletter(email);
       
       if (result.success) {
-        // Mark as subscribed in localStorage
         localStorage.setItem("newsletterSubscribed", "true");
         setSubscriptionStatus("success");
         
-        // Close popup after success
         setTimeout(() => {
-          setIsOpen(false);
+          closePopup();
           setEmail("");
         }, 2000);
       }
@@ -98,12 +97,11 @@ const NewsletterPopup = () => {
       console.error("Subscription failed:", error);
       
       if (error.message.includes('already subscribed')) {
-        // If email is already subscribed, mark as subscribed and close popup
         localStorage.setItem("newsletterSubscribed", "true");
         setSubscriptionStatus("already_subscribed");
         
         setTimeout(() => {
-          setIsOpen(false);
+          closePopup();
           setEmail("");
         }, 2000);
       } else {
@@ -116,11 +114,9 @@ const NewsletterPopup = () => {
   };
 
   const handleClose = () => {
-    setIsOpen(false);
-    // Remember user's choice for 30 days
+    closePopup();
     localStorage.setItem("newsletterDismissed", "true");
 
-    // Optional: Remove after 30 days
     setTimeout(
       () => {
         localStorage.removeItem("newsletterDismissed");
@@ -135,14 +131,13 @@ const NewsletterPopup = () => {
     }
   };
 
-  // Don't render anything if auth isn't loaded yet
-  if (!isLoaded) {
+  if (!isLoaded || !popupInitialized) {
     return null;
   }
 
   return (
     <AnimatePresence>
-      {isOpen && (
+      {isPopupOpen && (
         <>
           {/* Overlay */}
           <motion.div
@@ -167,7 +162,7 @@ const NewsletterPopup = () => {
               }}
               className="max-w-md w-full bg-white rounded-2xl shadow-2xl overflow-hidden"
             >
-              {/* Content */}
+              {/* Your existing popup content remains the same */}
               <div className="relative">
                 {/* Close Button */}
                 <button

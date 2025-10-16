@@ -49,11 +49,13 @@ export default function RootLayout({ children }) {
         <body className="antialiased">
           <ReduxProvider>
             <CartProvider>
+              <PopupProvider>
               <UserSync /> {/* Add UserSync here */}
               <Navbar />
               <main>{children}</main>
               <Footer />
               <CartDrawer />
+              </PopupProvider>
             </CartProvider>
           </ReduxProvider>
 
