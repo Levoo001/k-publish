@@ -301,7 +301,7 @@ export default function Home({ products }) {
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="mb-12 text-center">
-            <h2 className="text-3xl md:text-5xl mb-4 font-light tracking-wide text-burgundy-900 font-playfair">
+            <h2 className="text-3xl md:text-5xl mb-4 font-light tracking-wide text-burgundy font-playfair">
               Curated Collection
             </h2>
             <p className="text-burgundy-600 max-w-2xl mx-auto text-lg font-cormorant">
@@ -481,7 +481,7 @@ export default function Home({ products }) {
       {/* Enhanced Newsletter Section */}
       <section className="py-16 bg-burgundy text-white overflow-hidden">
         <div className="container mx-auto px-4 text-center max-w-4xl">
-          <h2 className="text-3xl font-light mb-6 bg-gradient-to-r from-white to-burgundy-200 bg-clip-text text-transparent font-playfair">
+          <h2 className="text-3xl font-light mb-6 bg-white bg-clip-text text-transparent font-playfair">
             Join Our Style Community
           </h2>
           <p className="text-lg text-burgundy-200 mb-8 max-w-2xl mx-auto font-cormorant">
@@ -555,7 +555,7 @@ export default function Home({ products }) {
       />
 
 {/* Floating WhatsApp icon */}
-      <Link href="https://wa.me/2347036210107" target="_blank" className="fixed bottom-14 right-2 p-2 rounded-full bg-burgundy/90">
+      <Link href="https://wa.me/2347036210107" target="_blank" className="fixed bottom-14 right-2 p-2 rounded-full bg-burgundy">
                     <IoIosChatbubbles size={25} color="white" />
                   </Link>
 

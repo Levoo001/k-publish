@@ -74,8 +74,9 @@ const Navbar = () => {
           </div>
 
           {/* Center Logo */}
-          <Link href="/" className="text-2xl font-bold tracking-tight text-burgundy absolute left-1/2 transform -translate-x-1/2 font-playfair">
-            KAVAN
+          <Link href="/" className="text-2xl text-burgundy absolute left-1/2 transform -translate-x-1/2"
+          style={{ fontFamily: 'Cinzel, serif' }}>
+            Kavan
           </Link>
 
           {/* Right Icons */}
@@ -106,8 +107,8 @@ const Navbar = () => {
           </button>
 
           {/* Center Logo */}
-          <Link href="/" className="text-xl font-bold tracking-tight text-burgundy font-playfair">
-            KAVAN
+          <Link href="/" className="text-xl font-bold text-burgundy" style={{ fontFamily: 'Cinzel, serif' }}>
+            Kavan
           </Link>
 
           {/* Cart Icon */}
