@@ -49,25 +49,25 @@ export default function AdminOrders() {
 
   if (loading) return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-      <div className="text-xl">Loading data...</div>
+      <div className="text-xl text-burgundy">Loading data...</div>
     </div>
   );
 
   return (
     <div className="min-h-screen bg-slate-50 py-8">
       <div className="max-w-7xl mx-auto px-4">
-        <h1 className="text-3xl font-bold text-slate-900 mb-8">Admin Dashboard</h1>
+        <h1 className="text-3xl font-bold text-slate-900 mb-8">Admin <span className="text-burgundy">Dashboard</span></h1>
         
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-burgundy">
             <h3 className="text-lg font-semibold text-slate-900 mb-2">Orders Overview</h3>
-            <p className="text-3xl font-bold text-blue-600">{orders.length}</p>
+            <p className="text-3xl font-bold text-burgundy">{orders.length}</p>
             <p className="text-slate-600">Total Orders</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-burgundy">
             <h3 className="text-lg font-semibold text-slate-900 mb-2">Newsletter Subscribers</h3>
-            <p className="text-3xl font-bold text-green-600">{subscribers.length}</p>
+            <p className="text-3xl font-bold text-burgundy">{subscribers.length}</p>
             <p className="text-slate-600">Active Subscribers</p>
           </div>
         </div>
@@ -80,7 +80,7 @@ export default function AdminOrders() {
                 onClick={() => setActiveTab('orders')}
                 className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${
                   activeTab === 'orders'
-                    ? 'border-blue-500 text-blue-600'
+                    ? 'border-burgundy text-burgundy'
                     : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
                 }`}
               >
@@ -90,7 +90,7 @@ export default function AdminOrders() {
                 onClick={() => setActiveTab('subscribers')}
                 className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${
                   activeTab === 'subscribers'
-                    ? 'border-blue-500 text-blue-600'
+                    ? 'border-burgundy text-burgundy'
                     : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
                 }`}
               >
@@ -103,7 +103,7 @@ export default function AdminOrders() {
             {/* Orders Tab */}
             {activeTab === 'orders' && (
               <div>
-                <h2 className="text-xl font-semibold mb-4">Orders Management</h2>
+                <h2 className="text-xl font-semibold mb-4 text-burgundy">Orders Management</h2>
                 {orders.length === 0 ? (
                   <div className="text-center py-8">
                     <p className="text-slate-500">No orders found.</p>
@@ -111,7 +111,7 @@ export default function AdminOrders() {
                 ) : (
                   <div className="grid gap-4">
                     {orders.map((order) => (
-                      <div key={order.id} className="border border-slate-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div key={order.id} className="border border-slate-200 rounded-lg p-4 hover:shadow-md transition-shadow hover:border-burgundy-200">
                         <div className="flex justify-between items-start mb-3">
                           <div>
                             <h3 className="font-semibold text-lg">Order #{order.orderId || order.id}</h3>
@@ -119,14 +119,14 @@ export default function AdminOrders() {
                             <p className="text-slate-600">Email: {order.customerEmail || 'N/A'}</p>
                           </div>
                           <div className="text-right">
-                            <p className="text-lg font-bold text-green-600">
+                            <p className="text-lg font-bold text-burgundy">
                               ₦{order.totalAmount?.toLocaleString() || '0'}
                             </p>
                             <span className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${
                               order.orderStatus === 'completed' 
                                 ? 'bg-green-100 text-green-800'
                                 : order.orderStatus === 'pending'
-                                ? 'bg-yellow-100 text-yellow-800'
+                                ? 'bg-burgundy-100 text-burgundy-800'
                                 : 'bg-slate-100 text-slate-800'
                             }`}>
                               {order.orderStatus || 'unknown'}
@@ -136,7 +136,7 @@ export default function AdminOrders() {
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                           <div>
-                            <p className="font-medium">Payment Information:</p>
+                            <p className="font-medium text-burgundy">Payment Information:</p>
                             <p>Method: {order.paymentMethod || 'N/A'}</p>
                             <p>Reference: {order.paymentReference || 'N/A'}</p>
                             {order.createdAt && (
@@ -144,7 +144,7 @@ export default function AdminOrders() {
                             )}
                           </div>
                           <div>
-                            <p className="font-medium">Shipping Information:</p>
+                            <p className="font-medium text-burgundy">Shipping Information:</p>
                             <p>Location: {order.shippingLocation || 'N/A'}</p>
                             <p>Fee: ₦{order.shippingFee?.toLocaleString() || '0'}</p>
                             <p className="truncate">Address: {order.shippingAddress || 'N/A'}</p>
@@ -154,7 +154,7 @@ export default function AdminOrders() {
                         {/* Order Items */}
                         {order.items && order.items.length > 0 && (
                           <div className="mt-3 pt-3 border-t border-slate-200">
-                            <p className="font-medium mb-2">Items:</p>
+                            <p className="font-medium mb-2 text-burgundy">Items:</p>
                             <div className="space-y-1">
                               {order.items.map((item, index) => (
                                 <div key={index} className="flex justify-between text-sm">
@@ -175,7 +175,7 @@ export default function AdminOrders() {
             {/* Subscribers Tab */}
             {activeTab === 'subscribers' && (
               <div>
-                <h2 className="text-xl font-semibold mb-4">Newsletter Subscribers</h2>
+                <h2 className="text-xl font-semibold mb-4 text-burgundy">Newsletter Subscribers</h2>
                 {subscribers.length === 0 ? (
                   <div className="text-center py-8">
                     <p className="text-slate-500">No subscribers yet.</p>
@@ -183,25 +183,25 @@ export default function AdminOrders() {
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-slate-200">
-                      <thead className="bg-slate-50">
+                      <thead className="bg-burgundy-50">
                         <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-left text-xs font-medium text-burgundy-900 uppercase tracking-wider">
                             Email
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-left text-xs font-medium text-burgundy-900 uppercase tracking-wider">
                             Subscribed At
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-left text-xs font-medium text-burgundy-900 uppercase tracking-wider">
                             Status
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-left text-xs font-medium text-burgundy-900 uppercase tracking-wider">
                             Source
                           </th>
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-slate-200">
                         {subscribers.map((subscriber) => (
-                          <tr key={subscriber.id} className="hover:bg-slate-50">
+                          <tr key={subscriber.id} className="hover:bg-burgundy-50">
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-sm font-medium text-slate-900">
                                 {subscriber.email}
@@ -216,7 +216,7 @@ export default function AdminOrders() {
                             <td className="px-6 py-4 whitespace-nowrap">
                               <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                                 subscriber.status === 'active' 
-                                  ? 'bg-green-100 text-green-800' 
+                                  ? 'bg-burgundy-100 text-burgundy-800' 
                                   : 'bg-slate-100 text-slate-800'
                               }`}>
                                 {subscriber.status || 'active'}
@@ -237,8 +237,8 @@ export default function AdminOrders() {
         </div>
 
         {/* Export Options */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">Export Data</h3>
+        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-burgundy">
+          <h3 className="text-lg font-semibold mb-4 text-burgundy">Export Data</h3>
           <div className="flex space-x-4">
             <button
               onClick={() => {
@@ -250,7 +250,7 @@ export default function AdminOrders() {
                 link.download = 'orders.json';
                 link.click();
               }}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+              className="bg-burgundy text-white px-4 py-2 rounded hover:bg-burgundy-700 transition-colors"
             >
               Export Orders as JSON
             </button>
@@ -267,7 +267,7 @@ export default function AdminOrders() {
                 link.download = 'subscribers.csv';
                 link.click();
               }}
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
+              className="bg-burgundy text-white px-4 py-2 rounded hover:bg-burgundy-700 transition-colors"
             >
               Export Subscribers as CSV
             </button>

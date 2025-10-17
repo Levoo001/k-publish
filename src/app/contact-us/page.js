@@ -22,7 +22,6 @@ const Page = () => {
       ...formData,
       [name]: value,
     });
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -98,7 +97,6 @@ const Page = () => {
       title: "WhatsApp / Call",
       value: "+234 703 621 0107",
       link: "https://wa.me/2347036210107",
-      color: "green",
       description: "Quick responses"
     },
     {
@@ -106,7 +104,6 @@ const Page = () => {
       title: "Email",
       value: "admin@kavanthebrand.com",
       link: "mailto:admin@kavanthebrand.com",
-      color: "blue",
       description: "Detailed enquiries"
     },
     {
@@ -114,88 +111,77 @@ const Page = () => {
       title: "Instagram",
       value: "@kavanthebrand_",
       link: "https://instagram.com/kavanthebrand_",
-      color: "pink",
       description: "Latest updates"
     }
   ];
 
-  const getColorClasses = (color) => {
-    const colors = {
-      green: "bg-green-50 border-green-200 text-green-900 hover:bg-green-100",
-      blue: "bg-blue-50 border-blue-200 text-blue-900 hover:bg-blue-100",
-      pink: "bg-pink-50 border-pink-200 text-pink-900 hover:bg-pink-100",
-      purple: "bg-purple-50 border-purple-200 text-purple-900 hover:bg-purple-100"
-    };
-    return colors[color] || colors.purple;
-  };
-
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 to-purple-50 py-8">
-      <div className="container-custom max-w-6xl mx-auto">
-        {/* Enhanced Header */}
+    <main className="min-h-screen bg-white py-8">
+      <div className="container-custom max-w-6xl mx-auto px-4">
+        {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-full shadow-lg mb-6">
-            <span className="text-3xl">💌</span>
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-burgundy-50 rounded-full shadow-lg mb-4 border border-burgundy-100">
+            <span className="text-3xl text-burgundy">💌</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4 font-playfair">
-            Get In Touch
+          <h1 className="text-4xl md:text-5xl font-bold text-burgundy-900 mb-4 font-playfair">
+            Get In <span className="text-burgundy">Touch</span>
           </h1>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-cormorant">
+          <p className="text-lg text-burgundy-600 max-w-2xl mx-auto leading-relaxed font-cormorant">
             We're here to help you embrace your strength and softness. Reach out with any questions about our collections, sizing, or custom orders.
           </p>
           <div className="flex flex-wrap justify-center gap-4 mt-6">
-            <div className="flex items-center text-sm text-slate-500 font-inter">
-              <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+            <div className="flex items-center text-sm text-burgundy-600 font-inter">
+              <span className="w-2 h-2 bg-burgundy rounded-full mr-2"></span>
               Response within 24 hours
             </div>
-            <div className="flex items-center text-sm text-slate-500 font-inter">
-              <span className="w-2 h-2 bg-purple-400 rounded-full mr-2"></span>
+            <div className="flex items-center text-sm text-burgundy-600 font-inter">
+              <span className="w-2 h-2 bg-burgundy rounded-full mr-2"></span>
               Personalized assistance
             </div>
-            <div className="flex items-center text-sm text-slate-500 font-inter">
-              <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
+            <div className="flex items-center text-sm text-burgundy-600 font-inter">
+              <span className="w-2 h-2 bg-burgundy rounded-full mr-2"></span>
               Worldwide shipping support
             </div>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Enhanced Contact Form */}
+        <div className="grid lg:grid-cols-3 gap-6">
+          {/* Contact Form */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-6 md:p-8 hover:shadow-xl transition-shadow duration-300">
+            <div className="bg-white rounded-xl shadow-sm border border-burgundy-100 p-6">
               <div className="flex items-center mb-6">
-                <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center mr-4">
-                  <span className="text-white text-xl">✍️</span>
+                <div className="w-12 h-12 bg-burgundy-100 rounded-xl flex items-center justify-center mr-4">
+                  <span className="text-xl text-burgundy">✍️</span>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-slate-900 font-playfair">
+                  <h2 className="text-2xl font-bold text-burgundy-900 font-playfair">
                     Send Us a Message
                   </h2>
-                  <p className="text-slate-600 font-cormorant">All fields marked * are required</p>
+                  <p className="text-burgundy-600 font-cormorant">All fields marked * are required</p>
                 </div>
               </div>
 
               {isSubmitted ? (
-                <div className="text-center py-12">
-                  <div className="w-24 h-24 bg-gradient-to-br from-green-100 to-emerald-200 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span className="text-3xl">📧</span>
+                <div className="text-center py-8">
+                  <div className="w-20 h-20 bg-burgundy-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-2xl text-burgundy">📧</span>
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-3 font-playfair">
+                  <h3 className="text-xl font-bold text-burgundy-900 mb-3 font-playfair">
                     Message Sent Successfully!
                   </h3>
-                  <p className="text-slate-600 mb-6 max-w-md mx-auto leading-relaxed font-cormorant">
+                  <p className="text-burgundy-600 mb-6 max-w-md mx-auto leading-relaxed font-cormorant">
                     Thank you for reaching out! We've received your message and will get back to you within 24 hours.
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
                     <button
                       onClick={() => setIsSubmitted(false)}
-                      className="px-8 py-3 bg-black text-white rounded-xl hover:bg-slate-800 transition-colors font-medium font-inter"
+                      className="px-6 py-3 bg-burgundy text-white rounded-lg hover:bg-burgundy-700 transition-colors font-medium font-inter"
                     >
                       Send Another Message
                     </button>
                     <a
                       href="/"
-                      className="px-8 py-3 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-colors font-medium font-inter"
+                      className="px-6 py-3 bg-burgundy-50 text-burgundy-700 rounded-lg hover:bg-burgundy-100 transition-colors font-medium font-inter"
                     >
                       Continue Shopping
                     </a>
@@ -204,17 +190,16 @@ const Page = () => {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {errors.submit && (
-                    <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 font-inter">
+                    <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 font-inter text-sm">
                       {errors.submit}
                     </div>
                   )}
 
-
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label
                         htmlFor="name"
-                        className="block text-sm font-semibold text-slate-700 mb-2 font-inter"
+                        className="block text-sm font-semibold text-burgundy-900 mb-2 font-inter"
                       >
                         Full Name *
                       </label>
@@ -225,10 +210,10 @@ const Page = () => {
                         value={formData.name}
                         onChange={handleInputChange}
                         required
-                        className={`w-full p-4 border rounded-xl focus:outline-none focus:ring-2 transition-all font-inter ${
+                        className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-1 transition-all font-inter ${
                           errors.name 
                             ? "border-red-300 focus:ring-red-200" 
-                            : "border-slate-300 focus:border-black focus:ring-slate-200"
+                            : "border-burgundy-200 focus:border-burgundy focus:ring-burgundy-100"
                         }`}
                         placeholder="Enter your full name"
                       />
@@ -240,7 +225,7 @@ const Page = () => {
                     <div>
                       <label
                         htmlFor="email"
-                        className="block text-sm font-semibold text-slate-700 mb-2 font-inter"
+                        className="block text-sm font-semibold text-burgundy-900 mb-2 font-inter"
                       >
                         Email Address *
                       </label>
@@ -251,10 +236,10 @@ const Page = () => {
                         value={formData.email}
                         onChange={handleInputChange}
                         required
-                        className={`w-full p-4 border rounded-xl focus:outline-none focus:ring-2 transition-all font-inter ${
+                        className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-1 transition-all font-inter ${
                           errors.email 
                             ? "border-red-300 focus:ring-red-200" 
-                            : "border-slate-300 focus:border-black focus:ring-slate-200"
+                            : "border-burgundy-200 focus:border-burgundy focus:ring-burgundy-100"
                         }`}
                         placeholder="your@email.com"
                       />
@@ -264,11 +249,11 @@ const Page = () => {
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label
                         htmlFor="phone"
-                        className="block text-sm font-semibold text-slate-700 mb-2 font-inter"
+                        className="block text-sm font-semibold text-burgundy-900 mb-2 font-inter"
                       >
                         Phone Number
                       </label>
@@ -278,7 +263,7 @@ const Page = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className="w-full p-4 border border-slate-300 rounded-xl focus:outline-none focus:border-black focus:ring-2 focus:ring-slate-200 transition-all font-inter"
+                        className="w-full p-3 border border-burgundy-200 rounded-lg focus:outline-none focus:border-burgundy focus:ring-1 focus:ring-burgundy-100 transition-all font-inter"
                         placeholder="+234 000 000 0000"
                       />
                     </div>
@@ -286,7 +271,7 @@ const Page = () => {
                     <div>
                       <label
                         htmlFor="subject"
-                        className="block text-sm font-semibold text-slate-700 mb-2 font-inter"
+                        className="block text-sm font-semibold text-burgundy-900 mb-2 font-inter"
                       >
                         Subject
                       </label>
@@ -295,7 +280,7 @@ const Page = () => {
                         name="subject"
                         value={formData.subject}
                         onChange={handleInputChange}
-                        className="w-full p-4 border border-slate-300 rounded-xl focus:outline-none focus:border-black focus:ring-2 focus:ring-slate-200 transition-all bg-white font-inter"
+                        className="w-full p-3 border border-burgundy-200 rounded-lg focus:outline-none focus:border-burgundy focus:ring-1 focus:ring-burgundy-100 transition-all bg-white font-inter"
                       >
                         <option value="">Select a subject</option>
                         <option value="general">General Inquiry</option>
@@ -311,7 +296,7 @@ const Page = () => {
                   <div>
                     <label
                       htmlFor="message"
-                      className="block text-sm font-semibold text-slate-700 mb-2 font-inter"
+                      className="block text-sm font-semibold text-burgundy-900 mb-2 font-inter"
                     >
                       Your Message *
                     </label>
@@ -321,11 +306,11 @@ const Page = () => {
                       value={formData.message}
                       onChange={handleInputChange}
                       required
-                      rows={6}
-                      className={`w-full p-4 border rounded-xl focus:outline-none focus:ring-2 transition-all resize-vertical font-inter ${
+                      rows={5}
+                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-1 transition-all resize-vertical font-inter ${
                         errors.message 
                           ? "border-red-300 focus:ring-red-200" 
-                          : "border-slate-300 focus:border-black focus:ring-slate-200"
+                          : "border-burgundy-200 focus:border-burgundy focus:ring-burgundy-100"
                       }`}
                       placeholder="Tell us about your inquiry, custom order request, or how we can help you embrace your Kavan style..."
                     />
@@ -333,11 +318,11 @@ const Page = () => {
                       <p className="mt-2 text-sm text-red-600 font-inter">{errors.message}</p>
                     )}
                     <div className="flex justify-between items-center mt-2">
-                      <span className="text-sm text-slate-500 font-inter">
+                      <span className="text-sm text-burgundy-500 font-inter">
                         Minimum 10 characters
                       </span>
                       <span className={`text-sm font-inter ${
-                        formData.message.length < 10 ? 'text-red-500' : 'text-green-500'
+                        formData.message.length < 10 ? 'text-red-500' : 'text-burgundy'
                       }`}>
                         {formData.message.length}/10
                       </span>
@@ -347,16 +332,16 @@ const Page = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-300 font-inter ${
+                    className={`w-full py-3 px-6 rounded-lg font-semibold text-base transition-all duration-300 font-inter ${
                       isSubmitting
-                        ? "bg-slate-400 cursor-not-allowed transform scale-95"
-                        : "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg transform hover:scale-[1.02]"
+                        ? "bg-burgundy-300 cursor-not-allowed"
+                        : "bg-burgundy text-white hover:bg-burgundy-700"
                     }`}
                   >
                     {isSubmitting ? (
                       <span className="flex items-center justify-center">
                         <svg
-                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                          className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
@@ -389,40 +374,33 @@ const Page = () => {
             </div>
           </div>
 
-          {/* Enhanced Sidebar */}
+          {/* Sidebar */}
           <div className="space-y-6">
             {/* Contact Methods */}
-            <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-6">
-              <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center font-playfair">
-                <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+            <div className="bg-white rounded-xl shadow-sm border border-burgundy-100 p-6">
+              <h3 className="text-lg font-bold text-burgundy-900 mb-4 flex items-center font-playfair">
+                <span className="w-2 h-2 bg-burgundy rounded-full mr-2"></span>
                 Connect With Us
               </h3>
 
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {contactMethods.map((method, index) => (
                   <div
                     key={index}
-                    className={`p-4 rounded-xl border-2 transition-all duration-300 cursor-pointer group ${
-                      method.link ? 'hover:scale-[1.02]' : ''
-                    } ${getColorClasses(method.color)}`}
+                    className="p-3 bg-burgundy-50 rounded-lg border border-burgundy-100 hover:bg-burgundy-100 transition-all duration-300 cursor-pointer"
                     onClick={() => method.link && window.open(method.link, '_blank')}
                   >
                     <div className="flex items-start">
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center mr-4 flex-shrink-0 group-hover:scale-110 transition-transform ${
-                        method.color === 'green' ? 'bg-green-100' :
-                        method.color === 'blue' ? 'bg-blue-100' :
-                        method.color === 'pink' ? 'bg-pink-100' :
-                        'bg-purple-100'
-                      }`}>
-                        <span className="text-xl">{method.icon}</span>
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center mr-3 flex-shrink-0 bg-burgundy-100">
+                        <span className="text-lg text-burgundy">{method.icon}</span>
                       </div>
                       <div className="flex-1">
-                        <h4 className="font-semibold mb-1 font-playfair">{method.title}</h4>
-                        <p className="text-sm opacity-90 mb-1 font-cormorant">{method.value}</p>
-                        <p className="text-xs opacity-70 font-inter">{method.description}</p>
+                        <h4 className="font-semibold mb-1 font-playfair text-burgundy-900 text-sm">{method.title}</h4>
+                        <p className="text-burgundy-700 text-sm mb-1 font-cormorant">{method.value}</p>
+                        <p className="text-burgundy-600 text-xs font-inter">{method.description}</p>
                       </div>
                       {method.link && (
-                        <span className="text-lg transform group-hover:translate-x-1 transition-transform">
+                        <span className="text-burgundy text-sm transform group-hover:translate-x-0.5 transition-transform">
                           ↗
                         </span>
                       )}
@@ -432,34 +410,34 @@ const Page = () => {
               </div>
             </div>
 
-            {/* Enhanced Business Hours */}
-            <div className="bg-gradient-to-br from-slate-900 to-black text-white rounded-2xl shadow-lg p-6">
-              <h3 className="text-xl font-bold mb-4 flex items-center font-playfair">
+            {/* Business Hours */}
+            <div className="bg-burgundy rounded-xl p-6">
+              <h3 className="text-lg font-bold mb-4 flex items-center font-playfair text-white">
                 <span className="w-2 h-2 bg-white rounded-full mr-2"></span>
                 Business Hours
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {[
                   { days: "Monday - Friday", hours: "9:00 AM – 6:00 PM", status: "open" },
                   { days: "Saturday", hours: "10:00 AM – 4:00 PM", status: "open" },
                   { days: "Sunday", hours: "Closed", status: "closed" },
                 ].map((schedule, index) => (
-                  <div key={index} className="flex justify-between items-center py-2 border-b border-slate-700 last:border-b-0">
-                    <span className={`text-sm ${schedule.status === 'closed' ? 'text-slate-400' : 'text-slate-200'} font-cormorant`}>
+                  <div key={index} className="flex justify-between items-center py-1">
+                    <span className={`text-sm ${schedule.status === 'closed' ? 'text-burgundy-300' : 'text-burgundy-100'} font-cormorant`}>
                       {schedule.days}
                     </span>
-                    <span className={`font-semibold text-sm ${
-                      schedule.status === 'closed' ? 'text-slate-500' : 'text-white'
+                    <span className={`font-medium text-sm ${
+                      schedule.status === 'closed' ? 'text-burgundy-400' : 'text-white'
                     } font-cormorant`}>
                       {schedule.hours}
                     </span>
                   </div>
                 ))}
               </div>
-              <div className="mt-4 pt-4 border-t border-slate-700">
+              <div className="mt-4 pt-3 border-t border-burgundy-600">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-400 font-cormorant">Current Status</span>
-                  <span className="flex items-center text-green-400 font-inter">
+                  <span className="text-burgundy-300 font-cormorant">Current Status</span>
+                  <span className="flex items-center text-burgundy-200 font-inter">
                     <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
                     Online • WAT
                   </span>
