@@ -15,7 +15,7 @@ import NewsletterPopup from "./NewsletterPopup";
 import Link from "next/link";
 import { subscribeToNewsletter } from '../services/newsletterService';
 import { HiOutlineArrowLongRight } from "react-icons/hi2";
-import { BsWhatsapp } from "react-icons/bs";
+import { IoIosChatbubbles } from "react-icons/io";
 
 // Brand Story Carousel Component
 const BrandStoryCarousel = ({ product }) => {
@@ -246,8 +246,8 @@ export default function Home({ products }) {
       className="w-full h-full object-cover"
       preload="auto"
       poster="/fallback.jpg"
-    >
-      <source src="/vid.mp4" type="video/mp4" />
+    > 
+      <source src="https://ck7vajewsn9hvwtw.public.blob.vercel-storage.com/vid.mp4" type="video/mp4" />
     </video>
 
     {/* Fallback Image - Only show if video fails */}
@@ -555,8 +555,8 @@ export default function Home({ products }) {
       />
 
 {/* Floating WhatsApp icon */}
-      <Link href="https://wa.me/2347036210107" target="_blank" className="fixed bottom-14 right-2 p-2 bg-green-600 rounded-full hover:bg-green-700 transition-colors">
-                    <BsWhatsapp size={25} color="white" />
+      <Link href="https://wa.me/2347036210107" target="_blank" className="fixed bottom-14 right-2 p-2 rounded-full bg-burgundy/90">
+                    <IoIosChatbubbles size={25} color="white" />
                   </Link>
 
       {/* Newsletter Popup */}

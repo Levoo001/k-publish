@@ -21,7 +21,7 @@ export default {
           800: "#4a0013",
           900: "#3d0010",
         },
-        burgundy: "#800020", // Direct burgundy reference
+        burgundy: "#3A0303", // Direct burgundy reference
         gold: "#D1BC2E",
         gray: "#808080",
         background: "var(--background)",
