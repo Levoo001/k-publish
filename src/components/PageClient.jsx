@@ -247,8 +247,7 @@ export default function Home({ products }) {
       preload="auto"
       poster="/fallback.jpg"
     >
-      <source src="https://ck7vajewsn9hvwtw.public.blob.vercel-storage.com/hero-video.mp4" type="video/mp4" />
-      Your browser does not support the video tag.
+      <source src="/vid.mp4" type="video/mp4" />
     </video>
 
     {/* Fallback Image - Only show if video fails */}
