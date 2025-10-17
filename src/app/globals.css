@@ -6,6 +6,9 @@
   --font-inter: 'Inter', sans-serif;
   --font-playfair: 'Playfair Display', serif;
   --font-cormorant: 'Cormorant Garamond', serif;
+  --burgundy: #800020;
+  --burgundy-light: #fdf2f2;
+  --burgundy-dark: #5c0017;
 }
 
 body {
@@ -19,17 +22,18 @@ body {
 }
 
 video {
-  /* Ensure video covers the entire container */
   object-fit: cover;
-  /* Prevent video from causing layout shifts */
   position: absolute;
   top: 0;
   left: 0;
-  /* Ensure video is behind other content */
   z-index: -1;
 }
 
-/* Add to your global CSS */
+/* Burgundy-themed scrollbar (optional) */
+::-webkit-scrollbar {
+  display: none;
+}
+
 .embla {
   overflow: hidden;
   width: 100%;
@@ -56,24 +60,16 @@ video {
   .text-balance {
     text-wrap: balance;
   }
-}
-
-/* Custom scrollbar */
-@layer utilities {
-  ::-webkit-scrollbar {
-    width: 6px;
+  
+  .bg-burgundy {
+    background-color: #800020;
   }
   
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+  .text-burgundy {
+    color: #800020;
   }
   
-  ::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 3px;
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
+  .border-burgundy {
+    border-color: #800020;
   }
 }

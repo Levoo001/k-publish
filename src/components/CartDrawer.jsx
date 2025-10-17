@@ -149,7 +149,7 @@ const CartDrawer = () => {
       script.onload = () => {
         // Initialize PayStack payment
         const paystack = window.PaystackPop.setup({
-          key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY, // Make sure this is in your .env.local
+          key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
           email: emailAddress,
           amount: totalAmount * 100, // Convert to kobo
           currency: 'NGN',
@@ -214,10 +214,10 @@ const CartDrawer = () => {
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b">
-            <h2 className="text-xl font-semibold">Your Cart ({cartItems.length})</h2>
+            <h2 className="text-xl font-semibold text-burgundy font-playfair">Your Cart ({cartItems.length})</h2>
             <button
               onClick={closeCart}
-              className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-burgundy-50 rounded-lg transition-colors text-burgundy"
             >
               <IoMdClose size={20} />
             </button>
@@ -227,14 +227,14 @@ const CartDrawer = () => {
           <div className="flex-1 overflow-y-auto">
             {cartItems.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-                <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4">
-                  <HiOutlineShoppingCart size={32} className="text-slate-400" />
+                <div className="w-20 h-20 bg-burgundy-50 rounded-full flex items-center justify-center mb-4">
+                  <HiOutlineShoppingCart size={32} className="text-burgundy" />
                 </div>
-                <h3 className="text-lg font-medium mb-2">Your cart is empty</h3>
-                <p className="text-slate-600 mb-6">Add some items to get started</p>
+                <h3 className="text-lg font-medium mb-2 font-playfair">Your cart is empty</h3>
+                <p className="text-slate-600 mb-6 font-cormorant">Add some items to get started</p>
                 <button
                   onClick={closeCart}
-                  className="bg-black text-white px-6 py-3 rounded-lg hover:bg-slate-800 transition-colors"
+                  className="bg-burgundy text-white px-6 py-3 rounded-lg hover:bg-burgundy-700 transition-colors font-inter"
                 >
                   Continue Shopping
                 </button>
@@ -245,7 +245,7 @@ const CartDrawer = () => {
                 {cartItems.map((item, index) => (
                   <div
                     key={item.id || item._id || `cart-item-${index}`}
-                    className="flex gap-3 p-3 bg-slate-50 rounded-lg"
+                    className="flex gap-3 p-3 bg-burgundy-50 rounded-lg border border-burgundy-100"
                   >
                     <div className="w-16 h-16 relative flex-shrink-0">
                       <Image
@@ -258,28 +258,28 @@ const CartDrawer = () => {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-sm line-clamp-2 mb-1">
+                      <h3 className="font-medium text-sm line-clamp-2 mb-1 font-inter">
                         {item.name}
                       </h3>
-                      <p className="font-semibold text-sm mb-2">
+                      <p className="font-semibold text-sm mb-2 text-burgundy font-inter">
                         {formatPrice(item.price)}
                       </p>
 
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center border rounded">
+                        <div className="flex items-center border border-burgundy-200 rounded">
                           <button
                             onClick={() => handleDecrement(item.id)}
-                            className="w-8 h-8 flex items-center justify-center hover:bg-slate-100 disabled:opacity-30"
+                            className="w-8 h-8 flex items-center justify-center hover:bg-burgundy-50 disabled:opacity-30 text-burgundy"
                             disabled={item.quantity <= 1}
                           >
                             <span className="text-lg">−</span>
                           </button>
-                          <span className="w-8 h-8 flex items-center justify-center text-sm border-x">
+                          <span className="w-8 h-8 flex items-center justify-center text-sm border-x border-burgundy-200 text-burgundy">
                             {item.quantity}
                           </span>
                           <button
                             onClick={() => handleIncrement(item.id)}
-                            className="w-8 h-8 flex items-center justify-center hover:bg-slate-100"
+                            className="w-8 h-8 flex items-center justify-center hover:bg-burgundy-50 text-burgundy"
                           >
                             <span className="text-lg">+</span>
                           </button>
@@ -287,7 +287,7 @@ const CartDrawer = () => {
 
                         <button
                           onClick={() => handleRemove(item.id)}
-                          className="text-slate-400 hover:text-red-500 p-1"
+                          className="text-burgundy-400 hover:text-red-500 p-1 transition-colors"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -303,22 +303,22 @@ const CartDrawer = () => {
 
           {/* Checkout Section - Fixed at bottom */}
           {cartItems.length > 0 && (
-            <div className="border-t bg-white">
+            <div className="border-t border-burgundy-100 bg-white">
               <div className="p-4 space-y-4 max-h-96 overflow-y-auto">
                 {/* Shipping Selection */}
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium mb-2 text-burgundy-900 font-inter">
                     Delivery Location *
                   </label>
                   <select
                     value={selectedLocation}
                     onChange={(e) => setSelectedLocation(e.target.value)}
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                    className="w-full p-3 border border-burgundy-200 rounded-lg focus:ring-2 focus:ring-burgundy focus:border-transparent font-inter"
                     required
                   >
                     <option value="">Select your location</option>
                     
-                    <optgroup label="GIG Logistics - Nigeria">
+                    <optgroup label="GIG Logistics - Nigeria" className="font-inter">
                       {GIG_LOCATIONS.map(location => (
                         <option key={location.id} value={location.id}>
                           {location.name} - {formatPrice(location.fee)}
@@ -326,7 +326,7 @@ const CartDrawer = () => {
                       ))}
                     </optgroup>
                     
-                    <optgroup label="DHL - Nigeria">
+                    <optgroup label="DHL - Nigeria" className="font-inter">
                       {DHL_DOMESTIC_LOCATIONS.map(location => (
                         <option key={location.id} value={location.id}>
                           {location.name} - {formatPrice(location.fee)}
@@ -334,7 +334,7 @@ const CartDrawer = () => {
                       ))}
                     </optgroup>
                     
-                    <optgroup label="International - DHL">
+                    <optgroup label="International - DHL" className="font-inter">
                       {INTERNATIONAL_LOCATIONS.map(location => (
                         <option key={location.id} value={location.id}>
                           {location.name} - {formatPrice(location.fee)}
@@ -348,7 +348,7 @@ const CartDrawer = () => {
                 {selectedLocation && (
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-sm font-medium mb-1">
+                      <label className="block text-sm font-medium mb-1 text-burgundy-900 font-inter">
                         Phone Number *
                       </label>
                       <input
@@ -356,13 +356,13 @@ const CartDrawer = () => {
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                         placeholder="+234 800 123 4567"
-                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-black"
+                        className="w-full p-3 border border-burgundy-200 rounded-lg focus:ring-2 focus:ring-burgundy font-inter"
                         required
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium mb-1">
+                      <label className="block text-sm font-medium mb-1 text-burgundy-900 font-inter">
                         Delivery Address *
                       </label>
                       <textarea
@@ -370,13 +370,13 @@ const CartDrawer = () => {
                         onChange={(e) => setAddress(e.target.value)}
                         placeholder="Full address with city and state"
                         rows={3}
-                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-black resize-none"
+                        className="w-full p-3 border border-burgundy-200 rounded-lg focus:ring-2 focus:ring-burgundy resize-none font-inter"
                         required
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium mb-1">
+                      <label className="block text-sm font-medium mb-1 text-burgundy-900 font-inter">
                         Delivery Instructions (Optional)
                       </label>
                       <textarea
@@ -384,35 +384,35 @@ const CartDrawer = () => {
                         onChange={(e) => setAdditionalNotes(e.target.value)}
                         placeholder="e.g., Leave with security, call before delivery..."
                         rows={2}
-                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-black resize-none"
+                        className="w-full p-3 border border-burgundy-200 rounded-lg focus:ring-2 focus:ring-burgundy resize-none font-inter"
                       />
                     </div>
                   </div>
                 )}
 
                 {/* Order Summary */}
-                <div className="space-y-2 pt-2 border-t">
-                  <div className="flex justify-between text-sm">
-                    <span>Subtotal</span>
-                    <span>{formatPrice(subtotal)}</span>
+                <div className="space-y-2 pt-2 border-t border-burgundy-100">
+                  <div className="flex justify-between text-sm font-inter">
+                    <span className="text-burgundy-900">Subtotal</span>
+                    <span className="text-burgundy font-semibold">{formatPrice(subtotal)}</span>
                   </div>
                   
-                  <div className="flex justify-between text-sm">
-                    <span>Shipping</span>
-                    <span>{shippingFee > 0 ? formatPrice(shippingFee) : '—'}</span>
+                  <div className="flex justify-between text-sm font-inter">
+                    <span className="text-burgundy-900">Shipping</span>
+                    <span className="text-burgundy font-semibold">{shippingFee > 0 ? formatPrice(shippingFee) : '—'}</span>
                   </div>
 
-                  <div className="flex justify-between font-semibold text-lg pt-2 border-t">
-                    <span>Total</span>
-                    <span>{formatPrice(totalAmount)}</span>
+                  <div className="flex justify-between font-semibold text-lg pt-2 border-t border-burgundy-100">
+                    <span className="text-burgundy-900 font-playfair">Total</span>
+                    <span className="text-burgundy font-playfair">{formatPrice(totalAmount)}</span>
                   </div>
                 </div>
 
                 {/* Quick Info */}
                 {selectedLocation && (
-                  <div className="bg-blue-50 p-3 rounded-lg text-sm">
-                    <p className="font-medium text-blue-900 mb-1">📦 Delivery Info</p>
-                    <p className="text-blue-700 text-xs">
+                  <div className="bg-burgundy-50 p-3 rounded-lg border border-burgundy-200">
+                    <p className="font-medium text-burgundy-900 mb-1 font-inter">📦 Delivery Info</p>
+                    <p className="text-burgundy-800 text-xs font-cormorant">
                       Made-to-order: 6-10 days production + {SHIPPING_LOCATIONS.find(loc => loc.id === selectedLocation)?.type === 'international' ? '5-7 days' : '2-5 days'} shipping
                     </p>
                   </div>
@@ -421,7 +421,7 @@ const CartDrawer = () => {
                 {/* Action Buttons */}
                 <div className="space-y-3 pt-2">
                   {!isLoaded ? (
-                    <div className="w-full bg-slate-400 text-white py-3 px-6 rounded-lg text-center">
+                    <div className="w-full bg-burgundy-300 text-white py-3 px-6 rounded-lg text-center font-inter">
                       Loading...
                     </div>
                   ) : isSignedIn ? (
@@ -430,7 +430,7 @@ const CartDrawer = () => {
                         <button
                           onClick={handlePayStackPayment}
                           disabled={isProcessing}
-                          className="w-full bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors disabled:bg-slate-400 disabled:cursor-not-allowed"
+                          className="w-full bg-burgundy text-white py-3 px-6 rounded-lg hover:bg-burgundy-700 transition-colors disabled:bg-burgundy-300 disabled:cursor-not-allowed font-inter"
                         >
                           {isProcessing ? (
                             <div className="flex items-center justify-center">
@@ -444,7 +444,7 @@ const CartDrawer = () => {
                       ) : (
                         <button
                           disabled
-                          className="w-full bg-slate-300 text-slate-500 py-3 px-6 rounded-lg cursor-not-allowed"
+                          className="w-full bg-burgundy-200 text-burgundy-600 py-3 px-6 rounded-lg cursor-not-allowed font-inter"
                         >
                           {!selectedLocation ? 'Select Delivery Location' : 'Complete Delivery Information'}
                         </button>
@@ -452,7 +452,7 @@ const CartDrawer = () => {
                     </>
                   ) : (
                     <SignInButton mode="modal">
-                      <button className="w-full bg-black text-white py-3 px-6 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer">
+                      <button className="w-full bg-burgundy text-white py-3 px-6 rounded-lg hover:bg-burgundy-700 transition-colors cursor-pointer font-inter">
                         Sign In to Checkout
                       </button>
                     </SignInButton>
@@ -461,7 +461,7 @@ const CartDrawer = () => {
                   <Link
                     href="/shop"
                     onClick={closeCart}
-                    className="w-full block border border-slate-300 text-slate-700 py-3 px-6 rounded-lg text-center font-medium hover:bg-slate-50 transition-colors"
+                    className="w-full block border border-burgundy-200 text-burgundy-700 py-3 px-6 rounded-lg text-center font-medium hover:bg-burgundy-50 transition-colors font-inter"
                   >
                     Continue Shopping
                   </Link>

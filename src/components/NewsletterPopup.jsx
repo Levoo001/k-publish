@@ -1,5 +1,5 @@
 // src/components/NewsletterPopup.jsx
-// src/components/NewsletterPopup.jsx
+
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -160,18 +160,17 @@ const NewsletterPopup = () => {
                 damping: 25,
                 stiffness: 300,
               }}
-              className="max-w-md w-full bg-white rounded-2xl shadow-2xl overflow-hidden"
+              className="max-w-md w-full bg-white rounded-2xl shadow-luxury overflow-hidden"
             >
-              {/* Your existing popup content remains the same */}
               <div className="relative">
                 {/* Close Button */}
                 <button
                   onClick={handleClose}
-                  className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center border bg-slate-100 hover:bg-slate-200 rounded-full transition-colors duration-200"
+                  className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center border bg-burgundy-50 hover:bg-burgundy-100 rounded-full transition-colors duration-200 border-burgundy-200"
                   aria-label="Close newsletter popup"
                 >
                   <svg
-                    className="w-4 h-4"
+                    className="w-4 h-4 text-burgundy-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -186,15 +185,15 @@ const NewsletterPopup = () => {
                 </button>
 
                 {/* Background Pattern */}
-                <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-white opacity-50" />
+                <div className="absolute inset-0 bg-gradient-to-br from-burgundy-50 to-white opacity-50" />
 
                 <div className="relative p-6">
                   {/* Success State */}
                   {(subscriptionStatus === "success" || subscriptionStatus === "already_subscribed") && (
                     <div className="text-center mb-4">
-                      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <div className="w-16 h-16 bg-burgundy-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <svg
-                          className="w-8 h-8 text-green-600"
+                          className="w-8 h-8 text-burgundy"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >
@@ -205,12 +204,12 @@ const NewsletterPopup = () => {
                           />
                         </svg>
                       </div>
-                      <h3 className="text-xl font-light text-slate-900 mb-2">
+                      <h3 className="text-xl font-light text-burgundy-900 mb-2 font-playfair">
                         {subscriptionStatus === "success" 
                           ? "Welcome to Our Community!" 
                           : "Already Subscribed!"}
                       </h3>
-                      <p className="text-slate-600 text-sm">
+                      <p className="text-burgundy-600 text-sm font-cormorant">
                         {subscriptionStatus === "success"
                           ? "Thank you for subscribing to our newsletter!"
                           : "You're already part of our style community!"}
@@ -223,7 +222,7 @@ const NewsletterPopup = () => {
                     <>
                       {/* Icon */}
                       <div className="flex justify-center mb-4">
-                        <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center">
+                        <div className="w-16 h-16 bg-burgundy rounded-full flex items-center justify-center">
                           <svg
                             className="w-8 h-8 text-white"
                             fill="none"
@@ -242,17 +241,17 @@ const NewsletterPopup = () => {
 
                       {/* Text Content */}
                       <div className="text-center mb-6">
-                        <h3 className="text-xl font-light text-slate-900 mb-2">
+                        <h3 className="text-xl font-light text-burgundy-900 mb-2 font-playfair">
                           Join Our Style Community
                         </h3>
-                        <p className="text-slate-600 text-sm leading-relaxed">
+                        <p className="text-burgundy-600 text-sm leading-relaxed font-cormorant">
                           Get exclusive access to new collections, styling tips, and
                           special offers delivered straight to your inbox.
                         </p>
                         
                         {/* Show sign-in encouragement for signed-out users */}
                         {!isSignedIn && (
-                          <p className="text-blue-600 text-xs mt-2">
+                          <p className="text-burgundy-500 text-xs mt-2 font-inter">
                             Sign up for an account to get personalized recommendations!
                           </p>
                         )}
@@ -265,7 +264,7 @@ const NewsletterPopup = () => {
                    subscriptionStatus !== "success" && 
                    subscriptionStatus !== "already_subscribed" && (
                     <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                      <p className="text-red-700 text-sm text-center">
+                      <p className="text-red-700 text-sm text-center font-inter">
                         {subscriptionStatus}
                       </p>
                     </div>
@@ -280,7 +279,7 @@ const NewsletterPopup = () => {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="Enter your email address"
-                          className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-slate-900 placeholder-slate-500 text-sm transition-all duration-200"
+                          className="w-full px-4 py-3 bg-burgundy-50 border border-burgundy-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-burgundy focus:border-transparent text-burgundy-900 placeholder-burgundy-500 text-sm transition-all duration-200 font-inter"
                           required
                           disabled={isSubmitting}
                         />
@@ -289,7 +288,7 @@ const NewsletterPopup = () => {
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full bg-black text-white py-3 px-6 rounded-xl font-semibold text-sm hover:bg-slate-800 disabled:bg-slate-400 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+                        className="w-full bg-burgundy text-white py-3 px-6 rounded-xl font-semibold text-sm hover:bg-burgundy-700 disabled:bg-burgundy-300 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] font-inter"
                       >
                         {isSubmitting ? (
                           <div className="flex items-center justify-center">
@@ -304,7 +303,7 @@ const NewsletterPopup = () => {
                   )}
 
                   {/* Footer Text */}
-                  <p className="text-center text-slate-500 text-xs mt-4">
+                  <p className="text-center text-burgundy-500 text-xs mt-4 font-cormorant">
                     No spam, unsubscribe at any time
                   </p>
                 </div>
