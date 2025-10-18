@@ -4,110 +4,95 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { subscribeToNewsletter } from "@/services/newsletterService";
-import { useAuth, useUser } from "@clerk/nextjs";
 import { usePopup } from "./PopupContext";
+import { IoIosLogIn } from "react-icons/io";
 
 const NewsletterPopup = () => {
-  const [email, setEmail] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: ""
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [subscriptionStatus, setSubscriptionStatus] = useState("");
+  const [authStatus, setAuthStatus] = useState("");
   
-  const { isSignedIn, isLoaded } = useAuth();
-  const { user } = useUser();
   const { popupInitialized, isPopupOpen, openPopup, closePopup } = usePopup();
 
   const hasSetupPopup = useRef(false);
 
   useEffect(() => {
-    // Only run this once when auth is loaded and popup is initialized
-    if (!popupInitialized || !isLoaded || hasSetupPopup.current) return;
+    // Only run this once when popup is initialized
+    if (!popupInitialized || hasSetupPopup.current) return;
     hasSetupPopup.current = true;
 
-    // Check if user is signed in
-    if (isSignedIn) {
-      // User is signed in - close popup and mark as subscribed
-      localStorage.setItem("newsletterSubscribed", "true");
-      return;
-    }
+    // Check if user has already dismissed
+    const hasDismissed = localStorage.getItem("signupDismissed");
 
-    // User is signed out - check if we should show popup
-    const hasSubscribed = localStorage.getItem("newsletterSubscribed");
-    const hasDismissed = localStorage.getItem("newsletterDismissed");
-
-    if (!hasSubscribed && !hasDismissed) {
-      // Show popup after 10 seconds for signed-out users
+    if (!hasDismissed) {
+      // Show popup after 10 seconds
       const timer = setTimeout(() => {
         openPopup();
       }, 10000);
 
       return () => clearTimeout(timer);
     }
-  }, [isSignedIn, isLoaded, popupInitialized, openPopup]);
+  }, [popupInitialized, openPopup]);
 
-  // Listen for sign-out events
-  useEffect(() => {
-    if (isLoaded && !isSignedIn && popupInitialized) {
-      const hasDismissed = localStorage.getItem("newsletterDismissed");
-      
-      if (!hasDismissed) {
-        const timer = setTimeout(() => {
-          openPopup();
-        }, 5000);
-        
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [isSignedIn, isLoaded, popupInitialized, openPopup]);
-
-  // Pre-fill email if user is signed in but hasn't subscribed
-  useEffect(() => {
-    if (isSignedIn && user && !localStorage.getItem("newsletterSubscribed")) {
-      setEmail(user.primaryEmailAddress?.emailAddress || "");
-    }
-  }, [isSignedIn, user]);
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email) return;
+    
+    // Basic validation
+    if (!formData.name || !formData.email || !formData.password) {
+      setAuthStatus('Please fill in all fields');
+      setTimeout(() => setAuthStatus(''), 5000);
+      return;
+    }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setSubscriptionStatus('Please enter a valid email address');
-      setTimeout(() => setSubscriptionStatus(''), 5000);
+    if (!emailRegex.test(formData.email)) {
+      setAuthStatus('Please enter a valid email address');
+      setTimeout(() => setAuthStatus(''), 5000);
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setAuthStatus('Password must be at least 6 characters');
+      setTimeout(() => setAuthStatus(''), 5000);
       return;
     }
 
     setIsSubmitting(true);
-    setSubscriptionStatus("");
+    setAuthStatus("");
 
     try {
-      const result = await subscribeToNewsletter(email);
+      // TODO: Replace with NextAuth signup logic
+      console.log('Signup data:', formData);
       
-      if (result.success) {
-        localStorage.setItem("newsletterSubscribed", "true");
-        setSubscriptionStatus("success");
-        
-        setTimeout(() => {
-          closePopup();
-          setEmail("");
-        }, 2000);
-      }
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // TODO: Replace with actual NextAuth success handling
+      setAuthStatus("success");
+      
+      // Store signup success
+      localStorage.setItem("userSignedUp", "true");
+      
+      setTimeout(() => {
+        closePopup();
+        setFormData({ name: "", email: "", password: "" });
+      }, 2000);
+      
     } catch (error) {
-      console.error("Subscription failed:", error);
-      
-      if (error.message.includes('already subscribed')) {
-        localStorage.setItem("newsletterSubscribed", "true");
-        setSubscriptionStatus("already_subscribed");
-        
-        setTimeout(() => {
-          closePopup();
-          setEmail("");
-        }, 2000);
-      } else {
-        setSubscriptionStatus(error.message || "Something went wrong. Please try again.");
-        setTimeout(() => setSubscriptionStatus(''), 5000);
-      }
+      console.error("Signup failed:", error);
+      setAuthStatus(error.message || "Something went wrong. Please try again.");
+      setTimeout(() => setAuthStatus(''), 5000);
     } finally {
       setIsSubmitting(false);
     }
@@ -115,14 +100,12 @@ const NewsletterPopup = () => {
 
   const handleClose = () => {
     closePopup();
-    localStorage.setItem("newsletterDismissed", "true");
+    localStorage.setItem("signupDismissed", "true");
 
-    setTimeout(
-      () => {
-        localStorage.removeItem("newsletterDismissed");
-      },
-      30 * 24 * 60 * 60 * 1000
-    );
+    // Reset dismissal after 30 days
+    setTimeout(() => {
+      localStorage.removeItem("signupDismissed");
+    }, 30 * 24 * 60 * 60 * 1000);
   };
 
   const handleOverlayClick = (e) => {
@@ -131,7 +114,7 @@ const NewsletterPopup = () => {
     }
   };
 
-  if (!isLoaded || !popupInitialized) {
+  if (!popupInitialized) {
     return null;
   }
 
@@ -167,7 +150,7 @@ const NewsletterPopup = () => {
                 <button
                   onClick={handleClose}
                   className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center border bg-burgundy-50 hover:bg-burgundy-100 rounded-full transition-colors duration-200 border-burgundy-200"
-                  aria-label="Close newsletter popup"
+                  aria-label="Close signup popup"
                 >
                   <svg
                     className="w-4 h-4 text-burgundy-600"
@@ -189,7 +172,7 @@ const NewsletterPopup = () => {
 
                 <div className="relative p-6">
                   {/* Success State */}
-                  {(subscriptionStatus === "success" || subscriptionStatus === "already_subscribed") && (
+                  {authStatus === "success" && (
                     <div className="text-center mb-4">
                       <div className="w-16 h-16 bg-burgundy-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <svg
@@ -205,86 +188,97 @@ const NewsletterPopup = () => {
                         </svg>
                       </div>
                       <h3 className="text-xl font-light text-burgundy-900 mb-2 font-playfair">
-                        {subscriptionStatus === "success" 
-                          ? "Welcome to Our Community!" 
-                          : "Already Subscribed!"}
+                        Welcome to Kavan!
                       </h3>
                       <p className="text-burgundy-600 text-sm font-cormorant">
-                        {subscriptionStatus === "success"
-                          ? "Thank you for subscribing to our newsletter!"
-                          : "You're already part of our style community!"}
+                        Your account has been created successfully!
                       </p>
                     </div>
                   )}
 
                   {/* Regular Form State */}
-                  {!subscriptionStatus && (
+                  {!authStatus && (
                     <>
                       {/* Icon */}
                       <div className="flex justify-center mb-4">
                         <div className="w-16 h-16 bg-burgundy rounded-full flex items-center justify-center">
-                          <svg
-                            className="w-8 h-8 text-white"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                            />
-                          </svg>
+                          <IoIosLogIn size={40} color="white" />
                         </div>
                       </div>
 
                       {/* Text Content */}
                       <div className="text-center mb-6">
                         <h3 className="text-xl font-light text-burgundy-900 mb-2 font-playfair">
-                          Join Our Style Community
+                          Join The Kavan Inner Circle
                         </h3>
-                        <p className="text-burgundy-600 text-sm leading-relaxed font-cormorant">
-                          Get exclusive access to new collections, styling tips, and
-                          special offers delivered straight to your inbox.
+                        <p className="text-burgundy-600 text-sm font-cormorant mb-2">
+                          Create your account and get 10% off your first order
                         </p>
-                        
-                        {/* Show sign-in encouragement for signed-out users */}
-                        {!isSignedIn && (
-                          <p className="text-burgundy-500 text-xs mt-2 font-inter">
-                            Sign up for an account to get personalized recommendations!
-                          </p>
-                        )}
+                        <p className="text-burgundy-500 text-xs font-inter">
+                          Plus exclusive access to new collections and styling tips
+                        </p>
                       </div>
                     </>
                   )}
 
                   {/* Error Message */}
-                  {subscriptionStatus && 
-                   subscriptionStatus !== "success" && 
-                   subscriptionStatus !== "already_subscribed" && (
+                  {authStatus && authStatus !== "success" && (
                     <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                       <p className="text-red-700 text-sm text-center font-inter">
-                        {subscriptionStatus}
+                        {authStatus}
                       </p>
                     </div>
                   )}
 
                   {/* Form (only show if not in success state) */}
-                  {!subscriptionStatus && (
+                  {!authStatus && (
                     <form onSubmit={handleSubmit} className="space-y-3">
-                      <div>
-                        <input
-                          type="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          placeholder="Enter your email address"
-                          className="w-full px-4 py-3 bg-burgundy-50 border border-burgundy-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-burgundy focus:border-transparent text-burgundy-900 placeholder-burgundy-500 text-sm transition-all duration-200 font-inter"
-                          required
-                          disabled={isSubmitting}
-                        />
+                      <div className="space-y-3">
+                        {/* Name Field */}
+                        <div>
+                          <input
+                            type="text"
+                            value={formData.name}
+                            onChange={(e) => handleInputChange('name', e.target.value)}
+                            placeholder="Full Name"
+                            className="w-full px-4 py-3 bg-burgundy-50 border border-burgundy-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-burgundy focus:border-transparent text-burgundy-900 placeholder-burgundy-500 text-sm transition-all duration-200 font-inter"
+                            required
+                            disabled={isSubmitting}
+                          />
+                        </div>
+
+                        {/* Email Field */}
+                        <div>
+                          <input
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => handleInputChange('email', e.target.value)}
+                            placeholder="Email Address"
+                            className="w-full px-4 py-3 bg-burgundy-50 border border-burgundy-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-burgundy focus:border-transparent text-burgundy-900 placeholder-burgundy-500 text-sm transition-all duration-200 font-inter"
+                            required
+                            disabled={isSubmitting}
+                          />
+                        </div>
+
+                        {/* Password Field */}
+                        <div>
+                          <input
+                            type="password"
+                            value={formData.password}
+                            onChange={(e) => handleInputChange('password', e.target.value)}
+                            placeholder="Password"
+                            className="w-full px-4 py-3 bg-burgundy-50 border border-burgundy-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-burgundy focus:border-transparent text-burgundy-900 placeholder-burgundy-500 text-sm transition-all duration-200 font-inter"
+                            required
+                            disabled={isSubmitting}
+                            minLength={6}
+                          />
+                          <p className="text-burgundy-400 text-xs mt-1 font-inter">
+                            Password must be at least 6 characters
+                          </p>
+                        </div>
                       </div>
 
+                      {/* Sign Up Button */}
                       <button
                         type="submit"
                         disabled={isSubmitting}
@@ -293,19 +287,45 @@ const NewsletterPopup = () => {
                         {isSubmitting ? (
                           <div className="flex items-center justify-center">
                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                            Subscribing...
+                            Creating Account...
                           </div>
                         ) : (
-                          "Subscribe Now"
+                          "Create Account & Get 10% Off"
                         )}
                       </button>
+
+                      {/* Alternative Sign In */}
+                      <div className="text-center pt-2">
+                        <p className="text-burgundy-600 text-xs font-inter">
+                          Already have an account?{" "}
+                          <button
+                            type="button"
+                            className="text-burgundy underline hover:no-underline font-medium"
+                            onClick={() => {
+                              // TODO: Switch to sign-in mode or open sign-in modal
+                              console.log('Switch to sign-in');
+                            }}
+                          >
+                            Sign In
+                          </button>
+                        </p>
+                      </div>
                     </form>
                   )}
 
-                  {/* Footer Text */}
-                  <p className="text-center text-burgundy-500 text-xs mt-4 font-cormorant">
-                    No spam, unsubscribe at any time
-                  </p>
+                  {/* Privacy Notice */}
+                  <div className="mt-4 text-center">
+                    <p className="text-burgundy-400 text-xs font-inter">
+                      By creating an account, you agree to our{" "}
+                      <button className="underline hover:no-underline">
+                        Terms
+                      </button>{" "}
+                      and{" "}
+                      <button className="underline hover:no-underline">
+                        Privacy Policy
+                      </button>
+                    </p>
+                  </div>
                 </div>
               </div>
             </motion.div>
