@@ -107,7 +107,7 @@ const Navbar = () => {
           </button>
 
           {/* Center Logo */}
-          <Link href="/" className="text-xl font-bold text-burgundy" style={{ fontFamily: 'Cinzel, serif' }}>
+          <Link href="/" className="text-2xl font-bold text-burgundy" style={{ fontFamily: 'Cinzel, serif' }}>
             Kavan
           </Link>
 

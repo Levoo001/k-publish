@@ -8,6 +8,7 @@ import { usePopup } from "./PopupContext";
 import { IoIosLogIn } from "react-icons/io";
 
 const NewsletterPopup = () => {
+  const [isSignInMode, setIsSignInMode] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -48,32 +49,41 @@ const NewsletterPopup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Basic validation
-    if (!formData.name || !formData.email || !formData.password) {
-      setAuthStatus('Please fill in all fields');
-      setTimeout(() => setAuthStatus(''), 5000);
-      return;
-    }
+    if (isSignInMode) {
+      // Sign In validation
+      if (!formData.email || !formData.password) {
+        setAuthStatus('Please fill in all fields');
+        setTimeout(() => setAuthStatus(''), 5000);
+        return;
+      }
+    } else {
+      // Sign Up validation
+      if (!formData.name || !formData.email || !formData.password) {
+        setAuthStatus('Please fill in all fields');
+        setTimeout(() => setAuthStatus(''), 5000);
+        return;
+      }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setAuthStatus('Please enter a valid email address');
-      setTimeout(() => setAuthStatus(''), 5000);
-      return;
-    }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        setAuthStatus('Please enter a valid email address');
+        setTimeout(() => setAuthStatus(''), 5000);
+        return;
+      }
 
-    if (formData.password.length < 6) {
-      setAuthStatus('Password must be at least 6 characters');
-      setTimeout(() => setAuthStatus(''), 5000);
-      return;
+      if (formData.password.length < 6) {
+        setAuthStatus('Password must be at least 6 characters');
+        setTimeout(() => setAuthStatus(''), 5000);
+        return;
+      }
     }
 
     setIsSubmitting(true);
     setAuthStatus("");
 
     try {
-      // TODO: Replace with NextAuth signup logic
-      console.log('Signup data:', formData);
+      // TODO: Replace with NextAuth logic
+      console.log(isSignInMode ? 'Sign in data:' : 'Signup data:', formData);
       
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
@@ -81,8 +91,10 @@ const NewsletterPopup = () => {
       // TODO: Replace with actual NextAuth success handling
       setAuthStatus("success");
       
-      // Store signup success
-      localStorage.setItem("userSignedUp", "true");
+      if (!isSignInMode) {
+        // Store signup success
+        localStorage.setItem("userSignedUp", "true");
+      }
       
       setTimeout(() => {
         closePopup();
@@ -90,7 +102,7 @@ const NewsletterPopup = () => {
       }, 2000);
       
     } catch (error) {
-      console.error("Signup failed:", error);
+      console.error("Auth failed:", error);
       setAuthStatus(error.message || "Something went wrong. Please try again.");
       setTimeout(() => setAuthStatus(''), 5000);
     } finally {
@@ -112,6 +124,12 @@ const NewsletterPopup = () => {
     if (e.target === e.currentTarget) {
       handleClose();
     }
+  };
+
+  const toggleAuthMode = () => {
+    setIsSignInMode(!isSignInMode);
+    setFormData({ name: "", email: "", password: "" });
+    setAuthStatus("");
   };
 
   if (!popupInitialized) {
@@ -174,7 +192,7 @@ const NewsletterPopup = () => {
                   {/* Success State */}
                   {authStatus === "success" && (
                     <div className="text-center mb-4">
-                      <div className="w-16 h-16 bg-burgundy-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <div className="w-16 h-16 bg-burgundy rounded-full flex items-center justify-center mx-auto mb-4">
                         <svg
                           className="w-8 h-8 text-burgundy"
                           fill="currentColor"
@@ -188,10 +206,12 @@ const NewsletterPopup = () => {
                         </svg>
                       </div>
                       <h3 className="text-xl font-light text-burgundy-900 mb-2 font-playfair">
-                        Welcome to Kavan!
+                        {isSignInMode ? "Welcome Back!" : "Welcome to Kavan!"}
                       </h3>
                       <p className="text-burgundy-600 text-sm font-cormorant">
-                        Your account has been created successfully!
+                        {isSignInMode 
+                          ? "You've successfully signed in!" 
+                          : "Your account has been created successfully!"}
                       </p>
                     </div>
                   )}
@@ -209,13 +229,12 @@ const NewsletterPopup = () => {
                       {/* Text Content */}
                       <div className="text-center mb-6">
                         <h3 className="text-xl font-light text-burgundy-900 mb-2 font-playfair">
-                          Join The Kavan Inner Circle
+                          {isSignInMode ? "Welcome Back" : "Join The Kavan Inner Circle"}
                         </h3>
                         <p className="text-burgundy-600 text-sm font-cormorant mb-2">
-                          Create your account and get 10% off your first order
-                        </p>
-                        <p className="text-burgundy-500 text-xs font-inter">
-                          Plus exclusive access to new collections and styling tips
+                          {isSignInMode 
+                            ? "Sign in to your account" 
+                            : "and get 10% off your first order"}
                         </p>
                       </div>
                     </>
@@ -234,18 +253,20 @@ const NewsletterPopup = () => {
                   {!authStatus && (
                     <form onSubmit={handleSubmit} className="space-y-3">
                       <div className="space-y-3">
-                        {/* Name Field */}
-                        <div>
-                          <input
-                            type="text"
-                            value={formData.name}
-                            onChange={(e) => handleInputChange('name', e.target.value)}
-                            placeholder="Full Name"
-                            className="w-full px-4 py-3 bg-burgundy-50 border border-burgundy-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-burgundy focus:border-transparent text-burgundy-900 placeholder-burgundy-500 text-sm transition-all duration-200 font-inter"
-                            required
-                            disabled={isSubmitting}
-                          />
-                        </div>
+                        {/* Name Field - Only show for Sign Up */}
+                        {!isSignInMode && (
+                          <div>
+                            <input
+                              type="text"
+                              value={formData.name}
+                              onChange={(e) => handleInputChange('name', e.target.value)}
+                              placeholder="Full Name"
+                              className="w-full px-4 py-3 bg-burgundy-50 border border-burgundy-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-burgundy focus:border-transparent text-burgundy-900 placeholder-burgundy-500 transition-all duration-200 font-inter"
+                              required={!isSignInMode}
+                              disabled={isSubmitting}
+                            />
+                          </div>
+                        )}
 
                         {/* Email Field */}
                         <div>
@@ -254,7 +275,7 @@ const NewsletterPopup = () => {
                             value={formData.email}
                             onChange={(e) => handleInputChange('email', e.target.value)}
                             placeholder="Email Address"
-                            className="w-full px-4 py-3 bg-burgundy-50 border border-burgundy-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-burgundy focus:border-transparent text-burgundy-900 placeholder-burgundy-500 text-sm transition-all duration-200 font-inter"
+                            className="w-full px-4 py-3 bg-burgundy-50 border border-burgundy-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-burgundy focus:border-transparent text-burgundy-900 placeholder-burgundy-500 transition-all duration-200 font-inter"
                             required
                             disabled={isSubmitting}
                           />
@@ -267,18 +288,20 @@ const NewsletterPopup = () => {
                             value={formData.password}
                             onChange={(e) => handleInputChange('password', e.target.value)}
                             placeholder="Password"
-                            className="w-full px-4 py-3 bg-burgundy-50 border border-burgundy-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-burgundy focus:border-transparent text-burgundy-900 placeholder-burgundy-500 text-sm transition-all duration-200 font-inter"
+                            className="w-full px-4 py-3 bg-burgundy-50 border border-burgundy-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-burgundy focus:border-transparent text-burgundy-900 placeholder-burgundy-500 transition-all duration-200 font-inter"
                             required
                             disabled={isSubmitting}
-                            minLength={6}
+                            minLength={isSignInMode ? 1 : 6}
                           />
-                          <p className="text-burgundy-400 text-xs mt-1 font-inter">
-                            Password must be at least 6 characters
-                          </p>
+                          {!isSignInMode && (
+                            <p className="text-burgundy-400 text-xs mt-1 font-inter">
+                              Password must be at least 6 characters
+                            </p>
+                          )}
                         </div>
                       </div>
 
-                      {/* Sign Up Button */}
+                      {/* Submit Button */}
                       <button
                         type="submit"
                         disabled={isSubmitting}
@@ -287,45 +310,28 @@ const NewsletterPopup = () => {
                         {isSubmitting ? (
                           <div className="flex items-center justify-center">
                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                            Creating Account...
+                            {isSignInMode ? "Signing In..." : "Creating Account..."}
                           </div>
                         ) : (
-                          "Create Account & Get 10% Off"
+                          isSignInMode ? "Sign In" : "Create Account"
                         )}
                       </button>
 
-                      {/* Alternative Sign In */}
+                      {/* Toggle Auth Mode */}
                       <div className="text-center pt-2">
                         <p className="text-burgundy-600 text-xs font-inter">
-                          Already have an account?{" "}
+                          {isSignInMode ? "Don't have an account? " : "Already have an account? "}
                           <button
                             type="button"
                             className="text-burgundy underline hover:no-underline font-medium"
-                            onClick={() => {
-                              // TODO: Switch to sign-in mode or open sign-in modal
-                              console.log('Switch to sign-in');
-                            }}
+                            onClick={toggleAuthMode}
                           >
-                            Sign In
+                            {isSignInMode ? "Sign Up" : "Sign In"}
                           </button>
                         </p>
                       </div>
                     </form>
                   )}
-
-                  {/* Privacy Notice */}
-                  <div className="mt-4 text-center">
-                    <p className="text-burgundy-400 text-xs font-inter">
-                      By creating an account, you agree to our{" "}
-                      <button className="underline hover:no-underline">
-                        Terms
-                      </button>{" "}
-                      and{" "}
-                      <button className="underline hover:no-underline">
-                        Privacy Policy
-                      </button>
-                    </p>
-                  </div>
                 </div>
               </div>
             </motion.div>
