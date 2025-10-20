@@ -1,7 +1,9 @@
 // src/app/api/contact/route.js
 
 import { NextResponse } from 'next/server';
-import { sendContactFormEmail } from '@/lib/emailService';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request) {
   try {
@@ -24,14 +26,57 @@ export async function POST(request) {
       );
     }
 
-    // Send email to admin
-    await sendContactFormEmail({
-      name,
-      email,
-      phone,
-      subject,
-      message
+    // Send email to admin using Resend
+    const { data, error } = await resend.emails.send({
+      from: 'Kavan The Brand <contact@kavanthebrand.com>',
+      to: 'admin@kavanthebrand.com',
+      subject: `New Contact Form: ${subject || 'General Inquiry'}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: 'Inter', sans-serif; color: #3A0303; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: #3A0303; color: white; padding: 20px; text-align: center; }
+            .content { padding: 20px; background: #fdf2f2; }
+            .field { margin: 10px 0; }
+            .label { font-weight: bold; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>New Contact Form Submission</h1>
+            </div>
+            <div class="content">
+              <div class="field">
+                <span class="label">Name:</span> ${name}
+              </div>
+              <div class="field">
+                <span class="label">Email:</span> ${email}
+              </div>
+              <div class="field">
+                <span class="label">Phone:</span> ${phone || 'Not provided'}
+              </div>
+              <div class="field">
+                <span class="label">Subject:</span> ${subject || 'General Inquiry'}
+              </div>
+              <div class="field">
+                <span class="label">Message:</span>
+                <p>${message}</p>
+              </div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
     });
+
+    if (error) {
+      console.error('Error sending contact form email:', error);
+      return NextResponse.json({ error: 'Failed to send message' }, { status: 500 });
+    }
 
     return NextResponse.json(
       { 

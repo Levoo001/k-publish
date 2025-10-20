@@ -41,7 +41,7 @@ async function registerUser(credentials) {
 
     // Send welcome email (non-blocking)
     try {
-      await fetch(`${process.env.NEXTAUTH_URL}/api/auth/emails/welcome-email`, {
+      await fetch(`/api/auth/emails/welcome-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
