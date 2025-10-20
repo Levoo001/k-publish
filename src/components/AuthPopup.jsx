@@ -1,14 +1,16 @@
-// src/components/NewsletterPopup.jsx
+// src/components/AuthPopup.jsx
 
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePopup } from "./PopupContext";
 import { IoIosLogIn } from "react-icons/io";
+import { useSession, signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-const NewsletterPopup = () => {
-  const [isSignInMode, setIsSignInMode] = useState(false);
+const AuthPopup = () => {
+  const [isSignInMode, setIsSignInMode] = useState(true); // Default to sign in
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -16,28 +18,10 @@ const NewsletterPopup = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authStatus, setAuthStatus] = useState("");
-  
-  const { popupInitialized, isPopupOpen, openPopup, closePopup } = usePopup();
 
-  const hasSetupPopup = useRef(false);
-
-  useEffect(() => {
-    // Only run this once when popup is initialized
-    if (!popupInitialized || hasSetupPopup.current) return;
-    hasSetupPopup.current = true;
-
-    // Check if user has already dismissed
-    const hasDismissed = localStorage.getItem("signupDismissed");
-
-    if (!hasDismissed) {
-      // Show popup after 10 seconds
-      const timer = setTimeout(() => {
-        openPopup();
-      }, 10000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [popupInitialized, openPopup]);
+  const { isPopupOpen, closePopup } = usePopup(); // Remove openPopup from here
+  const { data: session, update } = useSession();
+  const router = useRouter();
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -48,62 +32,55 @@ const NewsletterPopup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (isSignInMode) {
-      // Sign In validation
-      if (!formData.email || !formData.password) {
-        setAuthStatus('Please fill in all fields');
-        setTimeout(() => setAuthStatus(''), 5000);
-        return;
-      }
-    } else {
-      // Sign Up validation
-      if (!formData.name || !formData.email || !formData.password) {
-        setAuthStatus('Please fill in all fields');
-        setTimeout(() => setAuthStatus(''), 5000);
-        return;
-      }
-
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.email)) {
-        setAuthStatus('Please enter a valid email address');
-        setTimeout(() => setAuthStatus(''), 5000);
-        return;
-      }
-
-      if (formData.password.length < 6) {
-        setAuthStatus('Password must be at least 6 characters');
-        setTimeout(() => setAuthStatus(''), 5000);
-        return;
-      }
-    }
 
     setIsSubmitting(true);
     setAuthStatus("");
 
     try {
-      // TODO: Replace with NextAuth logic
-      console.log(isSignInMode ? 'Sign in data:' : 'Signup data:', formData);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // TODO: Replace with actual NextAuth success handling
-      setAuthStatus("success");
-      
+      // Prepare credentials with action
+      const credentials = {
+        email: formData.email,
+        password: formData.password,
+        action: isSignInMode ? 'login' : 'register'
+      };
+
+      // Add name for registration
       if (!isSignInMode) {
-        // Store signup success
-        localStorage.setItem("userSignedUp", "true");
+        credentials.name = formData.name;
       }
-      
-      setTimeout(() => {
-        closePopup();
-        setFormData({ name: "", email: "", password: "" });
-      }, 2000);
-      
+
+      const result = await signIn('credentials', {
+        ...credentials,
+        redirect: false
+      });
+
+      if (result?.error) {
+        setAuthStatus(result.error);
+        setTimeout(() => setAuthStatus(''), 5000);
+      } else if (result?.ok) {
+        setAuthStatus("success");
+
+        if (!isSignInMode) {
+          // Store signup success
+          localStorage.setItem("userSignedUp", "true");
+        }
+
+        // Update session to get latest user data
+        await update();
+
+        setTimeout(() => {
+          closePopup();
+          setFormData({ name: "", email: "", password: "" });
+
+          // Refresh the page to update all session-dependent components
+          router.refresh();
+        }, 2000);
+      } else {
+        setAuthStatus('Authentication failed. Please try again.');
+      }
     } catch (error) {
-      console.error("Auth failed:", error);
-      setAuthStatus(error.message || "Something went wrong. Please try again.");
+      console.error('Auth error:', error);
+      setAuthStatus('Something went wrong. Please try again.');
       setTimeout(() => setAuthStatus(''), 5000);
     } finally {
       setIsSubmitting(false);
@@ -112,12 +89,8 @@ const NewsletterPopup = () => {
 
   const handleClose = () => {
     closePopup();
-    localStorage.setItem("signupDismissed", "true");
-
-    // Reset dismissal after 30 days
-    setTimeout(() => {
-      localStorage.removeItem("signupDismissed");
-    }, 30 * 24 * 60 * 60 * 1000);
+    setFormData({ name: "", email: "", password: "" });
+    setAuthStatus("");
   };
 
   const handleOverlayClick = (e) => {
@@ -132,7 +105,8 @@ const NewsletterPopup = () => {
     setAuthStatus("");
   };
 
-  if (!popupInitialized) {
+  // Don't show if user is already authenticated
+  if (session) {
     return null;
   }
 
@@ -167,11 +141,11 @@ const NewsletterPopup = () => {
                 {/* Close Button */}
                 <button
                   onClick={handleClose}
-                  className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center border bg-burgundy-50 hover:bg-burgundy-100 rounded-full transition-colors duration-200 border-burgundy-200"
+                  className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center border bg-primary-50 hover:bg-primary-100 rounded-full transition-colors duration-200 border-primary-200"
                   aria-label="Close signup popup"
                 >
                   <svg
-                    className="w-4 h-4 text-burgundy-600"
+                    className="w-4 h-4 text-primary-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -186,15 +160,15 @@ const NewsletterPopup = () => {
                 </button>
 
                 {/* Background Pattern */}
-                <div className="absolute inset-0 bg-gradient-to-br from-burgundy-50 to-white opacity-50" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary-50 to-white opacity-50" />
 
                 <div className="relative p-6">
                   {/* Success State */}
                   {authStatus === "success" && (
                     <div className="text-center mb-4">
-                      <div className="w-16 h-16 bg-burgundy rounded-full flex items-center justify-center mx-auto mb-4">
+                      <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                         <svg
-                          className="w-8 h-8 text-burgundy"
+                          className="w-8 h-8 text-primary"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >
@@ -205,35 +179,35 @@ const NewsletterPopup = () => {
                           />
                         </svg>
                       </div>
-                      <h3 className="text-xl font-light text-burgundy-900 mb-2 font-playfair">
+                      <h3 className="text-xl font-light text-primary-900 mb-2 font-playfair">
                         {isSignInMode ? "Welcome Back!" : "Welcome to Kavan!"}
                       </h3>
-                      <p className="text-burgundy-600 text-sm font-cormorant">
-                        {isSignInMode 
-                          ? "You've successfully signed in!" 
+                      <p className="text-primary-600 text-sm font-cormorant">
+                        {isSignInMode
+                          ? "You've successfully signed in!"
                           : "Your account has been created successfully!"}
                       </p>
                     </div>
                   )}
 
                   {/* Regular Form State */}
-                  {!authStatus && (
+                  {authStatus !== "success" && (
                     <>
                       {/* Icon */}
                       <div className="flex justify-center mb-4">
-                        <div className="w-16 h-16 bg-burgundy rounded-full flex items-center justify-center">
+                        <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
                           <IoIosLogIn size={40} color="white" />
                         </div>
                       </div>
 
                       {/* Text Content */}
                       <div className="text-center mb-6">
-                        <h3 className="text-xl font-light text-burgundy-900 mb-2 font-playfair">
+                        <h3 className="text-xl font-light text-primary-900 mb-2 font-playfair">
                           {isSignInMode ? "Welcome Back" : "Join The Kavan Inner Circle"}
                         </h3>
-                        <p className="text-burgundy-600 text-sm font-cormorant mb-2">
-                          {isSignInMode 
-                            ? "Sign in to your account" 
+                        <p className="text-primary-600 text-sm font-cormorant mb-2">
+                          {isSignInMode
+                            ? "Sign in to your account"
                             : "and get 10% off your first order"}
                         </p>
                       </div>
@@ -250,7 +224,7 @@ const NewsletterPopup = () => {
                   )}
 
                   {/* Form (only show if not in success state) */}
-                  {!authStatus && (
+                  {authStatus !== "success" && (
                     <form onSubmit={handleSubmit} className="space-y-3">
                       <div className="space-y-3">
                         {/* Name Field - Only show for Sign Up */}
@@ -261,7 +235,7 @@ const NewsletterPopup = () => {
                               value={formData.name}
                               onChange={(e) => handleInputChange('name', e.target.value)}
                               placeholder="Full Name"
-                              className="w-full px-4 py-3 bg-burgundy-50 border border-burgundy-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-burgundy focus:border-transparent text-burgundy-900 placeholder-burgundy-500 transition-all duration-200 font-inter"
+                              className="w-full px-4 py-3 bg-primary-50 border border-primary-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-primary-900 placeholder-primary-500 transition-all duration-200 font-inter"
                               required={!isSignInMode}
                               disabled={isSubmitting}
                             />
@@ -275,7 +249,7 @@ const NewsletterPopup = () => {
                             value={formData.email}
                             onChange={(e) => handleInputChange('email', e.target.value)}
                             placeholder="Email Address"
-                            className="w-full px-4 py-3 bg-burgundy-50 border border-burgundy-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-burgundy focus:border-transparent text-burgundy-900 placeholder-burgundy-500 transition-all duration-200 font-inter"
+                            className="w-full px-4 py-3 bg-primary-50 border border-primary-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-primary-900 placeholder-primary-500 transition-all duration-200 font-inter"
                             required
                             disabled={isSubmitting}
                           />
@@ -288,13 +262,13 @@ const NewsletterPopup = () => {
                             value={formData.password}
                             onChange={(e) => handleInputChange('password', e.target.value)}
                             placeholder="Password"
-                            className="w-full px-4 py-3 bg-burgundy-50 border border-burgundy-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-burgundy focus:border-transparent text-burgundy-900 placeholder-burgundy-500 transition-all duration-200 font-inter"
+                            className="w-full px-4 py-3 bg-primary-50 border border-primary-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-primary-900 placeholder-primary-500 transition-all duration-200 font-inter"
                             required
                             disabled={isSubmitting}
-                            minLength={isSignInMode ? 1 : 6}
+                            minLength={6}
                           />
                           {!isSignInMode && (
-                            <p className="text-burgundy-400 text-xs mt-1 font-inter">
+                            <p className="text-primary-400 text-xs mt-1 font-inter">
                               Password must be at least 6 characters
                             </p>
                           )}
@@ -305,7 +279,7 @@ const NewsletterPopup = () => {
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full bg-burgundy text-white py-3 px-6 rounded-xl font-semibold text-sm hover:bg-burgundy-700 disabled:bg-burgundy-300 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] font-inter"
+                        className="w-full bg-primary text-white py-3 px-6 rounded-xl font-semibold text-sm hover:bg-primary-700 disabled:bg-primary-300 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] font-inter"
                       >
                         {isSubmitting ? (
                           <div className="flex items-center justify-center">
@@ -319,11 +293,11 @@ const NewsletterPopup = () => {
 
                       {/* Toggle Auth Mode */}
                       <div className="text-center pt-2">
-                        <p className="text-burgundy-600 text-xs font-inter">
+                        <p className="text-primary-600 text-xs font-inter">
                           {isSignInMode ? "Don't have an account? " : "Already have an account? "}
                           <button
                             type="button"
-                            className="text-burgundy underline hover:no-underline font-medium"
+                            className="text-primary underline hover:no-underline font-medium"
                             onClick={toggleAuthMode}
                           >
                             {isSignInMode ? "Sign Up" : "Sign In"}
@@ -342,4 +316,4 @@ const NewsletterPopup = () => {
   );
 };
 
-export default NewsletterPopup;
+export default AuthPopup;

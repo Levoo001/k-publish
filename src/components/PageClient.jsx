@@ -11,7 +11,6 @@ import { useCart } from "./CartProvider";
 import { urlFor } from "@/sanity/lib/image";
 import useEmblaCarousel from "embla-carousel-react";
 import ProductModal from "./ProductModal";
-import NewsletterPopup from "./NewsletterPopup";
 import Link from "next/link";
 import { subscribeToNewsletter } from '../services/newsletterService';
 import { HiOutlineArrowLongRight } from "react-icons/hi2";
@@ -174,7 +173,7 @@ export default function Home({ products }) {
   // Updated newsletter subscription handler with Firebase
   const handleSubscribe = async (e) => {
     e.preventDefault();
-    
+
     if (!email) {
       setSubscriptionStatus('Please enter your email address');
       return;
@@ -191,7 +190,7 @@ export default function Home({ products }) {
 
     try {
       const result = await subscribeToNewsletter(email);
-      
+
       if (result.success) {
         setSubscriptionStatus('success');
         setEmail('');
@@ -234,77 +233,77 @@ export default function Home({ products }) {
 
   return (
     <main className="min-h-screen">
-       <section className="relative h-[60vh] lg:h-[90vh] flex items-center justify-center overflow-hidden">
-  <div className="absolute inset-0 w-full h-full">
-    {/* Video - Always try to show it first */}
-    <video
-      ref={videoRef}
-      autoPlay
-      muted={isMuted}
-      loop
-      playsInline
-      className="w-full h-full object-cover"
-      preload="auto"
-      poster="/fallback.jpg"
-    > 
-      <source src="https://ck7vajewsn9hvwtw.public.blob.vercel-storage.com/vid.mp4" type="video/mp4" />
-    </video>
+      <section className="relative h-[60vh] lg:h-[90vh] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 w-full h-full">
+          {/* Video - Always try to show it first */}
+          <video
+            ref={videoRef}
+            autoPlay
+            muted={isMuted}
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+            preload="auto"
+            poster="/fallback.jpg"
+          >
+            <source src="https://ck7vajewsn9hvwtw.public.blob.vercel-storage.com/vid.mp4" type="video/mp4" />
+          </video>
 
-    {/* Fallback Image - Only show if video fails */}
-    {videoError && (
-      <Image
-        src="/fallback.jpg"
-        alt="Kavan The Brand"
-        fill
-        className="object-cover"
-        priority
-      />
-    )}
+          {/* Fallback Image - Only show if video fails */}
+          {videoError && (
+            <Image
+              src="/fallback.jpg"
+              alt="Kavan The Brand"
+              fill
+              className="object-cover"
+              priority
+            />
+          )}
 
-    {/* Text moved to bottom left corner - maintaining exact styling */}
-    <div className="absolute left-2 bottom-2 inset-0 flex items-end justify-start text-white z-20 pb-8 pl-6 lg:pl-12">
-      <div className="">
-        {/* Main Title - Matches Kilentar exactly */}
-        <h1 className="text-lg md:text-xl lg:text-2xl uppercase font-playfair">
-          THE REBIRTH
-        </h1>
-        
-        {/* Shop Now Button - Kilentar style */}
-        <Link
-          href="/shop"
-          className="py-2 flex items-center gap-2 text-white hover:text-burgundy-200 transition-colors"
-        >
-          <span className="border-b border-white hover:border-burgundy-200 transition-colors font-inter">
-            Order Now 
-          </span>
-          <HiOutlineArrowLongRight size={30} />
-        </Link>
-      </div>
-    </div>
+          {/* Text moved to bottom left corner - maintaining exact styling */}
+          <div className="absolute left-2 bottom-2 inset-0 flex items-end justify-start text-white z-20 pb-8 pl-6 lg:pl-12">
+            <div className="">
+              {/* Main Title - Matches Kilentar exactly */}
+              <h1 className="text-lg md:text-xl lg:text-2xl uppercase font-playfair">
+                THE REBIRTH
+              </h1>
 
-    {/* Mute Button */}
-    <button
-      onClick={toggleMute}
-      className="absolute bottom-4 right-4 z-30 bg-burgundy/50 text-white p-3 rounded-full hover:bg-burgundy/70 transition-all duration-300 backdrop-blur-sm"
-      aria-label={isMuted ? "Unmute video" : "Mute video"}
-    >
-      {isMuted ? (
-        <IoVolumeMute size={20} />
-      ) : (
-        <IoVolumeHighSharp size={20} />
-      )}
-    </button>
-  </div>
-</section>
+              {/* Shop Now Button - Kilentar style */}
+              <Link
+                href="/shop"
+                className="py-2 flex items-center gap-2 text-white hover:text-primary-200 transition-colors"
+              >
+                <span className="border-b border-white hover:border-primary-200 transition-colors font-inter">
+                  Order Now
+                </span>
+                <HiOutlineArrowLongRight size={30} />
+              </Link>
+            </div>
+          </div>
+
+          {/* Mute Button */}
+          <button
+            onClick={toggleMute}
+            className="absolute bottom-4 right-4 z-30 bg-primary/50 text-white p-3 rounded-full hover:bg-primary/70 transition-all duration-300 backdrop-blur-sm"
+            aria-label={isMuted ? "Unmute video" : "Mute video"}
+          >
+            {isMuted ? (
+              <IoVolumeMute size={20} />
+            ) : (
+              <IoVolumeHighSharp size={20} />
+            )}
+          </button>
+        </div>
+      </section>
 
       {/* Updated Featured Collections - 2 items on mobile */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="mb-12 text-center">
-            <h2 className="text-3xl md:text-5xl mb-4 font-light tracking-wide text-burgundy font-playfair">
+            <h2 className="text-3xl md:text-5xl mb-4 font-light tracking-wide text-primary font-playfair">
               Curated Collection
             </h2>
-            <p className="text-burgundy-600 max-w-2xl mx-auto text-lg font-cormorant">
+            <p className="text-primary-600 max-w-2xl mx-auto text-lg font-cormorant">
               Discover pieces that transform your wardrobe and elevate your style
             </p>
           </div>
@@ -315,9 +314,9 @@ export default function Home({ products }) {
               const currentSlide = currentSlides[product._id] || 0;
               const displayImage = product.image[currentSlide]
                 ? urlFor(product.image[currentSlide])
-                    .width(600)
-                    .height(800)
-                    .url()
+                  .width(600)
+                  .height(800)
+                  .url()
                 : "/fallback.jpg";
 
               return (
@@ -336,21 +335,21 @@ export default function Home({ products }) {
                       priority={currentSlide === 0}
                     />
                     <div className="absolute top-3 right-3">
-                      <span className="bg-burgundy/90 text-white px-2 py-1 rounded text-xs font-medium backdrop-blur-sm font-inter">
+                      <span className="bg-primary/90 text-white px-2 py-1 rounded text-xs font-medium backdrop-blur-sm font-inter">
                         New
                       </span>
                     </div>
                     <div className="absolute bottom-3 left-3 right-3 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                      <button className="cursor-pointer w-full bg-burgundy text-white py-2 text-sm font-medium rounded shadow-lg hover:bg-burgundy-700 transition-colors font-inter">
+                      <button className="cursor-pointer w-full bg-primary text-white py-2 text-sm font-medium rounded shadow-lg hover:bg-primary-700 transition-colors font-inter">
                         Quick View
                       </button>
                     </div>
                   </div>
                   <div className="text-center p-2">
-                    <h3 className="font-light text-base mb-1 text-burgundy-900 line-clamp-1 font-playfair">
+                    <h3 className="font-light text-base mb-1 text-primary-900 line-clamp-1 font-playfair">
                       {product.name}
                     </h3>
-                    <p className="text-base font-medium text-burgundy font-inter">
+                    <p className="text-base font-medium text-primary font-inter">
                       ₦{product.price.toLocaleString()}
                     </p>
                   </div>
@@ -362,7 +361,7 @@ export default function Home({ products }) {
       </section>
 
       {/* Brand Story Section */}
-      <section className="py-16 bg-gradient-to-br from-burgundy-50 to-white overflow-hidden">
+      <section className="py-16 bg-gradient-to-br from-primary-50 to-white overflow-hidden">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="grid grid-cols-2 gap-4">
@@ -374,19 +373,19 @@ export default function Home({ products }) {
 
                     {/* Best Seller & Shop Now Overlay */}
                     {index === 0 && (
-                        <div
-                          className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
-                          onClick={() => handleProductClick(product)}
-                        >
-                          <div className="space-y-2">
-                            <div className="text-left text-white text-xs font-semibold font-inter">
-                              BESTSELLER
-                            </div>
-                            <button className="text-white font-semibold text-sm w-fit border-b border-white hover:border-burgundy-200 transition-colors font-inter">
-                              Shop Now
-                            </button>
+                      <div
+                        className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
+                        onClick={() => handleProductClick(product)}
+                      >
+                        <div className="space-y-2">
+                          <div className="text-left text-white text-xs font-semibold font-inter">
+                            BESTSELLER
                           </div>
+                          <button className="text-white font-semibold text-sm w-fit border-b border-white hover:border-primary-200 transition-colors font-inter">
+                            Shop Now
+                          </button>
                         </div>
+                      </div>
                     )}
                   </div>
                 ))}
@@ -401,19 +400,19 @@ export default function Home({ products }) {
                     {/* Best Seller & Shop Now Overlay */}
                     {index === 0 && (
 
-                        <div
-                          className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
-                          onClick={() => handleProductClick(product)}
-                        >
-                          <div className="space-y-2">
-                            <div className="text-left text-white text-xs font-semibold font-inter">
-                              BESTSELLER
-                            </div>
-                            <button className="text-white font-semibold text-sm w-fit border-b border-white hover:border-burgundy-200 transition-colors font-inter">
-                              Shop Now
-                            </button>
+                      <div
+                        className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
+                        onClick={() => handleProductClick(product)}
+                      >
+                        <div className="space-y-2">
+                          <div className="text-left text-white text-xs font-semibold font-inter">
+                            BESTSELLER
                           </div>
+                          <button className="text-white font-semibold text-sm w-fit border-b border-white hover:border-primary-200 transition-colors font-inter">
+                            Shop Now
+                          </button>
                         </div>
+                      </div>
                     )}
                   </div>
                 ))}
@@ -422,52 +421,52 @@ export default function Home({ products }) {
 
             <div className="space-y-6">
               <div>
-                <span className="inline-block bg-burgundy text-white px-4 py-2 rounded-full text-sm font-medium mb-4 font-inter">
+                <span className="inline-block bg-primary text-white px-4 py-2 rounded-full text-sm font-medium mb-4 font-inter">
                   Our Philosophy
                 </span>
-                <h2 className="text-4xl font-light mb-6 text-burgundy-900 font-playfair">
+                <h2 className="text-4xl font-light mb-6 text-primary-900 font-playfair">
                   Designed for Life's Moments
                 </h2>
               </div>
 
               <div className="space-y-4">
                 <div className="flex items-start space-x-4 p-4 rounded-2xl hover:bg-white hover:shadow-elegant transition-all duration-300">
-                  <div className="w-12 h-12 bg-gradient-to-br from-burgundy to-burgundy-800 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary-800 to-primary-400 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
                     <span className="text-white text-xl">✓</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg mb-2 text-burgundy-900 font-playfair">
+                    <h3 className="font-semibold text-lg mb-2 text-primary-900 font-playfair">
                       Quality Craftsmanship
                     </h3>
-                    <p className="text-burgundy-600 font-cormorant">
+                    <p className="text-primary-600 font-cormorant">
                       Every stitch tells a story of dedication and excellence
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start space-x-4 p-4 rounded-2xl hover:bg-white hover:shadow-elegant transition-all duration-300">
-                  <div className="w-12 h-12 bg-gradient-to-br from-burgundy to-burgundy-800 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary-800 to-primary-400 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
                     <span className="text-white text-xl">♻</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg mb-2 text-burgundy-900 font-playfair">
+                    <h3 className="font-semibold text-lg mb-2 text-primary-900 font-playfair">
                       Sustainable Choices
                     </h3>
-                    <p className="text-burgundy-600 font-cormorant">
+                    <p className="text-primary-600 font-cormorant">
                       Materials that respect both people and planet
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start space-x-4 p-4 rounded-2xl hover:bg-white hover:shadow-elegant transition-all duration-300">
-                  <div className="w-12 h-12 bg-gradient-to-br from-burgundy to-burgundy-800 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary-800 to-primary-400 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
                     <span className="text-white text-xl">✨</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg mb-2 text-burgundy-900 font-playfair">
+                    <h3 className="font-semibold text-lg mb-2 text-primary-900 font-playfair">
                       Timeless Appeal
                     </h3>
-                    <p className="text-burgundy-600 font-cormorant">
+                    <p className="text-primary-600 font-cormorant">
                       Pieces designed to transcend seasonal trends
                     </p>
                   </div>
@@ -479,12 +478,12 @@ export default function Home({ products }) {
       </section>
 
       {/* Enhanced Newsletter Section */}
-      <section className="py-16 bg-burgundy text-white overflow-hidden">
+      <section className="py-16 bg-primary text-white overflow-hidden">
         <div className="container mx-auto px-4 text-center max-w-4xl">
           <h2 className="text-3xl font-light mb-6 bg-white bg-clip-text text-transparent font-playfair">
             Join Our Style Community
           </h2>
-          <p className="text-lg text-burgundy-200 mb-8 max-w-2xl mx-auto font-cormorant">
+          <p className="text-lg text-primary-200 mb-8 max-w-2xl mx-auto font-cormorant">
             Get exclusive access to new collections, styling tips, and special
             offers
           </p>
@@ -496,17 +495,17 @@ export default function Home({ products }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isSubmitting}
-              className="flex-1 px-4 py-3 bg-burgundy-800 border border-burgundy-700 rounded-xl focus:outline-none focus:border-white text-white placeholder-burgundy-300 disabled:opacity-50 font-inter"
+              className="flex-1 px-4 py-3 border border-primary-700 rounded-xl focus:outline-none focus:border-white text-primary placeholder-primary-300 disabled:opacity-50 font-inter"
               required
             />
-            <button 
+            <button
               type="submit"
               disabled={isSubmitting}
-              className="bg-white text-burgundy px-6 py-3 rounded-xl hover:bg-burgundy-50 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed font-inter"
+              className="bg-white text-primary px-6 py-3 rounded-xl hover:bg-primary-50 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed font-inter"
             >
               {isSubmitting ? (
                 <span className="flex items-center justify-center">
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-burgundy" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
@@ -541,7 +540,7 @@ export default function Home({ products }) {
             </div>
           )}
 
-          <p className="text-burgundy-300 text-xs font-cormorant">
+          <p className="text-primary-300 text-xs font-cormorant">
             By subscribing, you agree to our Privacy Policy. Unsubscribe at any time.
           </p>
         </div>
@@ -554,13 +553,10 @@ export default function Home({ products }) {
         onAddToCart={handleAddToCart}
       />
 
-{/* Floating WhatsApp icon */}
-      <Link href="https://wa.me/2347036210107" target="_blank" className="fixed bottom-14 right-2 p-2 rounded-full bg-burgundy">
-                    <IoIosChatbubbles size={25} color="white" />
-                  </Link>
-
-      {/* Newsletter Popup */}
-      <NewsletterPopup />
+      {/* Floating WhatsApp icon */}
+      <Link href="https://wa.me/2347036210107" target="_blank" className="fixed bottom-14 right-2 p-2 rounded-full bg-primary">
+        <IoIosChatbubbles size={25} color="white" />
+      </Link>
     </main>
   );
 }

@@ -3,16 +3,17 @@
 
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { SHIPPING_LOCATIONS } from "@/lib/shippingLocations";
+import PayStackPayment from "@/components/PayStackPayment";
 
 export default function CheckoutPage() {
-  const { isSignedIn, isLoaded } = useAuth();
-  const { user } = useUser();
+  const { data: session, status } = useSession();
   const router = useRouter();
+  const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart?.cartItems || []);
   
   const [selectedLocationType, setSelectedLocationType] = useState('domestic');
@@ -27,10 +28,10 @@ export default function CheckoutPage() {
   });
   const [isProcessing, setIsProcessing] = useState(false);
   const [agreeToPolicy, setAgreeToPolicy] = useState(false);
+  const [showPaystack, setShowPaystack] = useState(false);
 
-  const emailAddress = user?.primaryEmailAddress?.emailAddress || "";
-  const userFirstName = user?.firstName || "";
-  const userLastName = user?.lastName || "";
+  const emailAddress = session?.user?.email || "";
+  const userName = session?.user?.name || "";
 
   const subtotal = cartItems.reduce(
     (total, item) => total + (item?.price || 0) * (item?.quantity || 0),
@@ -53,10 +54,10 @@ export default function CheckoutPage() {
 
   // Redirect if cart is empty
   useEffect(() => {
-    if (cartItems.length === 0 && isLoaded) {
+    if (cartItems.length === 0 && status === 'authenticated') {
       router.push('/shop');
     }
-  }, [cartItems, isLoaded, router]);
+  }, [cartItems, status, router]);
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-NG", {
@@ -86,7 +87,7 @@ export default function CheckoutPage() {
     );
     
     return {
-      customer_name: `${userFirstName} ${userLastName}`.trim(),
+      customer_name: userName,
       customer_email: emailAddress,
       customer_phone: formData.phone,
       shipping_country: formData.country,
@@ -94,6 +95,7 @@ export default function CheckoutPage() {
       shipping_address: formData.address,
       shipping_location: selectedLocationData?.name || 'Not selected',
       shipping_provider: providerGroup?.provider || 'Not selected',
+      shipping_type: selectedLocationType,
       shipping_fee: shippingFee,
       items: cartItems.map(item => ({
         name: item.name,
@@ -107,80 +109,67 @@ export default function CheckoutPage() {
       store_name: "Kavan The Brand",
       store_contact: "+234 703 621 0107",
       store_email: "admin@kavanthebrand.com",
+      store_address: "Lagos, Nigeria"
     };
   };
 
-  // Direct PayStack payment integration
-  const handlePayStackPayment = async () => {
-    if (!isCheckoutReady || isProcessing) return;
+  const handlePayment = () => {
+  if (!isCheckoutReady || isProcessing) return;
 
-    setIsProcessing(true);
-
+  setIsProcessing(true);
+  setShowPaystack(true);
+  
+  // Use a longer timeout and ensure the PayStack component is properly rendered
+  setTimeout(() => {
     try {
-      const script = document.createElement('script');
-      script.src = 'https://js.paystack.co/v1/inline.js';
-      script.async = true;
+      // Find the PayStack button more reliably
+      const paystackButton = document.querySelector('button[data-paystack-button]') || 
+                           document.querySelector('button');
       
-      script.onload = () => {
-        const paystack = window.PaystackPop.setup({
-          key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
-          email: emailAddress,
-          amount: totalAmount * 100,
-          currency: 'NGN',
-          metadata: getOrderMetadata(),
-          callback: function(response) {
-            setIsProcessing(false);
-            console.log('Payment successful:', response);
-            alert('Payment successful! Thank you for your order.');
-            router.push('/order-success');
-          },
-          onClose: function() {
-            setIsProcessing(false);
-            console.log('Payment window closed.');
-          }
-        });
-        
-        paystack.openIframe();
-      };
-
-      script.onerror = () => {
+      if (paystackButton) {
+        console.log('Found PayStack button, clicking...');
+        paystackButton.click();
+      } else {
+        console.error('PayStack button not found');
         setIsProcessing(false);
-        console.error('Failed to load PayStack script');
-        alert('Payment service is temporarily unavailable. Please try again.');
-      };
-
-      document.body.appendChild(script);
+        alert('Payment system error. Please try again.');
+      }
     } catch (error) {
+      console.error('Error triggering payment:', error);
       setIsProcessing(false);
-      console.error('Payment error:', error);
-      alert('An error occurred while processing payment. Please try again.');
     }
+  }, 500); // Increased timeout to ensure component is fully rendered
+};
+
+  const handlePaymentSuccess = (response) => {
+    console.log('Payment successful:', response);
+    router.push('/order-success');
   };
 
   // Check if checkout is ready
   const isFormComplete = formData.country && formData.state && formData.address && formData.phone;
-  const isCheckoutReady = isSignedIn && isFormComplete && selectedLocation && agreeToPolicy && cartItems.length > 0;
+  const isCheckoutReady = status === 'authenticated' && isFormComplete && selectedLocation && agreeToPolicy && cartItems.length > 0;
 
-  if (!isLoaded) {
+  if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-burgundy border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-burgundy-600 font-inter">Loading...</p>
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-primary-600 font-inter">Loading...</p>
         </div>
       </div>
     );
   }
 
-  if (!isSignedIn) {
+  if (status === 'unauthenticated') {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="text-center max-w-md">
-          <h1 className="text-2xl font-playfair text-burgundy-900 mb-4">Sign In Required</h1>
-          <p className="text-burgundy-600 mb-6 font-cormorant">Please sign in to proceed with checkout.</p>
+          <h1 className="text-2xl font-playfair text-primary-900 mb-4">Sign In Required</h1>
+          <p className="text-primary-600 mb-6 font-cormorant">Please sign in to proceed with checkout.</p>
           <Link
             href="/shop"
-            className="bg-burgundy text-white px-6 py-3 rounded-lg hover:bg-burgundy-700 transition-colors font-inter"
+            className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors font-inter"
           >
             Continue Shopping
           </Link>
@@ -193,11 +182,11 @@ export default function CheckoutPage() {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="text-center max-w-md">
-          <h1 className="text-2xl font-playfair text-burgundy-900 mb-4">Your cart is empty</h1>
-          <p className="text-burgundy-600 mb-6 font-cormorant">Add some items to get started.</p>
+          <h1 className="text-2xl font-playfair text-primary-900 mb-4">Your cart is empty</h1>
+          <p className="text-primary-600 mb-6 font-cormorant">Add some items to get started.</p>
           <Link
             href="/shop"
-            className="bg-burgundy text-white px-6 py-3 rounded-lg hover:bg-burgundy-700 transition-colors font-inter"
+            className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors font-inter"
           >
             Continue Shopping
           </Link>
@@ -210,11 +199,11 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-white py-12">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-playfair text-burgundy-900 mb-4">Checkout</h1>
-          <div className="flex justify-center items-center space-x-8 text-sm text-burgundy-600 font-inter">
-            <span className="text-burgundy font-semibold">Cart</span>
+          <h1 className="text-3xl font-playfair text-primary-900 mb-4">Checkout</h1>
+          <div className="flex justify-center items-center space-x-8 text-sm text-primary-600 font-inter">
+            <span className="text-primary font-semibold">Cart</span>
             <span>→</span>
-            <span className="text-burgundy font-semibold">Information</span>
+            <span className="text-primary font-semibold">Information</span>
             <span>→</span>
             <span>Payment</span>
           </div>
@@ -225,25 +214,28 @@ export default function CheckoutPage() {
           <div className="space-y-8">
             {/* Contact Information */}
             <div>
-              <h2 className="text-xl font-playfair text-burgundy-900 mb-6">Contact information</h2>
-              <div className="bg-burgundy-50 p-4 rounded-lg border border-burgundy-100">
-                <p className="text-burgundy-800 font-inter text-sm">{emailAddress}</p>
+              <h2 className="text-xl font-playfair text-primary-900 mb-6">Contact information</h2>
+              <div className="bg-primary-50 p-4 rounded-lg border border-primary-100">
+                <p className="text-primary-800 font-inter text-sm">Email: {emailAddress}</p>
+                {userName && (
+                  <p className="text-primary-600 font-inter text-sm mt-1">Name: {userName}</p>
+                )}
               </div>
             </div>
 
             {/* Shipping Address */}
             <div>
-              <h2 className="text-xl font-playfair text-burgundy-900 mb-6">Shipping address</h2>
+              <h2 className="text-xl font-playfair text-primary-900 mb-6">Shipping address</h2>
               
               {/* Country */}
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2 text-burgundy-900 font-inter">
+                <label className="block text-sm font-medium mb-2 text-primary-900 font-inter">
                   Country
                 </label>
                 <select
                   value={formData.country}
                   onChange={(e) => handleInputChange('country', e.target.value)}
-                  className="w-full p-4 border border-burgundy-200 rounded-lg focus:ring-1 focus:ring-burgundy focus:border-burgundy font-inter text-sm bg-white"
+                  className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-inter text-sm bg-white"
                 >
                   <option value="Nigeria">Nigeria</option>
                   <option value="Ghana">Ghana</option>
@@ -256,7 +248,7 @@ export default function CheckoutPage() {
 
               {/* State/Province */}
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2 text-burgundy-900 font-inter">
+                <label className="block text-sm font-medium mb-2 text-primary-900 font-inter">
                   State / Province
                 </label>
                 <input
@@ -264,14 +256,14 @@ export default function CheckoutPage() {
                   value={formData.state}
                   onChange={(e) => handleInputChange('state', e.target.value)}
                   placeholder="Enter your state or province"
-                  className="w-full p-4 border border-burgundy-200 rounded-lg focus:ring-1 focus:ring-burgundy focus:border-burgundy font-inter text-sm"
+                  className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-inter text-sm"
                   required
                 />
               </div>
 
               {/* Address */}
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2 text-burgundy-900 font-inter">
+                <label className="block text-sm font-medium mb-2 text-primary-900 font-inter">
                   Address
                 </label>
                 <textarea
@@ -279,14 +271,14 @@ export default function CheckoutPage() {
                   onChange={(e) => handleInputChange('address', e.target.value)}
                   placeholder="Street address, apartment, suite, etc."
                   rows={3}
-                  className="w-full p-4 border border-burgundy-200 rounded-lg focus:ring-1 focus:ring-burgundy focus:border-burgundy resize-none font-inter text-sm"
+                  className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary resize-none font-inter text-sm"
                   required
                 />
               </div>
 
               {/* Phone */}
               <div className="mb-6">
-                <label className="block text-sm font-medium mb-2 text-burgundy-900 font-inter">
+                <label className="block text-sm font-medium mb-2 text-primary-900 font-inter">
                   Phone number
                 </label>
                 <input
@@ -294,27 +286,27 @@ export default function CheckoutPage() {
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
                   placeholder="+234 800 123 4567"
-                  className="w-full p-4 border border-burgundy-200 rounded-lg focus:ring-1 focus:ring-burgundy focus:border-burgundy font-inter text-sm"
+                  className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-inter text-sm"
                   required
                 />
               </div>
 
               {/* Shipping Provider - Collapsible */}
-              <div className="border border-burgundy-200 rounded-lg">
+              <div className="border border-primary-200 rounded-lg">
                 <button
                   onClick={() => setIsShippingOpen(!isShippingOpen)}
-                  className="w-full p-4 text-left flex justify-between items-center hover:bg-burgundy-25 transition-colors"
+                  className="w-full p-4 text-left flex justify-between items-center hover:bg-primary-50 transition-colors"
                 >
                   <div>
-                    <h3 className="font-medium text-burgundy-900 font-inter">Shipping method</h3>
+                    <h3 className="font-medium text-primary-900 font-inter">Shipping method</h3>
                     {selectedLocation && (
-                      <p className="text-sm text-burgundy-600 mt-1 font-inter">
+                      <p className="text-sm text-primary-600 mt-1 font-inter">
                         {SHIPPING_LOCATIONS[selectedLocationType].flatMap(group => group.options).find(opt => opt.id === selectedLocation)?.name}
                       </p>
                     )}
                   </div>
                   <svg
-                    className={`w-5 h-5 text-burgundy-600 transition-transform ${isShippingOpen ? 'rotate-180' : ''}`}
+                    className={`w-5 h-5 text-primary-600 transition-transform ${isShippingOpen ? 'rotate-180' : ''}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -324,10 +316,10 @@ export default function CheckoutPage() {
                 </button>
 
                 {isShippingOpen && (
-                  <div className="p-4 border-t border-burgundy-200 space-y-4">
+                  <div className="p-4 border-t border-primary-200 space-y-4">
                     {/* Location Type Selection */}
                     <div>
-                      <label className="block text-sm font-medium mb-3 text-burgundy-900 font-inter">
+                      <label className="block text-sm font-medium mb-3 text-primary-900 font-inter">
                         Location Type
                       </label>
                       <div className="flex space-x-4">
@@ -338,8 +330,8 @@ export default function CheckoutPage() {
                           }}
                           className={`px-4 py-2 rounded border font-inter text-sm transition-colors ${
                             selectedLocationType === 'domestic'
-                              ? 'border-burgundy bg-burgundy text-white'
-                              : 'border-burgundy-200 text-burgundy-700 hover:bg-burgundy-50'
+                              ? 'border-primary bg-primary text-white'
+                              : 'border-primary-200 text-primary-700 hover:bg-primary-50'
                           }`}
                         >
                           Domestic
@@ -351,8 +343,8 @@ export default function CheckoutPage() {
                           }}
                           className={`px-4 py-2 rounded border font-inter text-sm transition-colors ${
                             selectedLocationType === 'international'
-                              ? 'border-burgundy bg-burgundy text-white'
-                              : 'border-burgundy-200 text-burgundy-700 hover:bg-burgundy-50'
+                              ? 'border-primary bg-primary text-white'
+                              : 'border-primary-200 text-primary-700 hover:bg-primary-50'
                           }`}
                         >
                           International
@@ -363,13 +355,13 @@ export default function CheckoutPage() {
                     {/* Shipping Provider Selection */}
                     {selectedLocationType && (
                       <div>
-                        <label className="block text-sm font-medium mb-3 text-burgundy-900 font-inter">
+                        <label className="block text-sm font-medium mb-3 text-primary-900 font-inter">
                           Select shipping option
                         </label>
                         <div className="space-y-3 max-h-60 overflow-y-auto">
                           {SHIPPING_LOCATIONS[selectedLocationType].map((group) => (
                             <div key={group.provider} className="space-y-2">
-                              <p className="text-sm font-medium text-burgundy-700 font-inter">{group.provider}</p>
+                              <p className="text-sm font-medium text-primary-700 font-inter">{group.provider}</p>
                               <div className="grid gap-2">
                                 {group.options.map((location) => (
                                   <button
@@ -377,13 +369,13 @@ export default function CheckoutPage() {
                                     onClick={() => setSelectedLocation(location.id)}
                                     className={`p-3 rounded border text-left font-inter text-sm transition-colors ${
                                       selectedLocation === location.id
-                                        ? 'border-burgundy bg-burgundy-50'
-                                        : 'border-burgundy-200 hover:bg-burgundy-25'
+                                        ? 'border-primary bg-primary-50'
+                                        : 'border-primary-200 hover:bg-primary-50'
                                     }`}
                                   >
                                     <div className="flex justify-between items-center">
-                                      <span className="text-burgundy-900">{location.name}</span>
-                                      <span className="text-burgundy font-semibold">{formatPrice(location.fee)}</span>
+                                      <span className="text-primary-900">{location.name}</span>
+                                      <span className="text-primary font-semibold">{formatPrice(location.fee)}</span>
                                     </div>
                                   </button>
                                 ))}
@@ -399,22 +391,22 @@ export default function CheckoutPage() {
             </div>
 
             {/* Policy Agreement */}
-            <div className="border-t border-burgundy-100 pt-6">
+            <div className="border-t border-primary-100 pt-6">
               <div className="flex items-start space-x-3">
                 <input
                   type="checkbox"
                   id="policy-agreement"
                   checked={agreeToPolicy}
                   onChange={(e) => setAgreeToPolicy(e.target.checked)}
-                  className="mt-1 text-burgundy focus:ring-burgundy"
+                  className="mt-1 text-primary focus:ring-primary"
                 />
-                <label htmlFor="policy-agreement" className="text-sm text-burgundy-700 font-inter leading-relaxed">
+                <label htmlFor="policy-agreement" className="text-sm text-primary-700 font-inter leading-relaxed">
                   I agree with the{" "}
-                  <Link href="/delivery-policy" className="text-burgundy underline hover:no-underline">
+                  <Link href="/delivery-policy" className="text-primary underline hover:no-underline">
                     delivery policy
                   </Link>{" "}
                   and{" "}
-                  <Link href="/refund-and-exchange-policy" className="text-burgundy underline hover:no-underline">
+                  <Link href="/refund-and-exchange-policy" className="text-primary underline hover:no-underline">
                     return/exchange policy
                   </Link>
                 </label>
@@ -424,8 +416,8 @@ export default function CheckoutPage() {
 
           {/* Right Column - Order Summary */}
           <div className="space-y-6">
-            <div className="bg-burgundy-50 rounded-lg p-6">
-              <h2 className="text-xl font-playfair text-burgundy-900 mb-6">Order summary</h2>
+            <div className="bg-primary-50 rounded-lg p-6">
+              <h2 className="text-xl font-playfair text-primary-900 mb-6">Order summary</h2>
               
               {/* Cart Items */}
               <div className="space-y-4 mb-6">
@@ -441,13 +433,13 @@ export default function CheckoutPage() {
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-sm mb-1 font-inter text-burgundy-900 leading-tight">
+                      <h3 className="font-medium text-sm mb-1 font-inter text-primary-900 leading-tight">
                         {item.name}
                       </h3>
-                      <p className="text-burgundy-600 text-xs font-inter mb-2">
+                      <p className="text-primary-600 text-xs font-inter mb-2">
                         Quantity: {item.quantity}
                       </p>
-                      <p className="font-semibold text-burgundy text-sm font-inter">
+                      <p className="font-semibold text-primary text-sm font-inter">
                         {formatPrice(item.price * item.quantity)}
                       </p>
                     </div>
@@ -456,29 +448,29 @@ export default function CheckoutPage() {
               </div>
 
               {/* Order Total */}
-              <div className="space-y-3 border-t border-burgundy-200 pt-4">
+              <div className="space-y-3 border-t border-primary-200 pt-4">
                 <div className="flex justify-between text-sm font-inter">
-                  <span className="text-burgundy-700">Subtotal</span>
-                  <span className="text-burgundy-900 font-semibold">{formatPrice(subtotal)}</span>
+                  <span className="text-primary-700">Subtotal</span>
+                  <span className="text-primary-900 font-semibold">{formatPrice(subtotal)}</span>
                 </div>
                 
                 <div className="flex justify-between text-sm font-inter">
-                  <span className="text-burgundy-700">Shipping</span>
-                  <span className="text-burgundy-900 font-semibold">
+                  <span className="text-primary-700">Shipping</span>
+                  <span className="text-primary-900 font-semibold">
                     {shippingFee > 0 ? formatPrice(shippingFee) : '—'}
                   </span>
                 </div>
 
-                <div className="flex justify-between text-lg font-playfair pt-3 border-t border-burgundy-200">
-                  <span className="text-burgundy-900">Total</span>
-                  <span className="text-burgundy">{formatPrice(totalAmount)}</span>
+                <div className="flex justify-between text-lg font-playfair pt-3 border-t border-primary-200">
+                  <span className="text-primary-900">Total</span>
+                  <span className="text-primary">{formatPrice(totalAmount)}</span>
                 </div>
               </div>
 
               {/* Delivery Timeline */}
               {selectedLocation && (
-                <div className="bg-white p-4 rounded-lg border border-burgundy-200 mt-4">
-                  <p className="text-burgundy-800 text-xs font-inter leading-relaxed">
+                <div className="bg-white p-4 rounded-lg border border-primary-200 mt-4">
+                  <p className="text-primary-800 text-xs font-inter leading-relaxed">
                     📦 Made-to-order: 6-10 days production +{" "}
                     {selectedLocationType === 'international' ? '5-7 days' : '2-5 days'} shipping
                   </p>
@@ -490,9 +482,9 @@ export default function CheckoutPage() {
             <div className="space-y-4">
               {isCheckoutReady ? (
                 <button
-                  onClick={handlePayStackPayment}
+                  onClick={handlePayment}
                   disabled={isProcessing}
-                  className="w-full bg-burgundy text-white py-4 px-6 rounded-lg hover:bg-burgundy-700 transition-colors disabled:bg-burgundy-300 disabled:cursor-not-allowed font-inter text-sm font-medium"
+                  className="w-full bg-primary text-white py-4 px-6 rounded-lg hover:bg-primary-700 transition-colors disabled:bg-primary-300 disabled:cursor-not-allowed font-inter text-sm font-medium"
                 >
                   {isProcessing ? (
                     <div className="flex items-center justify-center">
@@ -506,7 +498,7 @@ export default function CheckoutPage() {
               ) : (
                 <button
                   disabled
-                  className="w-full bg-burgundy-200 text-burgundy-600 py-4 px-6 rounded-lg cursor-not-allowed font-inter text-sm font-medium"
+                  className="w-full bg-primary-200 text-primary-600 py-4 px-6 rounded-lg cursor-not-allowed font-inter text-sm font-medium"
                 >
                   {!selectedLocation ? 'Select shipping method' : 
                    !formData.state ? 'Enter state/province' :
@@ -519,11 +511,24 @@ export default function CheckoutPage() {
 
               <Link
                 href="/shop"
-                className="w-full block border border-burgundy-200 text-burgundy-700 py-4 px-6 rounded-lg text-center font-medium hover:bg-burgundy-50 transition-colors font-inter text-sm"
+                className="w-full block border border-primary-200 text-primary-700 py-4 px-6 rounded-lg text-center font-medium hover:bg-primary-50 transition-colors font-inter text-sm"
               >
                 Continue shopping
               </Link>
             </div>
+
+            {/* PayStack Payment Component */}
+            {showPaystack && (
+              <div className="hidden">
+                <PayStackPayment
+                  email={emailAddress}
+                  amount={totalAmount * 100}
+                  metadata={getOrderMetadata()}
+                  onSuccess={handlePaymentSuccess}
+                  session={session}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

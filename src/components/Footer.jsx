@@ -1,7 +1,7 @@
 // src/components/Footer.jsx
 import Link from "next/link";
 import { FaInstagram } from "react-icons/fa";
-import { BsWhatsapp } from "react-icons/bs";
+import { BsTiktok, BsWhatsapp } from "react-icons/bs";
 
 const Footer = () => {
   const date = new Date().getFullYear();
@@ -39,6 +39,9 @@ const Footer = () => {
             </Link>
             <Link href="https://wa.me/2347036210107" target="_blank">
               <BsWhatsapp size={21} className="hover:text-white" />
+            </Link>
+            <Link href="https://www.tiktok.com/@kavanthebrand" target="_blank">
+              <BsTiktok size={21} className="hover:text-white" />
             </Link>
           </div>
         </div>
@@ -81,7 +84,7 @@ const Footer = () => {
         <div className="text-[0.88rem] space-y-3">
           <h3 className="font-semibold text-sm font-playfair">Kavan The Brand</h3>
           <p className="font-cormorant leading-relaxed">
-            Where strength meets softness in contemporary fashion. 
+            Where strength meets softness in contemporary fashion.
             Handcrafted pieces that celebrate the beautiful duality of womanhood.
           </p>
         </div>

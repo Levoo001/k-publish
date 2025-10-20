@@ -9,11 +9,11 @@ import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { clearCart } from "../store/CartSlice";
 import { saveOrder } from '@/lib/firestoreService';
-import { useUser } from '@clerk/nextjs';
 
-const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
+// Update the component to accept session prop
+const PayStackPayment = ({ email, amount, metadata, onSuccess, session }) => {
   const dispatch = useDispatch();
-  const { user } = useUser();
+
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("");
   const [dateTime, setDateTime] = useState("");
@@ -25,6 +25,12 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
   const handlePayment = () => {
     if (!publicKey) {
       alert("Payment system is currently unavailable. Please try again later.");
+      return;
+    }
+
+    // Check if user is authenticated using the passed session
+    if (!session?.user) {
+      alert("Please sign in to complete your purchase.");
       return;
     }
 
@@ -123,12 +129,12 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
         try {
           // Save order to Firestore with enhanced delivery information
           const orderData = {
-            // Customer Information
-            clerkUserId: user?.id,
+            // Customer Information - use session data directly
+            userId: session?.user?.id,
             customerEmail: email,
             customerName: metadata?.customer_name,
             customerPhone: metadata?.customer_phone,
-            
+
             // Enhanced Delivery Information
             shippingLocation: metadata?.shipping_location,
             shippingProvider: metadata?.shipping_provider,
@@ -136,33 +142,51 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
             shippingFee: metadata?.shipping_fee,
             shippingAddress: metadata?.shipping_address,
             deliveryNotes: metadata?.delivery_notes,
-            
+
             // Order Information
             items: metadata?.items,
             itemCount: metadata?.item_count,
             subtotal: metadata?.subtotal,
             totalAmount: metadata?.total,
-            
+
             // Payment Information
             paymentMethod: response?.channel === "bank" ? "Bank Transfer" : "Card Payment",
             paymentReference: response.reference,
             paymentChannel: response.channel,
             paymentStatus: 'completed',
-            
+
             // Order Status
             orderStatus: 'confirmed',
             orderTimestamp: new Date().toISOString(),
-            
+
             // Store Information
             storeContact: metadata?.store_contact,
             storeEmail: metadata?.store_email,
             storeAddress: metadata?.store_address,
-            
+
             notes: `Payment via ${response.channel}. ${metadata?.delivery_notes ? 'Delivery notes: ' + metadata.delivery_notes : ''}`
           };
 
           const orderId = await saveOrder(orderData);
           console.log('Order saved with ID:', orderId);
+
+          // Send order confirmation email via API route
+          try {
+            await fetch('/api/emails/order-confirmation', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                ...orderData,
+                orderId
+              })
+            });
+            console.log('Order confirmation email sent via API');
+          } catch (emailError) {
+            console.log('Order confirmation email failed:', emailError);
+            // Don't throw error - order should still be successful
+          }
 
           // Update UI state
           setPaymentSuccess(true);
@@ -191,12 +215,12 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
           setPaymentMethod(response?.channel === "bank" ? "Bank Transfer" : "Card Payment");
           setDateTime(new Date().toLocaleString());
           setPaymentReference(response.reference);
-          
+
           // Call onSuccess callback even if database save fails
           if (onSuccess) {
             onSuccess(response);
           }
-          
+
           console.warn('Payment was successful but order was not saved to database. Please contact support.');
         } finally {
           setIsProcessing(false);
@@ -247,7 +271,7 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
       console.error('Error generating PDF:', error);
       alert('Error generating PDF receipt. Please try again.');
     });
-    
+
     dispatch(clearCart());
     setPaymentSuccess(false);
   };
@@ -419,8 +443,8 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
               <div className="space-y-2 mt-4 p-3 bg-blue-900/20 rounded-lg">
                 <h4 className="text-white font-medium text-sm">📦 Expected Delivery</h4>
                 <p className="text-xs text-blue-300">
-                  {metadata?.shipping_type === 'international' 
-                    ? 'International: 5-10 business days' 
+                  {metadata?.shipping_type === 'international'
+                    ? 'International: 5-10 business days'
                     : 'Domestic: 2-5 business days'
                   }
                 </p>
@@ -445,7 +469,7 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
               >
                 Back To Homepage
               </Link>
-              
+
               <Link
                 href="/shop"
                 onClick={handleCloseSuccessModal}

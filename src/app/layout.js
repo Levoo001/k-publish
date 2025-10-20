@@ -1,14 +1,9 @@
 // src/app/layout.js
-
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import CartDrawer from "@/components/CartDrawer"; // Import CartDrawer
+import CartDrawer from "@/components/CartDrawer";
 import "./globals.css";
-import ReduxProvider from "./ReduxProvider";
-import { ClerkProvider } from "@clerk/nextjs";
-import UserSync from '@/components/UserSync';
-import { CartProvider } from "@/components/CartProvider";
-import { PopupProvider } from "@/components/PopupContext";
+import ClientLayout from "./ClientLayout";
 
 export const metadata = {
   title: "Kavan The Brand - Luxury Fashion Brand",
@@ -41,28 +36,20 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <head>
-          <link rel="preconnect" href="https://cdn.sanity.io" />
-          <link rel="preconnect" href="https://img.clerk.com" />
-        </head>
-        <body className="antialiased">
-          <ReduxProvider>
-            <CartProvider>
-              <PopupProvider>
-              <UserSync /> {/* Add UserSync here */}
-              <Navbar />
-              <main>{children}</main>
-              <Footer />
-              <CartDrawer />
-              </PopupProvider>
-            </CartProvider>
-          </ReduxProvider>
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://cdn.sanity.io" />
+      </head>
+      <body className="antialiased">
+        <ClientLayout>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+          <CartDrawer />
+        </ClientLayout>
 
-          <script src="https://js.paystack.co/v1/inline.js" async></script>
-        </body>
-      </html>
-    </ClerkProvider>
+        <script src="https://js.paystack.co/v1/inline.js" async></script>
+      </body>
+    </html>
   );
 }

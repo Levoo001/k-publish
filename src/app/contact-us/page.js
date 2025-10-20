@@ -1,5 +1,4 @@
 // src/app/contact-us/page.js
-
 "use client";
 import { useState } from "react";
 
@@ -120,26 +119,26 @@ const Page = () => {
       <div className="container-custom max-w-6xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-burgundy-50 rounded-full shadow-lg mb-4 border border-burgundy-100">
-            <span className="text-3xl text-burgundy">💌</span>
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-50 rounded-full shadow-lg mb-4 border border-primary-100">
+            <span className="text-3xl text-primary">💌</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-burgundy-900 mb-4 font-playfair">
-            Get In <span className="text-burgundy">Touch</span>
+          <h1 className="text-4xl md:text-5xl font-bold text-primary-900 mb-4 font-playfair">
+            Get In <span className="text-primary">Touch</span>
           </h1>
-          <p className="text-lg text-burgundy-600 max-w-2xl mx-auto leading-relaxed font-cormorant">
+          <p className="text-lg text-primary-600 max-w-2xl mx-auto leading-relaxed font-cormorant">
             We're here to help you embrace your strength and softness. Reach out with any questions about our collections, sizing, or custom orders.
           </p>
           <div className="flex flex-wrap justify-center gap-4 mt-6">
-            <div className="flex items-center text-sm text-burgundy-600 font-inter">
-              <span className="w-2 h-2 bg-burgundy rounded-full mr-2"></span>
+            <div className="flex items-center text-sm text-primary-600 font-inter">
+              <span className="w-2 h-2 bg-primary rounded-full mr-2"></span>
               Response within 24 hours
             </div>
-            <div className="flex items-center text-sm text-burgundy-600 font-inter">
-              <span className="w-2 h-2 bg-burgundy rounded-full mr-2"></span>
+            <div className="flex items-center text-sm text-primary-600 font-inter">
+              <span className="w-2 h-2 bg-primary rounded-full mr-2"></span>
               Personalized assistance
             </div>
-            <div className="flex items-center text-sm text-burgundy-600 font-inter">
-              <span className="w-2 h-2 bg-burgundy rounded-full mr-2"></span>
+            <div className="flex items-center text-sm text-primary-600 font-inter">
+              <span className="w-2 h-2 bg-primary rounded-full mr-2"></span>
               Worldwide shipping support
             </div>
           </div>
@@ -148,40 +147,40 @@ const Page = () => {
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Contact Form */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-sm border border-burgundy-100 p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-primary-100 p-6">
               <div className="flex items-center mb-6">
-                <div className="w-12 h-12 bg-burgundy-100 rounded-xl flex items-center justify-center mr-4">
-                  <span className="text-xl text-burgundy">✍️</span>
+                <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mr-4">
+                  <span className="text-xl text-primary">✍️</span>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-burgundy-900 font-playfair">
+                  <h2 className="text-2xl font-bold text-primary-900 font-playfair">
                     Send Us a Message
                   </h2>
-                  <p className="text-burgundy-600 font-cormorant">All fields marked * are required</p>
+                  <p className="text-primary-600 font-cormorant">All fields marked * are required</p>
                 </div>
               </div>
 
               {isSubmitted ? (
                 <div className="text-center py-8">
-                  <div className="w-20 h-20 bg-burgundy-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl text-burgundy">📧</span>
+                  <div className="w-20 h-20 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-2xl text-primary">📧</span>
                   </div>
-                  <h3 className="text-xl font-bold text-burgundy-900 mb-3 font-playfair">
+                  <h3 className="text-xl font-bold text-primary-900 mb-3 font-playfair">
                     Message Sent Successfully!
                   </h3>
-                  <p className="text-burgundy-600 mb-6 max-w-md mx-auto leading-relaxed font-cormorant">
+                  <p className="text-primary-600 mb-6 max-w-md mx-auto leading-relaxed font-cormorant">
                     Thank you for reaching out! We've received your message and will get back to you within 24 hours.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3 justify-center">
                     <button
                       onClick={() => setIsSubmitted(false)}
-                      className="px-6 py-3 bg-burgundy text-white rounded-lg hover:bg-burgundy-700 transition-colors font-medium font-inter"
+                      className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-700 transition-colors font-medium font-inter"
                     >
                       Send Another Message
                     </button>
                     <a
                       href="/"
-                      className="px-6 py-3 bg-burgundy-50 text-burgundy-700 rounded-lg hover:bg-burgundy-100 transition-colors font-medium font-inter"
+                      className="px-6 py-3 bg-primary-50 text-primary-700 rounded-lg hover:bg-primary-100 transition-colors font-medium font-inter"
                     >
                       Continue Shopping
                     </a>
@@ -199,7 +198,7 @@ const Page = () => {
                     <div>
                       <label
                         htmlFor="name"
-                        className="block text-sm font-semibold text-burgundy-900 mb-2 font-inter"
+                        className="block text-sm font-semibold text-primary-900 mb-2 font-inter"
                       >
                         Full Name *
                       </label>
@@ -213,7 +212,7 @@ const Page = () => {
                         className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-1 transition-all font-inter ${
                           errors.name 
                             ? "border-red-300 focus:ring-red-200" 
-                            : "border-burgundy-200 focus:border-burgundy focus:ring-burgundy-100"
+                            : "border-primary-200 focus:border-primary focus:ring-primary-100"
                         }`}
                         placeholder="Enter your full name"
                       />
@@ -225,7 +224,7 @@ const Page = () => {
                     <div>
                       <label
                         htmlFor="email"
-                        className="block text-sm font-semibold text-burgundy-900 mb-2 font-inter"
+                        className="block text-sm font-semibold text-primary-900 mb-2 font-inter"
                       >
                         Email Address *
                       </label>
@@ -239,7 +238,7 @@ const Page = () => {
                         className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-1 transition-all font-inter ${
                           errors.email 
                             ? "border-red-300 focus:ring-red-200" 
-                            : "border-burgundy-200 focus:border-burgundy focus:ring-burgundy-100"
+                            : "border-primary-200 focus:border-primary focus:ring-primary-100"
                         }`}
                         placeholder="your@email.com"
                       />
@@ -253,7 +252,7 @@ const Page = () => {
                     <div>
                       <label
                         htmlFor="phone"
-                        className="block text-sm font-semibold text-burgundy-900 mb-2 font-inter"
+                        className="block text-sm font-semibold text-primary-900 mb-2 font-inter"
                       >
                         Phone Number
                       </label>
@@ -263,7 +262,7 @@ const Page = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className="w-full p-3 border border-burgundy-200 rounded-lg focus:outline-none focus:border-burgundy focus:ring-1 focus:ring-burgundy-100 transition-all font-inter"
+                        className="w-full p-3 border border-primary-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary-100 transition-all font-inter"
                         placeholder="+234 000 000 0000"
                       />
                     </div>
@@ -271,7 +270,7 @@ const Page = () => {
                     <div>
                       <label
                         htmlFor="subject"
-                        className="block text-sm font-semibold text-burgundy-900 mb-2 font-inter"
+                        className="block text-sm font-semibold text-primary-900 mb-2 font-inter"
                       >
                         Subject
                       </label>
@@ -280,7 +279,7 @@ const Page = () => {
                         name="subject"
                         value={formData.subject}
                         onChange={handleInputChange}
-                        className="w-full p-3 border border-burgundy-200 rounded-lg focus:outline-none focus:border-burgundy focus:ring-1 focus:ring-burgundy-100 transition-all bg-white font-inter"
+                        className="w-full p-3 border border-primary-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary-100 transition-all bg-white font-inter"
                       >
                         <option value="">Select a subject</option>
                         <option value="general">General Inquiry</option>
@@ -296,7 +295,7 @@ const Page = () => {
                   <div>
                     <label
                       htmlFor="message"
-                      className="block text-sm font-semibold text-burgundy-900 mb-2 font-inter"
+                      className="block text-sm font-semibold text-primary-900 mb-2 font-inter"
                     >
                       Your Message *
                     </label>
@@ -310,7 +309,7 @@ const Page = () => {
                       className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-1 transition-all resize-vertical font-inter ${
                         errors.message 
                           ? "border-red-300 focus:ring-red-200" 
-                          : "border-burgundy-200 focus:border-burgundy focus:ring-burgundy-100"
+                          : "border-primary-200 focus:border-primary focus:ring-primary-100"
                       }`}
                       placeholder="Tell us about your inquiry, custom order request, or how we can help you embrace your Kavan style..."
                     />
@@ -318,11 +317,11 @@ const Page = () => {
                       <p className="mt-2 text-sm text-red-600 font-inter">{errors.message}</p>
                     )}
                     <div className="flex justify-between items-center mt-2">
-                      <span className="text-sm text-burgundy-500 font-inter">
+                      <span className="text-sm text-primary-500 font-inter">
                         Minimum 10 characters
                       </span>
                       <span className={`text-sm font-inter ${
-                        formData.message.length < 10 ? 'text-red-500' : 'text-burgundy'
+                        formData.message.length < 10 ? 'text-red-500' : 'text-primary'
                       }`}>
                         {formData.message.length}/10
                       </span>
@@ -334,8 +333,8 @@ const Page = () => {
                     disabled={isSubmitting}
                     className={`w-full py-3 px-6 rounded-lg font-semibold text-base transition-all duration-300 font-inter ${
                       isSubmitting
-                        ? "bg-burgundy-300 cursor-not-allowed"
-                        : "bg-burgundy text-white hover:bg-burgundy-700"
+                        ? "bg-primary-300 cursor-not-allowed"
+                        : "bg-primary text-white hover:bg-primary-700"
                     }`}
                   >
                     {isSubmitting ? (
@@ -377,9 +376,9 @@ const Page = () => {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Contact Methods */}
-            <div className="bg-white rounded-xl shadow-sm border border-burgundy-100 p-6">
-              <h3 className="text-lg font-bold text-burgundy-900 mb-4 flex items-center font-playfair">
-                <span className="w-2 h-2 bg-burgundy rounded-full mr-2"></span>
+            <div className="bg-white rounded-xl shadow-sm border border-primary-100 p-6">
+              <h3 className="text-lg font-bold text-primary-900 mb-4 flex items-center font-playfair">
+                <span className="w-2 h-2 bg-primary rounded-full mr-2"></span>
                 Connect With Us
               </h3>
 
@@ -387,20 +386,20 @@ const Page = () => {
                 {contactMethods.map((method, index) => (
                   <div
                     key={index}
-                    className="p-3 bg-burgundy-50 rounded-lg border border-burgundy-100 hover:bg-burgundy-100 transition-all duration-300 cursor-pointer"
+                    className="p-3 bg-primary-50 rounded-lg border border-primary-100 hover:bg-primary-100 transition-all duration-300 cursor-pointer"
                     onClick={() => method.link && window.open(method.link, '_blank')}
                   >
                     <div className="flex items-start">
-                      <div className="w-10 h-10 rounded-lg flex items-center justify-center mr-3 flex-shrink-0 bg-burgundy-100">
-                        <span className="text-lg text-burgundy">{method.icon}</span>
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center mr-3 flex-shrink-0 bg-primary-100">
+                        <span className="text-lg text-primary">{method.icon}</span>
                       </div>
                       <div className="flex-1">
-                        <h4 className="font-semibold mb-1 font-playfair text-burgundy-900 text-sm">{method.title}</h4>
-                        <p className="text-burgundy-700 text-sm mb-1 font-cormorant">{method.value}</p>
-                        <p className="text-burgundy-600 text-xs font-inter">{method.description}</p>
+                        <h4 className="font-semibold mb-1 font-playfair text-primary-900 text-sm">{method.title}</h4>
+                        <p className="text-primary-700 text-sm mb-1 font-cormorant">{method.value}</p>
+                        <p className="text-primary-600 text-xs font-inter">{method.description}</p>
                       </div>
                       {method.link && (
-                        <span className="text-burgundy text-sm transform group-hover:translate-x-0.5 transition-transform">
+                        <span className="text-primary text-sm transform group-hover:translate-x-0.5 transition-transform">
                           ↗
                         </span>
                       )}
@@ -411,7 +410,7 @@ const Page = () => {
             </div>
 
             {/* Business Hours */}
-            <div className="bg-burgundy rounded-xl p-6">
+            <div className="bg-primary rounded-xl p-6">
               <h3 className="text-lg font-bold mb-4 flex items-center font-playfair text-white">
                 <span className="w-2 h-2 bg-white rounded-full mr-2"></span>
                 Business Hours
@@ -423,21 +422,21 @@ const Page = () => {
                   { days: "Sunday", hours: "Closed", status: "closed" },
                 ].map((schedule, index) => (
                   <div key={index} className="flex justify-between items-center py-1">
-                    <span className={`text-sm ${schedule.status === 'closed' ? 'text-burgundy-300' : 'text-burgundy-100'} font-cormorant`}>
+                    <span className={`text-sm ${schedule.status === 'closed' ? 'text-primary-300' : 'text-primary-100'} font-cormorant`}>
                       {schedule.days}
                     </span>
                     <span className={`font-medium text-sm ${
-                      schedule.status === 'closed' ? 'text-burgundy-400' : 'text-white'
+                      schedule.status === 'closed' ? 'text-primary-400' : 'text-white'
                     } font-cormorant`}>
                       {schedule.hours}
                     </span>
                   </div>
                 ))}
               </div>
-              <div className="mt-4 pt-3 border-t border-burgundy-600">
+              <div className="mt-4 pt-3 border-t border-primary-600">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-burgundy-300 font-cormorant">Current Status</span>
-                  <span className="flex items-center text-burgundy-200 font-inter">
+                  <span className="text-primary-300 font-cormorant">Current Status</span>
+                  <span className="flex items-center text-primary-200 font-inter">
                     <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
                     Online • WAT
                   </span>

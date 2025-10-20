@@ -1,6 +1,7 @@
 // src/app/api/contact/route.js
 
 import { NextResponse } from 'next/server';
+import { sendContactFormEmail } from '@/lib/emailService';
 
 export async function POST(request) {
   try {
@@ -23,20 +24,14 @@ export async function POST(request) {
       );
     }
 
-    // For now, let's log the data and return success
-    // You can integrate with your email service later
-    console.log('Contact form submission:', {
+    // Send email to admin
+    await sendContactFormEmail({
       name,
       email,
       phone,
       subject,
-      message,
-      timestamp: new Date().toISOString(),
+      message
     });
-
-    // Simulate email sending (replace this with actual email service)
-    console.log('📧 Email would be sent to: admin@kavanthebrand.com');
-    console.log('📧 Confirmation email would be sent to:', email);
 
     return NextResponse.json(
       { 

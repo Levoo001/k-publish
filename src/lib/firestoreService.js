@@ -13,14 +13,15 @@ import {
 } from 'firebase/firestore';
 import { db } from './firebase';
 
-// Save customer profile (sync with Clerk)
-export const saveCustomerProfile = async (clerkUserId, userData) => {
+// Save user profile (sync with NextAuth)
+export const saveUserProfile = async (userId, userData) => {
   try {
-    const customerRef = doc(db, 'customers', clerkUserId);
+    const userRef = doc(db, 'users', userId);
     
-    const customerData = {
-      clerkUserId,
+    const profileData = {
+      uid: userId,
       email: userData.email,
+      name: userData.name,
       firstName: userData.firstName,
       lastName: userData.lastName,
       phoneNumber: userData.phoneNumber,
@@ -28,73 +29,53 @@ export const saveCustomerProfile = async (clerkUserId, userData) => {
       signUpDate: userData.signUpDate || serverTimestamp(),
       lastLogin: serverTimestamp(),
       updatedAt: serverTimestamp(),
-      // Additional fields you might want
       totalOrders: 0,
       totalSpent: 0,
       newsletterSubscribed: true
     };
 
-    await setDoc(customerRef, customerData, { merge: true });
-    console.log('Customer profile saved successfully');
-    return customerData;
+    await setDoc(userRef, profileData, { merge: true });
+    console.log('User profile saved successfully');
+    return profileData;
   } catch (error) {
-    console.error('Error saving customer profile:', error);
+    console.error('Error saving user profile:', error);
     throw error;
   }
 };
 
-// Save order details with enhanced delivery information
+// Save order details
 export const saveOrder = async (orderData) => {
   try {
     const orderRef = doc(collection(db, 'orders'));
     const orderId = orderRef.id;
     
     const order = {
-      // Order Identification
       orderId,
-      clerkUserId: orderData.clerkUserId,
-      
-      // Customer Information
+      userId: orderData.userId,
       customerEmail: orderData.customerEmail,
       customerName: orderData.customerName,
       customerPhone: orderData.customerPhone,
-      
-      // Enhanced Delivery Information
       shippingLocation: orderData.shippingLocation,
       shippingProvider: orderData.shippingProvider,
       shippingType: orderData.shippingType,
       shippingFee: orderData.shippingFee,
       shippingAddress: orderData.shippingAddress,
       deliveryNotes: orderData.deliveryNotes,
-      
-      // Order Items
       items: orderData.items,
       itemCount: orderData.itemCount,
-      
-      // Payment Information
       subtotal: orderData.subtotal,
       totalAmount: orderData.totalAmount,
       paymentMethod: orderData.paymentMethod,
       paymentReference: orderData.paymentReference,
       paymentChannel: orderData.paymentChannel,
       paymentStatus: orderData.paymentStatus || 'completed',
-      
-      // Order Status
       orderStatus: orderData.orderStatus || 'confirmed',
-      
-      // Store Information
       storeContact: orderData.storeContact,
       storeEmail: orderData.storeEmail,
       storeAddress: orderData.storeAddress,
-      
-      // Timestamps
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
-      
-      // Additional metadata
       notes: orderData.notes || '',
-      
-      // Delivery Tracking
       deliveryStatus: 'pending',
       estimatedDelivery: getEstimatedDeliveryDate(orderData.shippingType),
       trackingNumber: null,
@@ -103,9 +84,9 @@ export const saveOrder = async (orderData) => {
 
     await setDoc(orderRef, order);
     
-    // Update customer's order count and total spent
-    if (orderData.clerkUserId) {
-      await updateCustomerOrderStats(orderData.clerkUserId, orderData.totalAmount);
+    // Update user's order count and total spent
+    if (orderData.userId) {
+      await updateUserOrderStats(orderData.userId, orderData.totalAmount);
     }
     
     console.log('Order saved successfully with ID:', orderId);
@@ -123,11 +104,11 @@ const getEstimatedDeliveryDate = (shippingType) => {
   
   switch (shippingType) {
     case 'international':
-      deliveryDays = 10; // 5-10 business days
+      deliveryDays = 10;
       break;
     case 'domestic':
     default:
-      deliveryDays = 5; // 2-5 business days
+      deliveryDays = 5;
       break;
   }
   
@@ -136,15 +117,15 @@ const getEstimatedDeliveryDate = (shippingType) => {
   return estimatedDate;
 };
 
-// Update customer order statistics
-const updateCustomerOrderStats = async (clerkUserId, orderAmount) => {
+// Update user order statistics
+const updateUserOrderStats = async (userId, orderAmount) => {
   try {
-    const customerRef = doc(db, 'customers', clerkUserId);
-    const customerDoc = await getDoc(customerRef);
+    const userRef = doc(db, 'users', userId);
+    const userDoc = await getDoc(userRef);
     
-    if (customerDoc.exists()) {
-      const currentData = customerDoc.data();
-      await updateDoc(customerRef, {
+    if (userDoc.exists()) {
+      const currentData = userDoc.data();
+      await updateDoc(userRef, {
         totalOrders: (currentData.totalOrders || 0) + 1,
         totalSpent: (currentData.totalSpent || 0) + orderAmount,
         lastOrderDate: serverTimestamp(),
@@ -152,16 +133,16 @@ const updateCustomerOrderStats = async (clerkUserId, orderAmount) => {
       });
     }
   } catch (error) {
-    console.error('Error updating customer stats:', error);
+    console.error('Error updating user stats:', error);
   }
 };
 
-// Get customer orders
-export const getCustomerOrders = async (clerkUserId) => {
+// Get user orders
+export const getUserOrders = async (userId) => {
   try {
     const ordersQuery = query(
       collection(db, 'orders'),
-      where('clerkUserId', '==', clerkUserId),
+      where('userId', '==', userId),
       orderBy('createdAt', 'desc')
     );
     
@@ -173,7 +154,6 @@ export const getCustomerOrders = async (clerkUserId) => {
       orders.push({ 
         id: doc.id, 
         ...orderData,
-        // Format dates for display
         createdAt: orderData.createdAt?.toDate() || new Date(),
         estimatedDelivery: orderData.estimatedDelivery?.toDate() || new Date()
       });
@@ -181,7 +161,7 @@ export const getCustomerOrders = async (clerkUserId) => {
     
     return orders;
   } catch (error) {
-    console.error('Error fetching customer orders:', error);
+    console.error('Error fetching user orders:', error);
     throw error;
   }
 };
@@ -197,7 +177,6 @@ export const getOrderById = async (orderId) => {
       return { 
         id: orderDoc.id, 
         ...orderData,
-        // Format dates for display
         createdAt: orderData.createdAt?.toDate() || new Date(),
         estimatedDelivery: orderData.estimatedDelivery?.toDate() || new Date()
       };
