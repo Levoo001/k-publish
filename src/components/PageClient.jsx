@@ -176,12 +176,16 @@ export default function Home({ products }) {
 
     if (!email) {
       setSubscriptionStatus('Please enter your email address');
+      // Auto-clear after 4 seconds
+      setTimeout(() => setSubscriptionStatus(''), 4000);
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setSubscriptionStatus('Please enter a valid email address');
+      // Auto-clear after 4 seconds
+      setTimeout(() => setSubscriptionStatus(''), 4000);
       return;
     }
 
@@ -194,11 +198,15 @@ export default function Home({ products }) {
       if (result.success) {
         setSubscriptionStatus('success');
         setEmail('');
+        // Auto-clear success message after 5 seconds
         setTimeout(() => setSubscriptionStatus(''), 5000);
       }
     } catch (error) {
       console.error('Subscription error:', error);
+      setEmail('');
       setSubscriptionStatus(error.message);
+      // Auto-clear error message after 5 seconds
+      setTimeout(() => setSubscriptionStatus(''), 5000);
     } finally {
       setIsSubmitting(false);
     }
@@ -418,7 +426,7 @@ export default function Home({ products }) {
                 </div>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               {/* Left Column */}
               <div className="space-y-4">
@@ -472,20 +480,19 @@ export default function Home({ products }) {
                   </div>
                 ))}
               </div>
-            </div>      
+            </div>
           </div>
         </div>
       </section>
 
       {/* Enhanced Newsletter Section */}
-      <section className="py-16 bg-primary text-white overflow-hidden">
+      <section className="py-16 bg-primary text-white overflow-hidden relative">
         <div className="container mx-auto px-4 text-center max-w-4xl">
           <h2 className="text-3xl font-light mb-6 bg-white bg-clip-text text-transparent font-playfair">
             Join Our Style Community
           </h2>
           <p className="text-lg text-primary-200 mb-8 max-w-2xl mx-auto font-cormorant">
-            Get exclusive access to new collections, styling tips, and special
-            offers
+            Get exclusive access to new collections, styling tips, and special offers
           </p>
 
           <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-4">
@@ -495,13 +502,13 @@ export default function Home({ products }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isSubmitting}
-              className="flex-1 px-4 py-3 border border-primary-700 rounded-xl focus:outline-none focus:border-white text-primary placeholder-primary-300 disabled:opacity-50 font-inter"
+              className="flex-1 px-4 py-3 border border-primary-700 rounded-xl focus:outline-none focus:border-white text-primary placeholder-primary-300 disabled:opacity-50 font-inter backdrop-blur-sm bg-white/95"
               required
             />
             <button
               type="submit"
               disabled={isSubmitting}
-              className="bg-white text-primary px-6 py-3 rounded-xl hover:bg-primary-50 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed font-inter"
+              className="bg-white text-primary px-6 py-3 rounded-xl hover:bg-primary-50 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed font-inter transform hover:scale-105 active:scale-95"
             >
               {isSubmitting ? (
                 <span className="flex items-center justify-center">
@@ -517,33 +524,75 @@ export default function Home({ products }) {
             </button>
           </form>
 
-          {/* Status Messages */}
-          {subscriptionStatus === 'success' && (
-            <div className="max-w-md mx-auto mb-4 p-3 bg-green-500/20 border border-green-500 rounded-xl text-green-300">
-              <div className="flex items-center justify-center space-x-2">
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                <span className="text-sm font-inter">Successfully subscribed! Welcome to our style community.</span>
+          {/* Beautiful Status Messages with Auto-timeout */}
+          <div className="max-w-md mx-auto mb-4">
+            {/* Success Message */}
+            {subscriptionStatus === 'success' && (
+              <div className="animate-fadeInUp bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-l-4 border-green-400 p-4 rounded-lg shadow-lg backdrop-blur-sm">
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-green-400 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="flex-1 text-left">
+                    <h4 className="text-green-100 font-semibold text-sm font-inter mb-1">
+                      Welcome to Kavan! 🎉
+                    </h4>
+                    <p className="text-green-200 text-xs font-inter leading-relaxed">
+                      You're now part of our style community. Check your email for exclusive offers!
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setSubscriptionStatus('')}
+                    className="flex-shrink-0 text-green-300 hover:text-green-100 transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {subscriptionStatus && subscriptionStatus !== 'success' && (
-            <div className="max-w-md mx-auto mb-4 p-3 bg-red-500/20 border border-red-500 rounded-xl text-red-300">
-              <div className="flex items-center justify-center space-x-2">
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-                <span className="text-sm font-inter">{subscriptionStatus}</span>
+            {/* Error Message */}
+            {subscriptionStatus && subscriptionStatus !== 'success' && (
+              <div className="animate-fadeInUp bg-gradient-to-r from-red-500/20 to-pink-500/20 border-l-4 border-red-400 p-4 rounded-lg shadow-lg backdrop-blur-sm">
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-red-400 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="flex-1 text-left">
+                    <h4 className="text-red-100 font-semibold text-sm font-inter mb-1">
+                      Subscription Failed
+                    </h4>
+                    <p className="text-red-200 text-xs font-inter leading-relaxed">
+                      {subscriptionStatus}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setSubscriptionStatus('')}
+                    className="flex-shrink-0 text-red-300 hover:text-red-100 transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           <p className="text-primary-300 text-xs font-cormorant">
             By subscribing, you agree to our Privacy Policy. Unsubscribe at any time.
           </p>
         </div>
+
+        {/* Background decorative elements */}
+        <div className="absolute top-0 left-0 w-32 h-32 bg-white/5 rounded-full -translate-x-16 -translate-y-16"></div>
+        <div className="absolute bottom-0 right-0 w-48 h-48 bg-white/5 rounded-full translate-x-24 translate-y-24"></div>
       </section>
 
       {/* Product Modal */}

@@ -1,4 +1,4 @@
-// src/components/AuthPopup.jsx - Fixed version
+// src/components/AuthPopup.jsx - Updated with conditional password message
 
 "use client";
 
@@ -18,6 +18,7 @@ const AuthPopup = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authStatus, setAuthStatus] = useState("");
+  const [showPasswordHint, setShowPasswordHint] = useState(false);
 
   const { showAuthPopup, closeAuthPopup } = usePopup();
   const { data: session, status, update } = useSession();
@@ -35,6 +36,15 @@ const AuthPopup = () => {
       ...prev,
       [field]: value
     }));
+
+    // Handle password hint visibility
+    if (field === 'password') {
+      if (value.length > 0 && value.length < 6) {
+        setShowPasswordHint(true);
+      } else {
+        setShowPasswordHint(false);
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -65,7 +75,7 @@ const AuthPopup = () => {
       } else if (result?.ok) {
         setAuthStatus("success");
         await update();
-        
+
         setTimeout(() => {
           handleClose();
           router.refresh();
@@ -82,6 +92,7 @@ const AuthPopup = () => {
   const handleClose = () => {
     setFormData({ name: "", email: "", password: "" });
     setAuthStatus("");
+    setShowPasswordHint(false);
     setIsSignInMode(true);
     closeAuthPopup();
   };
@@ -96,6 +107,7 @@ const AuthPopup = () => {
     setIsSignInMode(!isSignInMode);
     setFormData({ name: "", email: "", password: "" });
     setAuthStatus("");
+    setShowPasswordHint(false);
   };
 
   // Don't render if not open or user is authenticated
@@ -222,8 +234,9 @@ const AuthPopup = () => {
                             disabled={isSubmitting}
                             minLength={6}
                           />
-                          {!isSignInMode && (
-                            <p className="text-primary-400 text-xs mt-1 font-inter">
+                          {/* Conditional password hint - only shows during sign up and when user is typing but hasn't reached 6 characters */}
+                          {!isSignInMode && showPasswordHint && (
+                            <p className="text-primary-400 text-xs mt-1 font-inter animate-fadeIn">
                               Password must be at least 6 characters
                             </p>
                           )}

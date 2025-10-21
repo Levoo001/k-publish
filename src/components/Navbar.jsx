@@ -228,9 +228,9 @@ const Navbar = () => {
               </div>
 
               {/* Footer Section */}
-              <div className="p-6 border-t border-primary-100">
+              <div className="border-primary-100">
                 <div className="text-xs text-primary-500 text-center font-cormorant">
-                  © {year} KAVAN. ALL RIGHTS RESERVED.
+                  Copyright © {year} Kavanthebrand . All rights reserved.
                 </div>
               </div>
             </div>

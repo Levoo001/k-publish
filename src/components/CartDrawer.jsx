@@ -93,7 +93,9 @@ const CartDrawer = () => {
                   onClick={closeCart}
                   className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors font-inter"
                 >
+                  <Link href="/shop">
                   Continue Shopping
+                  </Link>
                 </button>
               </div>
             ) : (

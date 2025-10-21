@@ -92,7 +92,7 @@ const Footer = () => {
 
       {/* Copyright */}
       <p className="border-t border-slate-700 pt-4 text-center text-xs font-cormorant">
-        Copyright © Kavan The Brand {date}. All rights reserved.
+        Copyright © {date} Kavanthebrand . All rights reserved.
       </p>
     </footer>
   );

@@ -316,16 +316,6 @@ const Page = () => {
                     {errors.message && (
                       <p className="mt-2 text-sm text-red-600 font-inter">{errors.message}</p>
                     )}
-                    <div className="flex justify-between items-center mt-2">
-                      <span className="text-sm text-primary-500 font-inter">
-                        Minimum 10 characters
-                      </span>
-                      <span className={`text-sm font-inter ${
-                        formData.message.length < 10 ? 'text-red-500' : 'text-primary'
-                      }`}>
-                        {formData.message.length}/10
-                      </span>
-                    </div>
                   </div>
 
                   <button

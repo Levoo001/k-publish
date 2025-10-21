@@ -1,4 +1,4 @@
-// src/services/newsletterService.js - OPTIMIZED VERSION
+// src/services/newsletterService.js - UPDATED WITH BETTER ERROR HANDLING
 import { 
   collection, 
   addDoc, 
@@ -44,6 +44,15 @@ export const subscribeToNewsletter = async (email) => {
     };
   } catch (error) {
     console.error('Error subscribing to newsletter:', error);
+    
+    // Handle specific Firebase errors
+    if (error.code === 'permission-denied') {
+      throw new Error('Newsletter service is currently unavailable. Please try again later.');
+    }
+    
+    if (error.code === 'unavailable') {
+      throw new Error('Network error. Please check your connection and try again.');
+    }
     
     // Preserve specific error messages
     if (error.message.includes('already subscribed') || 
