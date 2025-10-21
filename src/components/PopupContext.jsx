@@ -1,4 +1,5 @@
 // src/components/PopupContext.jsx
+
 "use client";
 
 import { createContext, useContext, useState, useEffect, useRef } from 'react';
@@ -6,27 +7,37 @@ import { createContext, useContext, useState, useEffect, useRef } from 'react';
 const PopupContext = createContext();
 
 export function PopupProvider({ children }) {
+  const [showAuthPopup, setShowAuthPopup] = useState(false);
   const [popupInitialized, setPopupInitialized] = useState(false);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const hasInitialized = useRef(false);
+  const hasShownPopup = useRef(false);
 
-  const openPopup = () => setIsPopupOpen(true);
-  const closePopup = () => setIsPopupOpen(false);
+  const openAuthPopup = () => setShowAuthPopup(true);
+  const closeAuthPopup = () => setShowAuthPopup(false);
 
+  // Auto-show popup after 5 seconds on homepage for unauthenticated users
   useEffect(() => {
-    // This ensures the popup only initializes once across the entire app
-    if (hasInitialized.current) return;
-    hasInitialized.current = true;
+    if (hasShownPopup.current) return;
+    
+    const timer = setTimeout(() => {
+      // Only show if we're on homepage and user isn't authenticated
+      const isHomepage = window.location.pathname === '/';
+      if (isHomepage && !hasShownPopup.current) {
+        openAuthPopup();
+        hasShownPopup.current = true;
+      }
+    }, 5000);
 
     setPopupInitialized(true);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
     <PopupContext.Provider value={{
-      popupInitialized,
-      isPopupOpen,
-      openPopup,
-      closePopup
+      showAuthPopup,
+      setShowAuthPopup,
+      openAuthPopup,
+      closeAuthPopup,
+      popupInitialized
     }}>
       {children}
     </PopupContext.Provider>

@@ -1,4 +1,4 @@
-// src/app/api/auth/welcome-email/route.js
+// src/app/api/emails/welcome-email/route.js
 
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';

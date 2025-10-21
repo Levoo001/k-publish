@@ -9,7 +9,7 @@ import AuthPopup from '@/components/AuthPopup';
 
 export default function ClientLayout({ children }) {
   return (
-    <SessionProvider>
+    <SessionProvider refetchInterval={5 * 60} refetchOnWindowFocus={true}>
       <ReduxProvider>
         <CartProvider>
           <PopupProvider>

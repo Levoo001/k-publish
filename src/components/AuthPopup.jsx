@@ -1,8 +1,8 @@
-// src/components/AuthPopup.jsx
+// src/components/AuthPopup.jsx - Fixed version
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePopup } from "./PopupContext";
 import { IoIosLogIn } from "react-icons/io";
@@ -10,7 +10,7 @@ import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const AuthPopup = () => {
-  const [isSignInMode, setIsSignInMode] = useState(true); // Default to sign in
+  const [isSignInMode, setIsSignInMode] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -19,9 +19,16 @@ const AuthPopup = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authStatus, setAuthStatus] = useState("");
 
-  const { isPopupOpen, closePopup } = usePopup(); // Remove openPopup from here
-  const { data: session, update } = useSession();
+  const { showAuthPopup, closeAuthPopup } = usePopup();
+  const { data: session, status, update } = useSession();
   const router = useRouter();
+
+  // Close popup when user becomes authenticated
+  useEffect(() => {
+    if (session && showAuthPopup) {
+      handleClose();
+    }
+  }, [session, showAuthPopup]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -32,21 +39,20 @@ const AuthPopup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
 
     setIsSubmitting(true);
     setAuthStatus("");
 
     try {
-      // Prepare credentials with action
       const credentials = {
-        email: formData.email,
+        email: formData.email.trim(),
         password: formData.password,
         action: isSignInMode ? 'login' : 'register'
       };
 
-      // Add name for registration
       if (!isSignInMode) {
-        credentials.name = formData.name;
+        credentials.name = formData.name.trim();
       }
 
       const result = await signIn('credentials', {
@@ -56,41 +62,28 @@ const AuthPopup = () => {
 
       if (result?.error) {
         setAuthStatus(result.error);
-        setTimeout(() => setAuthStatus(''), 5000);
       } else if (result?.ok) {
         setAuthStatus("success");
-
-        if (!isSignInMode) {
-          // Store signup success
-          localStorage.setItem("userSignedUp", "true");
-        }
-
-        // Update session to get latest user data
         await update();
-
+        
         setTimeout(() => {
-          closePopup();
-          setFormData({ name: "", email: "", password: "" });
-
-          // Refresh the page to update all session-dependent components
+          handleClose();
           router.refresh();
-        }, 2000);
-      } else {
-        setAuthStatus('Authentication failed. Please try again.');
+        }, 1500);
       }
     } catch (error) {
       console.error('Auth error:', error);
       setAuthStatus('Something went wrong. Please try again.');
-      setTimeout(() => setAuthStatus(''), 5000);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleClose = () => {
-    closePopup();
     setFormData({ name: "", email: "", password: "" });
     setAuthStatus("");
+    setIsSignInMode(true);
+    closeAuthPopup();
   };
 
   const handleOverlayClick = (e) => {
@@ -105,27 +98,24 @@ const AuthPopup = () => {
     setAuthStatus("");
   };
 
-  // Don't show if user is already authenticated
-  if (session) {
+  // Don't render if not open or user is authenticated
+  if (!showAuthPopup || session) {
     return null;
   }
 
   return (
     <AnimatePresence>
-      {isPopupOpen && (
+      {showAuthPopup && (
         <>
-          {/* Overlay */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/80 bg-opacity-50 backdrop-blur-sm"
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm"
             onClick={handleOverlayClick}
           />
 
-          {/* Container with padding */}
           <div className="fixed inset-0 z-50 p-4 flex items-center justify-center">
-            {/* Popup */}
             <motion.div
               initial={{ opacity: 0, y: 50, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -138,83 +128,52 @@ const AuthPopup = () => {
               className="max-w-md w-full bg-white rounded-2xl shadow-luxury overflow-hidden"
             >
               <div className="relative">
-                {/* Close Button */}
                 <button
                   onClick={handleClose}
-                  className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center border bg-primary-50 hover:bg-primary-100 rounded-full transition-colors duration-200 border-primary-200"
-                  aria-label="Close signup popup"
+                  className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center border bg-primary-50 hover:bg-primary-100 rounded-full transition-colors duration-200 border-primary-200 cursor-pointer"
+                  aria-label="Close popup"
                 >
-                  <svg
-                    className="w-4 h-4 text-primary-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
+                  <svg className="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
 
-                {/* Background Pattern */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-50 to-white opacity-50" />
-
                 <div className="relative p-6">
-                  {/* Success State */}
                   {authStatus === "success" && (
                     <div className="text-center mb-4">
                       <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg
-                          className="w-8 h-8 text-primary"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
+                        <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       </div>
                       <h3 className="text-xl font-light text-primary-900 mb-2 font-playfair">
                         {isSignInMode ? "Welcome Back!" : "Welcome to Kavan!"}
                       </h3>
                       <p className="text-primary-600 text-sm font-cormorant">
-                        {isSignInMode
-                          ? "You've successfully signed in!"
-                          : "Your account has been created successfully!"}
+                        {isSignInMode ? "You've successfully signed in!" : "Your account has been created successfully!"}
                       </p>
                     </div>
                   )}
 
-                  {/* Regular Form State */}
                   {authStatus !== "success" && (
                     <>
-                      {/* Icon */}
                       <div className="flex justify-center mb-4">
                         <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
                           <IoIosLogIn size={40} color="white" />
                         </div>
                       </div>
 
-                      {/* Text Content */}
                       <div className="text-center mb-6">
                         <h3 className="text-xl font-light text-primary-900 mb-2 font-playfair">
                           {isSignInMode ? "Welcome Back" : "Join The Kavan Inner Circle"}
                         </h3>
                         <p className="text-primary-600 text-sm font-cormorant mb-2">
-                          {isSignInMode
-                            ? "Sign in to your account"
-                            : "and get 10% off your first order"}
+                          {isSignInMode ? "Sign in to your account" : "and get 10% off your first order"}
                         </p>
                       </div>
                     </>
                   )}
 
-                  {/* Error Message */}
                   {authStatus && authStatus !== "success" && (
                     <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                       <p className="text-red-700 text-sm text-center font-inter">
@@ -223,11 +182,9 @@ const AuthPopup = () => {
                     </div>
                   )}
 
-                  {/* Form (only show if not in success state) */}
                   {authStatus !== "success" && (
                     <form onSubmit={handleSubmit} className="space-y-3">
                       <div className="space-y-3">
-                        {/* Name Field - Only show for Sign Up */}
                         {!isSignInMode && (
                           <div>
                             <input
@@ -242,7 +199,6 @@ const AuthPopup = () => {
                           </div>
                         )}
 
-                        {/* Email Field */}
                         <div>
                           <input
                             type="email"
@@ -255,7 +211,6 @@ const AuthPopup = () => {
                           />
                         </div>
 
-                        {/* Password Field */}
                         <div>
                           <input
                             type="password"
@@ -275,11 +230,10 @@ const AuthPopup = () => {
                         </div>
                       </div>
 
-                      {/* Submit Button */}
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full bg-primary text-white py-3 px-6 rounded-xl font-semibold text-sm hover:bg-primary-700 disabled:bg-primary-300 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] font-inter"
+                        className="w-full bg-primary text-white py-3 px-6 rounded-xl font-semibold text-sm hover:bg-primary-700 disabled:bg-primary-300 disabled:cursor-not-allowed transition-all duration-200 font-inter"
                       >
                         {isSubmitting ? (
                           <div className="flex items-center justify-center">
@@ -291,7 +245,6 @@ const AuthPopup = () => {
                         )}
                       </button>
 
-                      {/* Toggle Auth Mode */}
                       <div className="text-center pt-2">
                         <p className="text-primary-600 text-xs font-inter">
                           {isSignInMode ? "Don't have an account? " : "Already have an account? "}

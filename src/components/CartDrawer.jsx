@@ -1,4 +1,4 @@
-// src/components/CartDrawer.jsx
+// src/components/CartDrawer.jsx - Add sign in button
 "use client";
 
 import Image from "next/image";
@@ -13,10 +13,12 @@ import {
 import { HiOutlineShoppingCart } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
 import { useCart } from "./CartProvider";
+import { usePopup } from "./PopupContext";
 
 const CartDrawer = () => {
   const { isCartOpen, closeCart } = useCart();
   const { data: session, status } = useSession();
+  const { openAuthPopup } = usePopup();
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart?.cartItems || []);
 
@@ -167,13 +169,25 @@ const CartDrawer = () => {
 
               {/* Action Buttons */}
               <div className="space-y-3">
-                <Link
-                  href="/checkout"
-                  onClick={closeCart}
-                  className="w-full block bg-primary text-white py-3 px-6 rounded-lg text-center font-medium hover:bg-primary-700 transition-colors font-inter"
-                >
-                  Check Out
-                </Link>
+                {session ? (
+                  <Link
+                    href="/checkout"
+                    onClick={closeCart}
+                    className="w-full block bg-primary text-white py-3 px-6 rounded-lg text-center font-medium hover:bg-primary-700 transition-colors font-inter"
+                  >
+                    Check Out
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() => {
+                      openAuthPopup();
+                      closeCart();
+                    }}
+                    className="w-full bg-primary text-white py-3 px-6 rounded-lg text-center font-medium hover:bg-primary-700 transition-colors font-inter"
+                  >
+                    Sign In to Checkout
+                  </button>
+                )}
 
                 <button
                   onClick={closeCart}

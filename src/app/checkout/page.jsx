@@ -2,24 +2,25 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { SHIPPING_LOCATIONS } from "@/lib/shippingLocations";
 import PayStackPayment from "@/components/PayStackPayment";
+import { usePopup } from "@/components/PopupContext";
 
 export default function CheckoutPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart?.cartItems || []);
-  
+
   const [selectedLocationType, setSelectedLocationType] = useState('domestic');
   const [selectedLocation, setSelectedLocation] = useState('');
   const [shippingFee, setShippingFee] = useState(0);
   const [isShippingOpen, setIsShippingOpen] = useState(false);
+  const { showAuthPopup, setShowAuthPopup } = usePopup();
   const [formData, setFormData] = useState({
     country: 'Nigeria',
     state: '',
@@ -80,12 +81,12 @@ export default function CheckoutPage() {
       ...SHIPPING_LOCATIONS.international.flatMap(group => group.options)
     ];
     const selectedLocationData = allLocations.find(loc => loc.id === selectedLocation);
-    const providerGroup = SHIPPING_LOCATIONS.domestic.find(group => 
+    const providerGroup = SHIPPING_LOCATIONS.domestic.find(group =>
       group.options.some(opt => opt.id === selectedLocation)
-    ) || SHIPPING_LOCATIONS.international.find(group => 
+    ) || SHIPPING_LOCATIONS.international.find(group =>
       group.options.some(opt => opt.id === selectedLocation)
     );
-    
+
     return {
       customer_name: userName,
       customer_email: emailAddress,
@@ -114,32 +115,35 @@ export default function CheckoutPage() {
   };
 
   const handlePayment = () => {
-  if (!isCheckoutReady || isProcessing) return;
+    if (!isCheckoutReady || isProcessing) return;
 
-  setIsProcessing(true);
-  setShowPaystack(true);
-  
-  // Use a longer timeout and ensure the PayStack component is properly rendered
-  setTimeout(() => {
-    try {
-      // Find the PayStack button more reliably
-      const paystackButton = document.querySelector('button[data-paystack-button]') || 
-                           document.querySelector('button');
-      
-      if (paystackButton) {
-        console.log('Found PayStack button, clicking...');
-        paystackButton.click();
-      } else {
-        console.error('PayStack button not found');
-        setIsProcessing(false);
-        alert('Payment system error. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error triggering payment:', error);
-      setIsProcessing(false);
+    // Double-check session status (this is the fix)
+    if (status !== 'authenticated' || !session) {
+      setShowAuthPopup(true);
+      return;
     }
-  }, 500); // Increased timeout to ensure component is fully rendered
-};
+
+    setIsProcessing(true);
+    setShowPaystack(true);
+
+    setTimeout(() => {
+      try {
+        const paystackButton = document.querySelector('button[data-paystack-button]') ||
+          document.querySelector('button');
+
+        if (paystackButton) {
+          paystackButton.click();
+        } else {
+          console.error('PayStack button not found');
+          setIsProcessing(false);
+          alert('Payment system error. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error triggering payment:', error);
+        setIsProcessing(false);
+      }
+    }, 1000);
+  };
 
   const handlePaymentSuccess = (response) => {
     console.log('Payment successful:', response);
@@ -161,18 +165,30 @@ export default function CheckoutPage() {
     );
   }
 
+
   if (status === 'unauthenticated') {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="text-center max-w-md">
           <h1 className="text-2xl font-playfair text-primary-900 mb-4">Sign In Required</h1>
-          <p className="text-primary-600 mb-6 font-cormorant">Please sign in to proceed with checkout.</p>
-          <Link
-            href="/shop"
-            className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors font-inter"
-          >
-            Continue Shopping
-          </Link>
+          <p className="text-primary-600 mb-6 font-cormorant">Please sign in to complete your purchase.</p>
+
+          <div className="space-y-3">
+            {/* Sign In Button that opens the auth modal */}
+            <button
+              onClick={() => setShowAuthPopup(true)}
+              className="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-700 cursor-pointer transition-colors font-inter"
+            >
+              Sign In to Checkout
+            </button>
+
+            <Link
+              href="/shop"
+              className="w-full block border border-primary text-primary px-6 py-3 rounded-lg hover:bg-primary-50 transition-colors font-inter cursor-pointer"
+            >
+              Continue Shopping
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -226,7 +242,7 @@ export default function CheckoutPage() {
             {/* Shipping Address */}
             <div>
               <h2 className="text-xl font-playfair text-primary-900 mb-6">Shipping address</h2>
-              
+
               {/* Country */}
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2 text-primary-900 font-inter">
@@ -328,11 +344,10 @@ export default function CheckoutPage() {
                             setSelectedLocationType('domestic');
                             setSelectedLocation('');
                           }}
-                          className={`px-4 py-2 rounded border font-inter text-sm transition-colors ${
-                            selectedLocationType === 'domestic'
-                              ? 'border-primary bg-primary text-white'
-                              : 'border-primary-200 text-primary-700 hover:bg-primary-50'
-                          }`}
+                          className={`px-4 py-2 rounded border font-inter text-sm transition-colors ${selectedLocationType === 'domestic'
+                            ? 'border-primary bg-primary text-white'
+                            : 'border-primary-200 text-primary-700 hover:bg-primary-50'
+                            }`}
                         >
                           Domestic
                         </button>
@@ -341,11 +356,10 @@ export default function CheckoutPage() {
                             setSelectedLocationType('international');
                             setSelectedLocation('');
                           }}
-                          className={`px-4 py-2 rounded border font-inter text-sm transition-colors ${
-                            selectedLocationType === 'international'
-                              ? 'border-primary bg-primary text-white'
-                              : 'border-primary-200 text-primary-700 hover:bg-primary-50'
-                          }`}
+                          className={`px-4 py-2 rounded border font-inter text-sm transition-colors ${selectedLocationType === 'international'
+                            ? 'border-primary bg-primary text-white'
+                            : 'border-primary-200 text-primary-700 hover:bg-primary-50'
+                            }`}
                         >
                           International
                         </button>
@@ -367,11 +381,10 @@ export default function CheckoutPage() {
                                   <button
                                     key={location.id}
                                     onClick={() => setSelectedLocation(location.id)}
-                                    className={`p-3 rounded border text-left font-inter text-sm transition-colors ${
-                                      selectedLocation === location.id
-                                        ? 'border-primary bg-primary-50'
-                                        : 'border-primary-200 hover:bg-primary-50'
-                                    }`}
+                                    className={`p-3 rounded border text-left font-inter text-sm transition-colors ${selectedLocation === location.id
+                                      ? 'border-primary bg-primary-50'
+                                      : 'border-primary-200 hover:bg-primary-50'
+                                      }`}
                                   >
                                     <div className="flex justify-between items-center">
                                       <span className="text-primary-900">{location.name}</span>
@@ -418,7 +431,7 @@ export default function CheckoutPage() {
           <div className="space-y-6">
             <div className="bg-primary-50 rounded-lg p-6">
               <h2 className="text-xl font-playfair text-primary-900 mb-6">Order summary</h2>
-              
+
               {/* Cart Items */}
               <div className="space-y-4 mb-6">
                 {cartItems.map((item, index) => (
@@ -453,7 +466,7 @@ export default function CheckoutPage() {
                   <span className="text-primary-700">Subtotal</span>
                   <span className="text-primary-900 font-semibold">{formatPrice(subtotal)}</span>
                 </div>
-                
+
                 <div className="flex justify-between text-sm font-inter">
                   <span className="text-primary-700">Shipping</span>
                   <span className="text-primary-900 font-semibold">
@@ -500,12 +513,12 @@ export default function CheckoutPage() {
                   disabled
                   className="w-full bg-primary-200 text-primary-600 py-4 px-6 rounded-lg cursor-not-allowed font-inter text-sm font-medium"
                 >
-                  {!selectedLocation ? 'Select shipping method' : 
-                   !formData.state ? 'Enter state/province' :
-                   !formData.address ? 'Enter address' :
-                   !formData.phone ? 'Enter phone number' :
-                   !agreeToPolicy ? 'Agree to policies' : 
-                   'Complete required information'}
+                  {!selectedLocation ? 'Select shipping method' :
+                    !formData.state ? 'Enter state/province' :
+                      !formData.address ? 'Enter address' :
+                        !formData.phone ? 'Enter phone number' :
+                          !agreeToPolicy ? 'Agree to policies' :
+                            'Complete required information'}
                 </button>
               )}
 

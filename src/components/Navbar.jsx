@@ -1,4 +1,4 @@
-// src/components/Navbar.jsx
+// src/components/Navbar.jsx - Updated sign in section
 "use client";
 
 import Link from "next/link";
@@ -6,10 +6,10 @@ import { useEffect, useState } from "react";
 import { GiShoppingBag } from "react-icons/gi";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { useSelector } from "react-redux";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { FaUserCircle } from "react-icons/fa";
 import { useCart } from "./CartProvider";
-import { usePopup } from "./PopupContext"; // Add this import
+import { usePopup } from "./PopupContext";
 import { IoCloseOutline } from "react-icons/io5";
 
 const Navbar = () => {
@@ -17,7 +17,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: session, status } = useSession();
   const { openCart } = useCart();
-  const { openPopup } = usePopup(); // Add this hook
+  const { openAuthPopup } = usePopup(); // Use the correct function
 
   useEffect(() => {
     setIsHydrated(true);
@@ -41,9 +41,9 @@ const Navbar = () => {
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
             {session.user?.image ? (
-              <img 
-                src={session.user.image} 
-                alt={session.user.name || 'User'} 
+              <img
+                src={session.user.image}
+                alt={session.user.name || 'User'}
                 className="w-8 h-8 rounded-full"
               />
             ) : (
@@ -64,7 +64,7 @@ const Navbar = () => {
 
     return (
       <button
-        onClick={openPopup} // Change from signIn() to openPopup()
+        onClick={openAuthPopup} // Use the correct function
         className="flex items-center space-x-1"
       >
         <FaUserCircle
@@ -102,7 +102,7 @@ const Navbar = () => {
 
           {/* Center Logo */}
           <Link href="/" className="text-2xl text-primary absolute left-1/2 transform -translate-x-1/2"
-          style={{ fontFamily: 'Cinzel, serif' }}>
+            style={{ fontFamily: 'Cinzel, serif' }}>
             Kavan
           </Link>
 
@@ -157,61 +157,61 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
           {/* Backdrop */}
-          <div 
+          <div
             className="absolute inset-0 bg-black bg-opacity-50"
             onClick={toggleMobileMenu}
           />
-          
+
           {/* Menu Panel */}
           <div className="absolute top-0 left-0 w-3/5 max-w-sm h-full bg-white shadow-xl">
             <div className="flex flex-col h-full p-6">
               {/* Header */}
               <div className="flex justify-end">
                 <span onClick={toggleMobileMenu}>
-                  <IoCloseOutline size={30} className="text-primary-500 hover:text-primary transition-colors"/>
+                  <IoCloseOutline size={30} className="text-primary-500 hover:text-primary transition-colors" />
                 </span>
               </div>
 
               {/* Menu Items */}
               <div className="flex-1 mt-3">
                 <nav className="py-2 space-y-3 text-sm text-primary-900">
-                  <Link 
-                    href="/shop" 
+                  <Link
+                    href="/shop"
                     className="block w-full text-left py-3 hover:bg-primary-50 transition-colors border-b border-primary-100 font-inter"
                     onClick={toggleMobileMenu}
                   >
                     SHOP
                   </Link>
-                  <Link 
-                    href="/about-us" 
+                  <Link
+                    href="/about-us"
                     className="block w-full text-left py-3 hover:bg-primary-50 transition-colors border-b border-primary-100 font-inter"
                     onClick={toggleMobileMenu}
                   >
                     ABOUT US
                   </Link>
-                  
-                  <Link 
-                    href="/contact-us" 
+
+                  <Link
+                    href="/contact-us"
                     className="block w-full text-left py-3 hover:bg-primary-50 transition-colors border-b border-primary-100 font-inter"
                     onClick={toggleMobileMenu}
                   >
                     CONTACT US
                   </Link>
-                  <Link 
-                    href="/SizeGuide" 
+                  <Link
+                    href="/SizeGuide"
                     className="block w-full text-left py-3 hover:bg-primary-50 transition-colors border-b border-primary-100 font-inter"
                     onClick={toggleMobileMenu}
                   >
                     SIZE GUIDE
                   </Link>
-                  
+
                   {/* User Section in Mobile Menu */}
                   <div className="border-b border-primary-100">
-                    <div 
+                    <div
                       className="flex items-center w-full text-left py-3 hover:bg-primary-50 transition-colors cursor-pointer"
                       onClick={() => {
                         if (!session) {
-                          openPopup(); // Change from signIn() to openPopup()
+                          openAuthPopup();
                         }
                         toggleMobileMenu();
                       }}

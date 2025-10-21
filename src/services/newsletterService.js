@@ -1,4 +1,4 @@
-// src/services/newsletterService.js
+// src/services/newsletterService.js - OPTIMIZED VERSION
 import { 
   collection, 
   addDoc, 
@@ -12,9 +12,17 @@ import { db } from '@/lib/firebase';
 // Subscribe to newsletter
 export const subscribeToNewsletter = async (email) => {
   try {
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      throw new Error('Please enter a valid email address');
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+    
     // Check if email already exists
     const subscribersRef = collection(db, 'newsletterSubscribers');
-    const q = query(subscribersRef, where('email', '==', email.toLowerCase().trim()));
+    const q = query(subscribersRef, where('email', '==', normalizedEmail));
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
@@ -23,7 +31,7 @@ export const subscribeToNewsletter = async (email) => {
 
     // Add new subscriber
     const docRef = await addDoc(subscribersRef, {
-      email: email.toLowerCase().trim(),
+      email: normalizedEmail,
       subscribedAt: serverTimestamp(),
       status: 'active',
       source: 'website'
@@ -37,7 +45,9 @@ export const subscribeToNewsletter = async (email) => {
   } catch (error) {
     console.error('Error subscribing to newsletter:', error);
     
-    if (error.message.includes('already subscribed')) {
+    // Preserve specific error messages
+    if (error.message.includes('already subscribed') || 
+        error.message.includes('valid email')) {
       throw error;
     }
     
