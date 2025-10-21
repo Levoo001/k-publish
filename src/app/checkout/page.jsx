@@ -117,32 +117,47 @@ export default function CheckoutPage() {
   const handlePayment = () => {
     if (!isCheckoutReady || isProcessing) return;
 
-    // Double-check session status (this is the fix)
-    if (status !== 'authenticated' || !session) {
+    // Enhanced session checking with more detailed logging
+    console.log('Session status:', status);
+    console.log('Session data:', session);
+
+    if (status === 'loading') {
+      alert('Please wait while we verify your session...');
+      return;
+    }
+
+    if (status !== 'authenticated' || !session?.user) {
+      console.log('User not authenticated, showing auth popup');
       setShowAuthPopup(true);
       return;
     }
 
+    console.log('Starting payment process for authenticated user:', session.user.email);
     setIsProcessing(true);
     setShowPaystack(true);
 
-    setTimeout(() => {
-      try {
-        const paystackButton = document.querySelector('button[data-paystack-button]') ||
-          document.querySelector('button');
+    // Use requestAnimationFrame for better timing
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        try {
+          const paystackButton = document.querySelector('[data-paystack-button]');
 
-        if (paystackButton) {
-          paystackButton.click();
-        } else {
-          console.error('PayStack button not found');
+          if (paystackButton) {
+            console.log('Found PayStack button, clicking...');
+            paystackButton.click();
+          } else {
+            console.error('PayStack button not found');
+            setIsProcessing(false);
+            setShowPaystack(false);
+            alert('Payment system error. Please refresh the page and try again.');
+          }
+        } catch (error) {
+          console.error('Error triggering payment:', error);
           setIsProcessing(false);
-          alert('Payment system error. Please try again.');
+          setShowPaystack(false);
         }
-      } catch (error) {
-        console.error('Error triggering payment:', error);
-        setIsProcessing(false);
-      }
-    }, 1000);
+      }, 500);
+    });
   };
 
   const handlePaymentSuccess = (response) => {

@@ -364,61 +364,6 @@ export default function Home({ products }) {
       <section className="py-16 bg-gradient-to-br from-primary-50 to-white overflow-hidden">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="grid grid-cols-2 gap-4">
-              {/* Left Column */}
-              <div className="space-y-4">
-                {products.slice(0, 2).map((product, index) => (
-                  <div key={product._id} className="relative group">
-                    <BrandStoryProductCard product={product} />
-
-                    {/* Best Seller & Shop Now Overlay */}
-                    {index === 0 && (
-                      <div
-                        className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
-                        onClick={() => handleProductClick(product)}
-                      >
-                        <div className="space-y-2">
-                          <div className="text-left text-white text-xs font-semibold font-inter">
-                            BESTSELLER
-                          </div>
-                          <button className="text-white font-semibold text-sm w-fit border-b border-white hover:border-primary-200 transition-colors font-inter">
-                            Shop Now
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              {/* Right Column */}
-              <div className="space-y-4 mt-8">
-                {products.slice(2, 4).map((product, index) => (
-                  <div key={product._id} className="relative group">
-                    <BrandStoryProductCard product={product} />
-
-                    {/* Best Seller & Shop Now Overlay */}
-                    {index === 0 && (
-
-                      <div
-                        className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
-                        onClick={() => handleProductClick(product)}
-                      >
-                        <div className="space-y-2">
-                          <div className="text-left text-white text-xs font-semibold font-inter">
-                            BESTSELLER
-                          </div>
-                          <button className="text-white font-semibold text-sm w-fit border-b border-white hover:border-primary-200 transition-colors font-inter">
-                            Shop Now
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
             <div className="space-y-6">
               <div>
                 <span className="inline-block bg-primary text-white px-4 py-2 rounded-full text-sm font-medium mb-4 font-inter">
@@ -473,6 +418,61 @@ export default function Home({ products }) {
                 </div>
               </div>
             </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              {/* Left Column */}
+              <div className="space-y-4">
+                {products.slice(0, 2).map((product, index) => (
+                  <div key={product._id} className="relative group">
+                    <BrandStoryProductCard product={product} />
+
+                    {/* Best Seller & Shop Now Overlay */}
+                    {index === 0 && (
+                      <div
+                        className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
+                        onClick={() => handleProductClick(product)}
+                      >
+                        <div className="space-y-2">
+                          <div className="text-left text-white text-xs font-semibold font-inter">
+                            BESTSELLER
+                          </div>
+                          <button className="text-white font-semibold text-sm w-fit border-b border-white hover:border-primary-200 transition-colors font-inter">
+                            Shop Now
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Right Column */}
+              <div className="space-y-4 mt-8">
+                {products.slice(2, 4).map((product, index) => (
+                  <div key={product._id} className="relative group">
+                    <BrandStoryProductCard product={product} />
+
+                    {/* Best Seller & Shop Now Overlay */}
+                    {index === 0 && (
+
+                      <div
+                        className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
+                        onClick={() => handleProductClick(product)}
+                      >
+                        <div className="space-y-2">
+                          <div className="text-left text-white text-xs font-semibold font-inter">
+                            BESTSELLER
+                          </div>
+                          <button className="text-white font-semibold text-sm w-fit border-b border-white hover:border-primary-200 transition-colors font-inter">
+                            Shop Now
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>      
           </div>
         </div>
       </section>

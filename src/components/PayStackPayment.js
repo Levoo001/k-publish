@@ -1,7 +1,7 @@
-// src/components/PayStackPayment.jsx
+// src/components/PayStackPayment.jsx - FIXED VERSION
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -10,7 +10,6 @@ import { useDispatch } from "react-redux";
 import { clearCart } from "../store/CartSlice";
 import { saveOrder } from '@/lib/firestoreService';
 
-// Update the component to accept session prop
 const PayStackPayment = ({ email, amount, metadata, onSuccess, session }) => {
   const dispatch = useDispatch();
 
@@ -19,8 +18,131 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, session }) => {
   const [dateTime, setDateTime] = useState("");
   const [paymentReference, setPaymentReference] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [paystackLoaded, setPaystackLoaded] = useState(false);
 
   const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
+
+  // Check if PayStack script is loaded
+  useEffect(() => {
+    const checkPaystack = () => {
+      if (window.PaystackPop) {
+        setPaystackLoaded(true);
+        console.log('PayStack script loaded successfully');
+      } else {
+        console.log('PayStack script not yet loaded');
+      }
+    };
+
+    // Check immediately
+    checkPaystack();
+
+    // Also check after a delay
+    const timer = setTimeout(checkPaystack, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Define the callback function with useCallback to preserve reference
+  const paymentCallback = useCallback(async (response) => {
+    console.log('PayStack callback received:', response);
+
+    try {
+      // Enhanced order data with session verification
+      const orderData = {
+        // Customer Information with session verification
+        userId: session?.user?.id,
+        customerEmail: email,
+        customerName: metadata?.customer_name,
+        customerPhone: metadata?.customer_phone,
+
+        // Shipping Information
+        shippingLocation: metadata?.shipping_location,
+        shippingProvider: metadata?.shipping_provider,
+        shippingType: metadata?.shipping_type,
+        shippingFee: metadata?.shipping_fee,
+        shippingAddress: metadata?.shipping_address,
+        deliveryNotes: metadata?.delivery_notes,
+
+        // Order Information
+        items: metadata?.items,
+        itemCount: metadata?.item_count,
+        subtotal: metadata?.subtotal,
+        totalAmount: metadata?.total,
+
+        // Payment Information
+        paymentMethod: response?.channel === "bank" ? "Bank Transfer" : "Card Payment",
+        paymentReference: response.reference,
+        paymentChannel: response.channel,
+        paymentStatus: 'completed',
+
+        // Order Status
+        orderStatus: 'confirmed',
+        orderTimestamp: new Date().toISOString(),
+
+        // Store Information
+        storeContact: metadata?.store_contact,
+        storeEmail: metadata?.store_email,
+        storeAddress: metadata?.store_address,
+
+        notes: `Payment via ${response.channel}. User: ${session?.user?.email}`
+      };
+
+      console.log('Saving order to database...');
+      const orderId = await saveOrder(orderData);
+      console.log('Order saved with ID:', orderId);
+
+      // Send order confirmation email
+      try {
+        await fetch('/api/emails/order-confirmation', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...orderData,
+            orderId
+          })
+        });
+        console.log('Order confirmation email sent');
+      } catch (emailError) {
+        console.log('Order confirmation email failed:', emailError);
+        // Continue even if email fails
+      }
+
+      // Update UI state
+      setPaymentSuccess(true);
+      setPaymentMethod(orderData.paymentMethod);
+      setDateTime(new Date().toLocaleString());
+      setPaymentReference(response.reference);
+
+      // Call onSuccess callback if provided
+      if (onSuccess) {
+        onSuccess(response);
+      }
+
+      console.log('Payment completed successfully');
+
+    } catch (error) {
+      console.error('Error in payment callback:', error);
+      // Still show success to user but log the error
+      setPaymentSuccess(true);
+      setPaymentMethod(response?.channel === "bank" ? "Bank Transfer" : "Card Payment");
+      setDateTime(new Date().toLocaleString());
+      setPaymentReference(response.reference);
+
+      if (onSuccess) {
+        onSuccess(response);
+      }
+    } finally {
+      setIsProcessing(false);
+    }
+  }, [session, email, metadata, onSuccess]);
+
+  // Define the onClose function with useCallback
+  const paymentOnClose = useCallback(() => {
+    console.log('Payment window closed by user');
+    setIsProcessing(false);
+  }, []);
 
   const handlePayment = () => {
     if (!publicKey) {
@@ -28,211 +150,114 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, session }) => {
       return;
     }
 
-    // Check if user is authenticated using the passed session
+    // Enhanced session checking
     if (!session?.user) {
-      alert("Please sign in to complete your purchase.");
+      console.error('No user session found in PayStack component');
+      alert("Your session has expired. Please sign in again to complete your purchase.");
       return;
     }
 
+    if (!paystackLoaded) {
+      alert("Payment system is still loading. Please wait a moment and try again.");
+      return;
+    }
+
+    console.log('PayStack: Starting payment for user:', session.user.email);
+    console.log('PayStack public key available:', !!publicKey);
+    console.log('PayStack Pop available:', !!window.PaystackPop);
+    
     setIsProcessing(true);
 
-    const handler = window.PaystackPop.setup({
-      key: publicKey,
-      email,
-      amount,
-      currency: "NGN",
-      metadata: {
-        custom_fields: [
-          {
-            display_name: "Customer Name",
-            variable_name: "customer_name",
-            value: metadata?.customer_name || "N/A"
-          },
-          {
-            display_name: "Customer Phone",
-            variable_name: "customer_phone",
-            value: metadata?.customer_phone || "N/A"
-          },
-          {
-            display_name: "Customer Email",
-            variable_name: "customer_email",
-            value: email || "N/A"
-          },
-          {
-            display_name: "Shipping Location",
-            variable_name: "shipping_location",
-            value: metadata?.shipping_location || "N/A"
-          },
-          {
-            display_name: "Shipping Provider",
-            variable_name: "shipping_provider",
-            value: metadata?.shipping_provider || "N/A"
-          },
-          {
-            display_name: "Shipping Type",
-            variable_name: "shipping_type",
-            value: metadata?.shipping_type || "N/A"
-          },
-          {
-            display_name: "Shipping Fee",
-            variable_name: "shipping_fee",
-            value: metadata?.shipping_fee || 0
-          },
-          {
-            display_name: "Shipping Address",
-            variable_name: "shipping_address",
-            value: metadata?.shipping_address || "N/A"
-          },
-          {
-            display_name: "Delivery Notes",
-            variable_name: "delivery_notes",
-            value: metadata?.delivery_notes || "None"
-          },
-          {
-            display_name: "Items Count",
-            variable_name: "item_count",
-            value: metadata?.item_count || 0
-          },
-          {
-            display_name: "Order Items",
-            variable_name: "order_items",
-            value: JSON.stringify(metadata?.items || [])
-          },
-          {
-            display_name: "Subtotal",
-            variable_name: "subtotal",
-            value: metadata?.subtotal || 0
-          },
-          {
-            display_name: "Total Amount",
-            variable_name: "total_amount",
-            value: metadata?.total || 0
-          },
-          {
-            display_name: "Store Name",
-            variable_name: "store_name",
-            value: metadata?.store_name || "Your Fashion Brand"
-          },
-          {
-            display_name: "Store Contact",
-            variable_name: "store_contact",
-            value: metadata?.store_contact || "+234 123 456 7890"
-          },
-          {
-            display_name: "Store Email",
-            variable_name: "store_email",
-            value: metadata?.store_email || "support@yourbrand.com"
-          }
-        ]
-      },
-      callback: async (response) => {
-        try {
-          // Save order to Firestore with enhanced delivery information
-          const orderData = {
-            // Customer Information - use session data directly
-            userId: session?.user?.id,
-            customerEmail: email,
-            customerName: metadata?.customer_name,
-            customerPhone: metadata?.customer_phone,
+    try {
+      // Create a simple callback function that doesn't lose context
+      const callbackFunction = function(response) {
+        console.log('PayStack raw callback triggered');
+        paymentCallback(response);
+      };
 
-            // Enhanced Delivery Information
-            shippingLocation: metadata?.shipping_location,
-            shippingProvider: metadata?.shipping_provider,
-            shippingType: metadata?.shipping_type,
-            shippingFee: metadata?.shipping_fee,
-            shippingAddress: metadata?.shipping_address,
-            deliveryNotes: metadata?.delivery_notes,
+      // Create a simple onClose function
+      const onCloseFunction = function() {
+        console.log('PayStack onClose triggered');
+        paymentOnClose();
+      };
 
-            // Order Information
-            items: metadata?.items,
-            itemCount: metadata?.item_count,
-            subtotal: metadata?.subtotal,
-            totalAmount: metadata?.total,
+      // Verify the functions are valid
+      if (typeof callbackFunction !== 'function') {
+        throw new Error('Callback is not a valid function');
+      }
 
-            // Payment Information
-            paymentMethod: response?.channel === "bank" ? "Bank Transfer" : "Card Payment",
-            paymentReference: response.reference,
-            paymentChannel: response.channel,
-            paymentStatus: 'completed',
+      if (typeof onCloseFunction !== 'function') {
+        throw new Error('OnClose is not a valid function');
+      }
 
-            // Order Status
-            orderStatus: 'confirmed',
-            orderTimestamp: new Date().toISOString(),
+      console.log('Setting up PayStack with callback...');
+      
+      const handler = window.PaystackPop.setup({
+        key: publicKey,
+        email: email,
+        amount: amount,
+        currency: "NGN",
+        metadata: {
+          custom_fields: [
+            {
+              display_name: "Customer Name",
+              variable_name: "customer_name",
+              value: metadata?.customer_name || "N/A"
+            },
+            {
+              display_name: "Customer Phone",
+              variable_name: "customer_phone",
+              value: metadata?.customer_phone || "N/A"
+            },
+            {
+              display_name: "Customer Email",
+              variable_name: "customer_email",
+              value: email || "N/A"
+            },
+            {
+              display_name: "Customer ID",
+              variable_name: "customer_id",
+              value: session.user.id || "N/A"
+            },
+            {
+              display_name: "Shipping Location",
+              variable_name: "shipping_location",
+              value: metadata?.shipping_location || "N/A"
+            },
+            {
+              display_name: "Shipping Provider",
+              variable_name: "shipping_provider",
+              value: metadata?.shipping_provider || "N/A"
+            },
+            {
+              display_name: "Shipping Type",
+              variable_name: "shipping_type",
+              value: metadata?.shipping_type || "N/A"
+            },
+            {
+              display_name: "Shipping Fee",
+              variable_name: "shipping_fee",
+              value: metadata?.shipping_fee || 0
+            },
+            {
+              display_name: "Shipping Address",
+              variable_name: "shipping_address",
+              value: metadata?.shipping_address || "N/A"
+            }
+          ]
+        },
+        callback: callbackFunction,
+        onClose: onCloseFunction
+      });
 
-            // Store Information
-            storeContact: metadata?.store_contact,
-            storeEmail: metadata?.store_email,
-            storeAddress: metadata?.store_address,
-
-            notes: `Payment via ${response.channel}. ${metadata?.delivery_notes ? 'Delivery notes: ' + metadata.delivery_notes : ''}`
-          };
-
-          const orderId = await saveOrder(orderData);
-          console.log('Order saved with ID:', orderId);
-
-          // Send order confirmation email via API route
-          try {
-            await fetch('/api/emails/order-confirmation', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                ...orderData,
-                orderId
-              })
-            });
-            console.log('Order confirmation email sent via API');
-          } catch (emailError) {
-            console.log('Order confirmation email failed:', emailError);
-            // Don't throw error - order should still be successful
-          }
-
-          // Update UI state
-          setPaymentSuccess(true);
-          setPaymentMethod(orderData.paymentMethod);
-          setDateTime(new Date().toLocaleString());
-          setPaymentReference(response.reference);
-
-          // Call onSuccess callback if provided
-          if (onSuccess) {
-            onSuccess(response);
-          }
-
-          // Log the successful payment with all details
-          console.log('Payment successful with details:', {
-            reference: response.reference,
-            metadata: metadata,
-            amount: amount,
-            orderId: orderId,
-            orderData: orderData
-          });
-
-        } catch (error) {
-          console.error('Error saving order to database:', error);
-          // Still show success to user but log the error
-          setPaymentSuccess(true);
-          setPaymentMethod(response?.channel === "bank" ? "Bank Transfer" : "Card Payment");
-          setDateTime(new Date().toLocaleString());
-          setPaymentReference(response.reference);
-
-          // Call onSuccess callback even if database save fails
-          if (onSuccess) {
-            onSuccess(response);
-          }
-
-          console.warn('Payment was successful but order was not saved to database. Please contact support.');
-        } finally {
-          setIsProcessing(false);
-        }
-      },
-      onClose: function () {
-        console.log('Payment window closed by user');
-        setIsProcessing(false);
-      },
-    });
-
-    handler.openIframe();
+      console.log('PayStack handler created, opening iframe...');
+      handler.openIframe();
+      
+    } catch (error) {
+      console.error('Error setting up PayStack:', error);
+      alert('Error initializing payment. Please try again.');
+      setIsProcessing(false);
+    }
   };
 
   const formatter = new Intl.NumberFormat("en-NG", {
@@ -284,8 +309,9 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, session }) => {
   return (
     <>
       <button
+        data-paystack-button
         onClick={handlePayment}
-        disabled={isProcessing}
+        disabled={isProcessing || !paystackLoaded}
         className="bg-black text-white text-lg rounded-xl w-full py-3 cursor-pointer hover:bg-slate-800 disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors"
       >
         {isProcessing ? (
@@ -293,6 +319,8 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, session }) => {
             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
             Processing...
           </div>
+        ) : !paystackLoaded ? (
+          'Loading Payment...'
         ) : (
           `Proceed To Checkout - ${formatter.format(amount / 100)}`
         )}

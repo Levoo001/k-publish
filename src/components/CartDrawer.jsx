@@ -193,7 +193,9 @@ const CartDrawer = () => {
                   onClick={closeCart}
                   className="w-full border border-primary-200 text-primary-700 py-3 px-6 rounded-lg font-medium hover:bg-primary-50 transition-colors font-inter"
                 >
-                  Continue Shopping
+                  <Link href="/shop">
+                    Continue Shopping
+                  </Link>
                 </button>
               </div>
             </div>

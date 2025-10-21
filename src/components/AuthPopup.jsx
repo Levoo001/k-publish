@@ -10,7 +10,7 @@ import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const AuthPopup = () => {
-  const [isSignInMode, setIsSignInMode] = useState(true);
+  const [isSignInMode, setIsSignInMode] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
