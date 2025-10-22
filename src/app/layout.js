@@ -4,6 +4,20 @@ import Navbar from "@/components/Navbar";
 import CartDrawer from "@/components/CartDrawer";
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
+import { Playfair_Display, Poppins } from 'next/font/google'
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-playfair',
+})
+
+const poppins = Poppins({
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-poppins',
+})
 
 export const metadata = {
   title: "Kavan The Brand - Luxury Fashion Brand",
@@ -36,7 +50,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${playfair.variable} ${poppins.variable}`}>
       <head>
         <link rel="preconnect" href="https://cdn.sanity.io" />
       </head>

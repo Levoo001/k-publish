@@ -1,4 +1,3 @@
-// src/app/about-us/page.js
 const AboutUs = () => {
   return (
     <main className="min-h-screen bg-white py-12">
@@ -8,14 +7,14 @@ const AboutUs = () => {
           <h1 className="text-4xl md:text-5xl font-light text-slate-900 mb-4 font-playfair tracking-wide">
             About <span className="text-primary">Kavan</span>
           </h1>
-          <p className="text-slate-600 text-lg font-cormorant">
+          <p className="text-slate-600 text-lg font-poppins">
             Where strength meets softness in contemporary fashion
           </p>
         </div>
 
         {/* Introduction */}
         <div className="bg-primary-50 p-6 md:p-8 mb-8 border-l-4 border-primary">
-          <p className="text-slate-700 text-lg leading-relaxed font-cormorant">
+          <p className="text-slate-700 text-lg leading-relaxed font-poppins">
             <strong className="text-primary">Kavan</strong> is a contemporary fashion brand for women in
             their soft but powerful era. We create timeless, sophisticated
             pieces that honor both strength and softness, legacy and
@@ -30,9 +29,9 @@ const AboutUs = () => {
             <h2 className="text-2xl font-light text-slate-900 font-playfair tracking-wide">Founder's Story</h2>
           </div>
 
-          <div className="space-y-6 text-slate-700 leading-relaxed font-cormorant ml-10">
+          <div className="space-y-6 text-slate-700 leading-relaxed font-poppins ml-10">
             <div className="bg-primary text-white p-6 mb-4">
-              <p className="text-lg leading-relaxed italic font-cormorant">
+              <p className="text-lg leading-relaxed italic font-poppins">
                 "I never planned to be in fashion. I planned to be strong. But sometimes, the most powerful strength is found in embracing our softness."
               </p>
             </div>
@@ -50,7 +49,7 @@ const AboutUs = () => {
             </p>
 
             <div className="border-l-2 border-primary pl-4 mt-4">
-              <p className="text-slate-700 font-cormorant">
+              <p className="text-slate-700 font-poppins">
                 That dream grew into <strong className="text-primary">Kavan</strong>: a brand for women who, like me, have spent years being strong for everyone else and are ready to celebrate themselves—soft, powerful, and beautifully feminine.
               </p>
             </div>
@@ -68,14 +67,14 @@ const AboutUs = () => {
               </h2>
             </div>
 
-            <div className="space-y-4 text-slate-700 leading-relaxed font-cormorant ml-10">
+            <div className="space-y-4 text-slate-700 leading-relaxed font-poppins ml-10">
               <p>
                 Our designs balance structure and fluidity, echoing the
                 dualities women navigate daily: resilience and rest, elegance
                 and ease, tradition and modernity.
               </p>
               <div className="border-l-2 border-primary pl-4 mt-4">
-                <p className="text-slate-700 font-cormorant">
+                <p className="text-slate-700 font-poppins">
                   Each piece is intentionally crafted to whisper: You are seen.
                   You are powerful. You are allowed to be soft.
                 </p>
@@ -97,7 +96,7 @@ const AboutUs = () => {
                 <h3 className="font-semibold text-primary mb-3 font-playfair">
                   Our Mission
                 </h3>
-                <p className="text-slate-700 font-cormorant">
+                <p className="text-slate-700 font-poppins">
                   To design intentional garments that affirm women's strength
                   and softness, empowering them to lead their lives with
                   elegance, confidence, and ease.
@@ -108,7 +107,7 @@ const AboutUs = () => {
                 <h3 className="font-semibold text-primary mb-3 font-playfair">
                   Our Vision
                 </h3>
-                <p className="text-slate-700 font-cormorant">
+                <p className="text-slate-700 font-poppins">
                   To grow into a global fashion house rooted in African elegance
                   and timeless design — creating pieces that carry stories,
                   legacies, and the fullness of womanhood beyond seasons.
@@ -129,7 +128,7 @@ const AboutUs = () => {
                 <div className="w-2 h-2 bg-primary rounded-full mt-2 mr-4 flex-shrink-0"></div>
                 <div>
                   <h3 className="font-semibold text-slate-900 mb-1 font-playfair group-hover:text-primary">Legacy</h3>
-                  <p className="text-slate-700 font-cormorant">
+                  <p className="text-slate-700 font-poppins">
                     Honoring women's stories, the journeys they walk, and the
                     weight they carry
                   </p>
@@ -140,7 +139,7 @@ const AboutUs = () => {
                 <div className="w-2 h-2 bg-primary rounded-full mt-2 mr-4 flex-shrink-0"></div>
                 <div>
                   <h3 className="font-semibold text-slate-900 mb-1 font-playfair group-hover:text-primary">Elegance</h3>
-                  <p className="text-slate-700 font-cormorant">
+                  <p className="text-slate-700 font-poppins">
                     Designing pieces that are timeless, sophisticated, and
                     versatile
                   </p>
@@ -153,7 +152,7 @@ const AboutUs = () => {
                   <h3 className="font-semibold text-slate-900 mb-1 font-playfair group-hover:text-primary">
                     Strength in Softness
                   </h3>
-                  <p className="text-slate-700 font-cormorant">
+                  <p className="text-slate-700 font-poppins">
                     Affirming the power found in femininity and rest
                   </p>
                 </div>
@@ -165,7 +164,7 @@ const AboutUs = () => {
                   <h3 className="font-semibold text-slate-900 mb-1 font-playfair group-hover:text-primary">
                     Craftsmanship
                   </h3>
-                  <p className="text-slate-700 font-cormorant">
+                  <p className="text-slate-700 font-poppins">
                     Creating intentional, well-made garments that last
                   </p>
                 </div>
@@ -183,12 +182,12 @@ const AboutUs = () => {
             </div>
 
             <div className="bg-primary-50 p-4 mb-4 ml-10">
-              <p className="text-slate-700 font-cormorant">
+              <p className="text-slate-700 font-poppins">
                 She is sophisticated yet grounded. Feminine yet commanding.
               </p>
             </div>
 
-            <div className="space-y-4 text-slate-700 font-cormorant ml-10">
+            <div className="space-y-4 text-slate-700 font-poppins ml-10">
               <p>
                 She embodies quiet power in the way she carries herself, and
                 effortless softness in how she chooses to rest, feel, and
@@ -206,20 +205,20 @@ const AboutUs = () => {
           {/* Join Our Community */}
           <div className="bg-primary text-white p-8 text-center mt-12 rounded-lg">
             <h3 className="text-xl font-light mb-3 font-playfair tracking-wide">Join the Kavan Community</h3>
-            <p className="mb-6 opacity-90 font-cormorant">
+            <p className="mb-6 opacity-90 font-poppins">
               Become part of a movement that celebrates the beautiful duality of
               womanhood
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a
                 href="/"
-                className="inline-flex items-center bg-white text-primary px-6 py-3 font-medium transition-colors hover:bg-slate-100 font-inter text-sm tracking-wide rounded"
+                className="inline-flex items-center bg-white text-primary px-6 py-3 font-medium transition-colors hover:bg-slate-100 font-poppins text-sm tracking-wide rounded"
               >
                 Explore Collections
               </a>
               <a
                 href="/contact-us"
-                className="inline-flex items-center bg-transparent border border-white text-white px-6 py-3 font-medium transition-colors hover:bg-white hover:text-primary font-inter text-sm tracking-wide rounded"
+                className="inline-flex items-center bg-transparent border border-white text-white px-6 py-3 font-medium transition-colors hover:bg-white hover:text-primary font-poppins text-sm tracking-wide rounded"
               >
                 Get In Touch
               </a>

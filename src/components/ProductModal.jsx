@@ -1,4 +1,5 @@
 // src/components/ProductModal.jsx
+
 "use client";
 
 import { useState, useRef } from "react";
@@ -93,7 +94,7 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
 
                 {/* Image Counter */}
                 {images.length > 1 && (
-                  <div className="absolute top-2 left-2 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium">
+                  <div className="absolute top-2 left-2 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium font-poppins">
                     {currentImageIndex + 1} / {images.length}
                   </div>
                 )}
@@ -131,19 +132,19 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
             <div className="flex flex-col justify-between p-6">
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-light mb-3 text-slate-900">
+                  <h2 className="text-2xl md:text-3xl font-light mb-3 text-slate-900 font-playfair">
                     {product.name}
                   </h2>
-                  <p className="text-2xl font-bold text-slate-900 mb-4">
+                  <p className="text-2xl font-bold text-slate-900 mb-4 font-poppins">
                     ₦{product.price?.toLocaleString()}
                   </p>
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-lg mb-3 text-slate-800">
+                  <h3 className="font-semibold text-lg mb-3 text-slate-800 font-playfair">
                     Description
                   </h3>
-                  <p className="text-slate-600 leading-relaxed text-base">
+                  <p className="text-slate-600 leading-relaxed text-base font-poppins">
                     {product.description}
                   </p>
                 </div>
@@ -151,14 +152,14 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
 
               <div className="space-y-4 pt-6">
                 <button
-                  className="w-full bg-black text-white py-3 px-6 hover:bg-slate-800 transition-all duration-300 rounded-xl font-semibold text-lg shadow-lg"
+                  className="w-full bg-black text-white py-3 px-6 hover:bg-slate-800 transition-all duration-300 rounded-xl font-semibold text-lg shadow-lg font-poppins"
                   onClick={handleAddToCartClick}
                 >
                   Add to Cart
                 </button>
 
                 <button
-                  className="w-full border-2 border-slate-300 text-slate-700 py-2 px-6 hover:border-black hover:bg-slate-50 transition-all duration-300 rounded-xl font-semibold text-lg"
+                  className="w-full border-2 border-slate-300 text-slate-700 py-2 px-6 hover:border-black hover:bg-slate-50 transition-all duration-300 rounded-xl font-semibold text-lg font-poppins"
                   onClick={onClose}
                 >
                   Continue Shopping

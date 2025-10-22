@@ -1,4 +1,4 @@
-// src/components/Navbar.jsx - Updated sign in section
+// src/components/Navbar.jsx - UPDATED WITHOUT AUTH
 "use client";
 
 import Link from "next/link";
@@ -6,18 +6,13 @@ import { useEffect, useState } from "react";
 import { GiShoppingBag } from "react-icons/gi";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { useSelector } from "react-redux";
-import { useSession, signOut } from "next-auth/react";
-import { FaUserCircle } from "react-icons/fa";
-import { useCart } from "./CartProvider";
-import { usePopup } from "./PopupContext";
 import { IoCloseOutline } from "react-icons/io5";
+import { useCart } from "./CartProvider";
 
 const Navbar = () => {
   const [isHydrated, setIsHydrated] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { data: session, status } = useSession();
   const { openCart } = useCart();
-  const { openAuthPopup } = usePopup(); // Use the correct function
 
   useEffect(() => {
     setIsHydrated(true);
@@ -30,51 +25,6 @@ const Navbar = () => {
         0
       ) || 0
   );
-
-  const renderUserIcon = () => {
-    if (status === 'loading') {
-      return <FaUserCircle size={24} className="text-primary-400 animate-pulse" />;
-    }
-
-    if (session) {
-      return (
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
-            {session.user?.image ? (
-              <img
-                src={session.user.image}
-                alt={session.user.name || 'User'}
-                className="w-8 h-8 rounded-full"
-              />
-            ) : (
-              <span className="text-primary-600 text-sm font-medium">
-                {session.user?.name?.charAt(0) || session.user?.email?.charAt(0)}
-              </span>
-            )}
-          </div>
-          <button
-            onClick={() => signOut()}
-            className="text-sm text-primary-600 hover:text-primary-700 font-inter"
-          >
-            Sign Out
-          </button>
-        </div>
-      );
-    }
-
-    return (
-      <button
-        onClick={openAuthPopup} // Use the correct function
-        className="flex items-center space-x-1"
-      >
-        <FaUserCircle
-          size={24}
-          className="cursor-pointer text-primary-600 hover:text-primary transition-colors"
-        />
-        <span className="text-sm text-primary-600 font-inter hidden sm:block">Sign In</span>
-      </button>
-    );
-  };
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -89,13 +39,13 @@ const Navbar = () => {
         <div className="hidden md:flex items-center justify-between px-6 py-4">
           {/* Left Links */}
           <div className="flex items-center space-x-8">
-            <Link href="/shop" className="text-sm font-medium text-primary-700 hover:text-primary transition-colors font-inter">
+            <Link href="/shop" className="text-sm font-medium text-primary-700 hover:text-primary transition-colors font-poppins">
               SHOP
             </Link>
-            <Link href="/about-us" className="text-sm font-medium text-primary-700 hover:text-primary transition-colors font-inter">
+            <Link href="/about-us" className="text-sm font-medium text-primary-700 hover:text-primary transition-colors font-poppins">
               ABOUT US
             </Link>
-            <Link href="/SizeGuide" className="text-sm font-medium text-primary-700 hover:text-primary transition-colors font-inter">
+            <Link href="/SizeGuide" className="text-sm font-medium text-primary-700 hover:text-primary transition-colors font-poppins">
               SIZE GUIDE
             </Link>
           </div>
@@ -108,13 +58,12 @@ const Navbar = () => {
 
           {/* Right Icons */}
           <div className="flex items-center space-x-6">
-            {renderUserIcon()}
             <button
               onClick={openCart}
               className="relative text-primary-600 hover:text-primary transition-colors"
             >
               {isHydrated && cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-primary text-white rounded-full text-xs w-5 h-5 flex items-center justify-center font-medium">
+                <span className="absolute -top-2 -right-2 bg-primary text-white rounded-full text-xs w-5 h-5 flex items-center justify-center font-medium font-poppins">
                   {cartCount > 99 ? "99+" : cartCount}
                 </span>
               )}
@@ -124,7 +73,7 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Navigation */}
-        <div className="md:hidden flex items-center justify-between px-4 py-4">
+        <div className="md:hidden flex items-center justify-between px-4 py-1">
           {/* Hamburger Menu */}
           <button
             onClick={toggleMobileMenu}
@@ -134,8 +83,14 @@ const Navbar = () => {
           </button>
 
           {/* Center Logo */}
-          <Link href="/" className="text-2xl font-bold text-primary" style={{ fontFamily: 'Cinzel, serif' }}>
-            Kavan
+          <Link href="/" className="font-bold text-primary text-center" style={{ fontFamily: 'Cinzel, serif' }}>
+            <span className="text-3xl border-b border-primary">
+              Kavan
+            </span>
+            <br />       
+            <span className="text-xs">
+              THE BRAND
+            </span>
           </Link>
 
           {/* Cart Icon */}
@@ -144,7 +99,7 @@ const Navbar = () => {
             className="relative text-primary-600 hover:text-primary transition-colors"
           >
             {isHydrated && cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-primary text-white rounded-full text-xs w-5 h-5 flex items-center justify-center font-medium">
+              <span className="absolute -top-2 -right-2 bg-primary text-white rounded-full text-xs w-5 h-5 flex items-center justify-center font-medium font-poppins">
                 {cartCount > 99 ? "99+" : cartCount}
               </span>
             )}
@@ -177,14 +132,14 @@ const Navbar = () => {
                 <nav className="py-2 space-y-3 text-sm text-primary-900">
                   <Link
                     href="/shop"
-                    className="block w-full text-left py-3 hover:bg-primary-50 transition-colors border-b border-primary-100 font-inter"
+                    className="block w-full text-left py-3 hover:bg-primary-50 transition-colors border-b border-primary-100 font-poppins"
                     onClick={toggleMobileMenu}
                   >
                     SHOP
                   </Link>
                   <Link
                     href="/about-us"
-                    className="block w-full text-left py-3 hover:bg-primary-50 transition-colors border-b border-primary-100 font-inter"
+                    className="block w-full text-left py-3 hover:bg-primary-50 transition-colors border-b border-primary-100 font-poppins"
                     onClick={toggleMobileMenu}
                   >
                     ABOUT US
@@ -192,44 +147,24 @@ const Navbar = () => {
 
                   <Link
                     href="/contact-us"
-                    className="block w-full text-left py-3 hover:bg-primary-50 transition-colors border-b border-primary-100 font-inter"
+                    className="block w-full text-left py-3 hover:bg-primary-50 transition-colors border-b border-primary-100 font-poppins"
                     onClick={toggleMobileMenu}
                   >
                     CONTACT US
                   </Link>
                   <Link
                     href="/SizeGuide"
-                    className="block w-full text-left py-3 hover:bg-primary-50 transition-colors border-b border-primary-100 font-inter"
+                    className="block w-full text-left py-3 hover:bg-primary-50 transition-colors border-b border-primary-100 font-poppins"
                     onClick={toggleMobileMenu}
                   >
                     SIZE GUIDE
                   </Link>
-
-                  {/* User Section in Mobile Menu */}
-                  <div className="border-b border-primary-100">
-                    <div
-                      className="flex items-center w-full text-left py-3 hover:bg-primary-50 transition-colors cursor-pointer"
-                      onClick={() => {
-                        if (!session) {
-                          openAuthPopup();
-                        }
-                        toggleMobileMenu();
-                      }}
-                    >
-                      <div className="flex items-center space-x-3">
-                        {renderUserIcon()}
-                        <span className="text-[15px] font-normal text-primary-900 font-inter">
-                          {session ? "Account" : "Sign In"}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
                 </nav>
               </div>
 
               {/* Footer Section */}
               <div className="border-primary-100">
-                <div className="text-xs text-primary-500 text-center font-cormorant">
+                <div className="text-xs text-primary-500 text-center font-poppins">
                   Copyright © {year} Kavanthebrand . All rights reserved.
                 </div>
               </div>

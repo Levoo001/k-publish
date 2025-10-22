@@ -1,4 +1,5 @@
 // src/components/ShopClient.jsx - UPDATED WITH PRIMARY COLORS
+
 "use client";
 
 import { useState } from "react";
@@ -97,7 +98,7 @@ export default function ShopClient({ products }) {
             <h1 className="text-2xl md:text-6xl font-playfair mb-4 text-primary-900 text-center">
               The Rebirth Collection 
             </h1>
-            <p className="text-[1.05rem] font-cormorant text-primary-600 max-w-2xl mx-auto text-center">
+            <p className="text-[1.05rem] font-poppins text-primary-600 max-w-2xl mx-auto text-center">
               Softness. Strength.
               <br />
               <br />
@@ -133,14 +134,14 @@ export default function ShopClient({ products }) {
                 />
 
                 <div className="absolute top-2 right-2">
-                  <span className="bg-primary/90 text-white px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm font-inter">
+                  <span className="bg-primary/90 text-white px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm font-poppins">
                     New
                   </span>
                 </div>
 
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-primary/10 transition-all duration-300 flex items-center justify-center">
                   <div className="transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                    <button className="bg-white text-primary px-4 py-2 rounded-lg font-semibold text-sm shadow-lg font-inter">
+                    <button className="bg-white text-primary px-4 py-2 rounded-lg font-semibold text-sm shadow-lg font-poppins">
                       Quick View
                     </button>
                   </div>
@@ -151,12 +152,12 @@ export default function ShopClient({ products }) {
                 <h3 className="font-light text-base md:text-lg text-primary-900 line-clamp-2 font-playfair">
                   {product.name}
                 </h3>
-                <p className="text-lg font-bold text-primary font-inter">
+                <p className="text-lg font-bold text-primary font-poppins">
                   ₦{product.price?.toLocaleString()}
                 </p>
 
                 <button
-                  className="md:hidden w-full bg-primary text-white py-2 rounded-lg text-sm font-medium mt-2 font-inter"
+                  className="md:hidden w-full bg-primary text-white py-2 rounded-lg text-sm font-medium mt-2 font-poppins"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleProductClick(product);
@@ -176,7 +177,7 @@ export default function ShopClient({ products }) {
           <h2 className="text-2xl md:text-3xl font-light mb-6 bg-white bg-clip-text text-transparent font-playfair">
             Stay Updated
           </h2>
-          <p className="text-primary-200 mb-8 max-w-2xl mx-auto font-cormorant text-lg">
+          <p className="text-primary-200 mb-8 max-w-2xl mx-auto font-poppins text-lg">
             Be the first to know about new arrivals, exclusive offers, and styling tips
           </p>
 
@@ -187,13 +188,13 @@ export default function ShopClient({ products }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isSubmitting}
-              className="flex-1 px-4 py-3 border border-primary-700 rounded-xl focus:outline-none focus:border-white text-primary-900 placeholder-primary-300 disabled:opacity-50 font-inter backdrop-blur-sm bg-white/95"
+              className="flex-1 px-4 py-3 border border-primary-700 rounded-xl focus:outline-none focus:border-white text-primary-900 placeholder-primary-300 disabled:opacity-50 font-poppins backdrop-blur-sm bg-white/95"
               required
             />
             <button
               type="submit"
               disabled={isSubmitting}
-              className="bg-white text-primary px-6 py-3 rounded-xl hover:bg-primary-50 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed font-inter transform hover:scale-105 active:scale-95"
+              className="bg-white text-primary px-6 py-3 rounded-xl hover:bg-primary-50 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed font-poppins transform hover:scale-105 active:scale-95"
             >
               {isSubmitting ? (
                 <span className="flex items-center justify-center">
@@ -221,10 +222,10 @@ export default function ShopClient({ products }) {
                     </svg>
                   </div>
                   <div className="flex-1 text-left">
-                    <h4 className="text-green-100 font-semibold text-sm font-inter mb-1">
+                    <h4 className="text-green-100 font-semibold text-sm font-poppins mb-1">
                       Welcome to Kavan! 🎉
                     </h4>
-                    <p className="text-green-200 text-xs font-inter leading-relaxed">
+                    <p className="text-green-200 text-xs font-poppins leading-relaxed">
                       You're now part of our style community. Check your email for exclusive offers!
                     </p>
                   </div>
@@ -250,10 +251,10 @@ export default function ShopClient({ products }) {
                     </svg>
                   </div>
                   <div className="flex-1 text-left">
-                    <h4 className="text-red-100 font-semibold text-sm font-inter mb-1">
+                    <h4 className="text-red-100 font-semibold text-sm font-poppins mb-1">
                       Subscription Failed
                     </h4>
-                    <p className="text-red-200 text-xs font-inter leading-relaxed">
+                    <p className="text-red-200 text-xs font-poppins leading-relaxed">
                       {subscriptionStatus}
                     </p>
                   </div>
@@ -270,7 +271,7 @@ export default function ShopClient({ products }) {
             )}
           </div>
 
-          <p className="text-primary-300 text-xs font-cormorant">
+          <p className="text-primary-300 text-xs font-poppins">
             By subscribing, you agree to our Privacy Policy. Unsubscribe at any time.
           </p>
         </div>

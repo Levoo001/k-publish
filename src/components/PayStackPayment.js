@@ -1,4 +1,4 @@
-// src/components/PayStackPayment.jsx - FIXED VERSION
+// src/components/PayStackPayment.jsx - UPDATED WITHOUT SESSION
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { clearCart } from "../store/CartSlice";
 import { saveOrder } from '@/lib/firestoreService';
 
-const PayStackPayment = ({ email, amount, metadata, onSuccess, session }) => {
+const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
   const dispatch = useDispatch();
 
   const [paymentSuccess, setPaymentSuccess] = useState(false);
@@ -47,10 +47,9 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, session }) => {
     console.log('PayStack callback received:', response);
 
     try {
-      // Enhanced order data with session verification
+      // Enhanced order data without user session
       const orderData = {
-        // Customer Information with session verification
-        userId: session?.user?.id,
+        // Customer Information
         customerEmail: email,
         customerName: metadata?.customer_name,
         customerPhone: metadata?.customer_phone,
@@ -61,7 +60,6 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, session }) => {
         shippingType: metadata?.shipping_type,
         shippingFee: metadata?.shipping_fee,
         shippingAddress: metadata?.shipping_address,
-        deliveryNotes: metadata?.delivery_notes,
 
         // Order Information
         items: metadata?.items,
@@ -84,7 +82,7 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, session }) => {
         storeEmail: metadata?.store_email,
         storeAddress: metadata?.store_address,
 
-        notes: `Payment via ${response.channel}. User: ${session?.user?.email}`
+        notes: `Payment via ${response.channel}. Guest checkout.`
       };
 
       console.log('Saving order to database...');
@@ -136,7 +134,7 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, session }) => {
     } finally {
       setIsProcessing(false);
     }
-  }, [session, email, metadata, onSuccess]);
+  }, [email, metadata, onSuccess]);
 
   // Define the onClose function with useCallback
   const paymentOnClose = useCallback(() => {
@@ -150,19 +148,12 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, session }) => {
       return;
     }
 
-    // Enhanced session checking
-    if (!session?.user) {
-      console.error('No user session found in PayStack component');
-      alert("Your session has expired. Please sign in again to complete your purchase.");
-      return;
-    }
-
     if (!paystackLoaded) {
       alert("Payment system is still loading. Please wait a moment and try again.");
       return;
     }
 
-    console.log('PayStack: Starting payment for user:', session.user.email);
+    console.log('PayStack: Starting payment for email:', email);
     console.log('PayStack public key available:', !!publicKey);
     console.log('PayStack Pop available:', !!window.PaystackPop);
     
@@ -213,11 +204,6 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, session }) => {
               display_name: "Customer Email",
               variable_name: "customer_email",
               value: email || "N/A"
-            },
-            {
-              display_name: "Customer ID",
-              variable_name: "customer_id",
-              value: session.user.id || "N/A"
             },
             {
               display_name: "Shipping Location",
@@ -354,9 +340,9 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, session }) => {
             >
               {/* Store Information */}
               <div className="text-center mb-2 border-b border-slate-700 pb-2">
-                <h3 className="text-white text-lg font-semibold">{metadata?.store_name || "Your Fashion Brand"}</h3>
-                <p className="text-xs text-slate-400">{metadata?.store_contact || "+234 123 456 7890"}</p>
-                <p className="text-xs text-slate-400">{metadata?.store_email || "support@yourbrand.com"}</p>
+                <h3 className="text-white text-lg font-semibold">{metadata?.store_name || "Kavan The Brand"}</h3>
+                <p className="text-xs text-slate-400">{metadata?.store_contact || "+234 703 621 0107"}</p>
+                <p className="text-xs text-slate-400">{metadata?.store_email || "admin@kavanthebrand.com"}</p>
                 <p className="text-xs text-slate-400 mt-1">Reference: {paymentReference}</p>
               </div>
 
@@ -400,12 +386,6 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, session }) => {
                   <span className="flex-shrink-0">Address:</span>
                   <span className="text-white text-right text-xs ml-2">{metadata?.shipping_address || "N/A"}</span>
                 </div>
-                {metadata?.delivery_notes && (
-                  <div className="flex justify-between items-start">
-                    <span className="flex-shrink-0">Delivery Notes:</span>
-                    <span className="text-white text-right text-xs ml-2">{metadata?.delivery_notes}</span>
-                  </div>
-                )}
               </div>
 
               {/* Order Items */}

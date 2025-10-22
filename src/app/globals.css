@@ -4,9 +4,6 @@
 @tailwind utilities;
 
 :root {
-  --font-inter: 'Inter', sans-serif;
-  --font-playfair: 'Playfair Display', serif;
-  --font-cormorant: 'Cormorant Garamond', serif;
   --primary: #3A0303;
   --primary-light: #fdf2f2;
   --primary-dark: #2a0202;
@@ -19,7 +16,7 @@ body {
   border-color: #3b3b3b;
   user-select: none;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-poppins), sans-serif; /* Changed to use Poppins */
 }
 
 video {
@@ -52,6 +49,16 @@ video {
   position: relative;
 }
 
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-playfair), serif;
+  }
+  
+  body {
+    font-family: var(--font-poppins), sans-serif;
+  }
+}
+
 /* Custom utility classes */
 @layer utilities {
   .container-custom {
@@ -75,22 +82,6 @@ video {
   }
 }
 
-/* Add to your globals.css or use Tailwind animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fadeInUp {
-  animation: fadeInUp 0.3s ease-out;
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -100,6 +91,21 @@ video {
   }
 }
 
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .animate-fadeIn {
-  animation: fadeIn 0.2s ease-out;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.3s ease-out;
 }

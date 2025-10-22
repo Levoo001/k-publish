@@ -1,10 +1,9 @@
-// src/components/CartDrawer.jsx - Add sign in button
+// src/components/CartDrawer.jsx - UPDATED WITHOUT AUTH
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import { useSession } from "next-auth/react";
 import {
   incrementQuantity,
   decrementQuantity,
@@ -13,12 +12,9 @@ import {
 import { HiOutlineShoppingCart } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
 import { useCart } from "./CartProvider";
-import { usePopup } from "./PopupContext";
 
 const CartDrawer = () => {
   const { isCartOpen, closeCart } = useCart();
-  const { data: session, status } = useSession();
-  const { openAuthPopup } = usePopup();
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart?.cartItems || []);
 
@@ -88,10 +84,10 @@ const CartDrawer = () => {
                   <HiOutlineShoppingCart size={32} className="text-primary" />
                 </div>
                 <h3 className="text-lg font-medium mb-2 font-playfair">Your cart is empty</h3>
-                <p className="text-slate-600 mb-6 font-cormorant">Add some items to get started</p>
+                <p className="text-slate-600 mb-6 font-poppins">Add some items to get started</p>
                 <button
                   onClick={closeCart}
-                  className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors font-inter"
+                  className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors font-poppins"
                 >
                   <Link href="/shop">
                   Continue Shopping
@@ -117,10 +113,10 @@ const CartDrawer = () => {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-sm line-clamp-2 mb-1 font-inter">
+                      <h3 className="font-medium text-sm line-clamp-2 mb-1 font-poppins">
                         {item.name}
                       </h3>
-                      <p className="font-semibold text-sm mb-2 text-primary font-inter">
+                      <p className="font-semibold text-sm mb-2 text-primary font-poppins">
                         {formatPrice(item.price)}
                       </p>
 
@@ -171,29 +167,17 @@ const CartDrawer = () => {
 
               {/* Action Buttons */}
               <div className="space-y-3">
-                {session ? (
-                  <Link
-                    href="/checkout"
-                    onClick={closeCart}
-                    className="w-full block bg-primary text-white py-3 px-6 rounded-lg text-center font-medium hover:bg-primary-700 transition-colors font-inter"
-                  >
-                    Check Out
-                  </Link>
-                ) : (
-                  <button
-                    onClick={() => {
-                      openAuthPopup();
-                      closeCart();
-                    }}
-                    className="w-full bg-primary text-white py-3 px-6 rounded-lg text-center font-medium hover:bg-primary-700 transition-colors font-inter"
-                  >
-                    Sign In to Checkout
-                  </button>
-                )}
+                <Link
+                  href="/checkout"
+                  onClick={closeCart}
+                  className="w-full block bg-primary text-white py-3 px-6 rounded-lg text-center font-medium hover:bg-primary-700 transition-colors font-poppins"
+                >
+                  Check Out
+                </Link>
 
                 <button
                   onClick={closeCart}
-                  className="w-full border border-primary-200 text-primary-700 py-3 px-6 rounded-lg font-medium hover:bg-primary-50 transition-colors font-inter"
+                  className="w-full border border-primary-200 text-primary-700 py-3 px-6 rounded-lg font-medium hover:bg-primary-50 transition-colors font-poppins"
                 >
                   <Link href="/shop">
                     Continue Shopping

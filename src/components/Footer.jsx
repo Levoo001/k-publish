@@ -1,4 +1,5 @@
 // src/components/Footer.jsx
+
 import Link from "next/link";
 import { FaInstagram } from "react-icons/fa";
 import { BsTiktok, BsWhatsapp } from "react-icons/bs";
@@ -12,10 +13,10 @@ const Footer = () => {
         {/* Contact Info */}
         <div className="text-[0.88rem] space-y-3">
           <h3 className="text-sm font-semibold font-playfair">Contact Us</h3>
-          <div className="space-y-2 font-cormorant">
+          <div className="space-y-2 font-poppins">
             <p>
               <span className="font-playfair">Call:</span>{" "}
-              <a href="tel:+2347036210107" className="hover:text-white font-cormorant">
+              <a href="tel:+2347036210107" className="hover:text-white font-poppins">
                 +234 703 621 0107
               </a>
             </p>
@@ -23,7 +24,7 @@ const Footer = () => {
               <span className="font-playfair">Email:</span>{" "}
               <a
                 href="mailto:admin@kavanthebrand.com"
-                className="hover:text-white font-cormorant"
+                className="hover:text-white font-poppins"
               >
                 admin@kavanthebrand.com
               </a>
@@ -52,27 +53,27 @@ const Footer = () => {
 
           <div className="flex justify-between">
             <div className="space-y-2">
-              <Link href="/contact-us" className="block hover:text-white font-cormorant">
+              <Link href="/contact-us" className="block hover:text-white font-poppins">
                 Contact Us
               </Link>
-              <Link href="/about-us" className="block hover:text-white font-cormorant">
+              <Link href="/about-us" className="block hover:text-white font-poppins">
                 About Us
               </Link>
-              <Link href="/SizeGuide" className="block hover:text-white font-cormorant">
+              <Link href="/SizeGuide" className="block hover:text-white font-poppins">
                 Size Guide
               </Link>
             </div>
 
             <div className="space-y-2">
-              <Link href="/delivery-policy" className="block hover:text-white font-cormorant">
+              <Link href="/delivery-policy" className="block hover:text-white font-poppins">
                 Delivery Policy
               </Link>
-              <Link href="/privacy-policy" className="block hover:text-white font-cormorant">
+              <Link href="/privacy-policy" className="block hover:text-white font-poppins">
                 Privacy Policy
               </Link>
               <Link
                 href="/refund-and-exchange-policy"
-                className="block hover:text-white font-cormorant"
+                className="block hover:text-white font-poppins"
               >
                 Returns & Exchanges
               </Link>
@@ -83,7 +84,7 @@ const Footer = () => {
         {/* Brand Message */}
         <div className="text-[0.88rem] space-y-3">
           <h3 className="font-semibold text-sm font-playfair">Kavan The Brand</h3>
-          <p className="font-cormorant leading-relaxed">
+          <p className="font-poppins leading-relaxed">
             Where strength meets softness in contemporary fashion.
             Handcrafted pieces that celebrate the beautiful duality of womanhood.
           </p>
@@ -91,7 +92,7 @@ const Footer = () => {
       </div>
 
       {/* Copyright */}
-      <p className="border-t border-slate-700 pt-4 text-center text-xs font-cormorant">
+      <p className="border-t border-slate-700 pt-4 text-center text-xs font-poppins">
         Copyright © {date} Kavanthebrand . All rights reserved.
       </p>
     </footer>

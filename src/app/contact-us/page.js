@@ -54,7 +54,7 @@ const Page = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -80,12 +80,12 @@ const Page = () => {
       } else {
         throw new Error(result.error || 'Failed to send message');
       }
-      
+
     } catch (error) {
       setIsSubmitting(false);
       console.error('Submission error:', error);
-      setErrors({ 
-        submit: error.message || 'Unable to send message. Please try again later.' 
+      setErrors({
+        submit: error.message || 'Unable to send message. Please try again later.'
       });
     }
   };
@@ -118,6 +118,7 @@ const Page = () => {
     <main className="min-h-screen bg-white py-8">
       <div className="container-custom max-w-6xl mx-auto px-4">
         {/* Header */}
+
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-50 rounded-full shadow-lg mb-4 border border-primary-100">
             <span className="text-3xl text-primary">💌</span>
@@ -125,19 +126,19 @@ const Page = () => {
           <h1 className="text-4xl md:text-5xl font-bold text-primary-900 mb-4 font-playfair">
             Get In <span className="text-primary">Touch</span>
           </h1>
-          <p className="text-lg text-primary-600 max-w-2xl mx-auto leading-relaxed font-cormorant">
+          <p className="text-lg text-primary-600 max-w-2xl mx-auto leading-relaxed font-poppins">
             We're here to help you embrace your strength and softness. Reach out with any questions about our collections, sizing, or custom orders.
           </p>
           <div className="flex flex-wrap justify-center gap-4 mt-6">
-            <div className="flex items-center text-sm text-primary-600 font-inter">
+            <div className="flex items-center text-sm text-primary-600 font-poppins">
               <span className="w-2 h-2 bg-primary rounded-full mr-2"></span>
               Response within 24 hours
             </div>
-            <div className="flex items-center text-sm text-primary-600 font-inter">
+            <div className="flex items-center text-sm text-primary-600 font-poppins">
               <span className="w-2 h-2 bg-primary rounded-full mr-2"></span>
               Personalized assistance
             </div>
-            <div className="flex items-center text-sm text-primary-600 font-inter">
+            <div className="flex items-center text-sm text-primary-600 font-poppins">
               <span className="w-2 h-2 bg-primary rounded-full mr-2"></span>
               Worldwide shipping support
             </div>
@@ -156,7 +157,7 @@ const Page = () => {
                   <h2 className="text-2xl font-bold text-primary-900 font-playfair">
                     Send Us a Message
                   </h2>
-                  <p className="text-primary-600 font-cormorant">All fields marked * are required</p>
+                  <p className="text-primary-600 font-poppins">All fields marked * are required</p>
                 </div>
               </div>
 
@@ -168,19 +169,19 @@ const Page = () => {
                   <h3 className="text-xl font-bold text-primary-900 mb-3 font-playfair">
                     Message Sent Successfully!
                   </h3>
-                  <p className="text-primary-600 mb-6 max-w-md mx-auto leading-relaxed font-cormorant">
+                  <p className="text-primary-600 mb-6 max-w-md mx-auto leading-relaxed font-poppins">
                     Thank you for reaching out! We've received your message and will get back to you within 24 hours.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3 justify-center">
                     <button
                       onClick={() => setIsSubmitted(false)}
-                      className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-700 transition-colors font-medium font-inter"
+                      className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-700 transition-colors font-medium font-poppins"
                     >
                       Send Another Message
                     </button>
                     <a
                       href="/"
-                      className="px-6 py-3 bg-primary-50 text-primary-700 rounded-lg hover:bg-primary-100 transition-colors font-medium font-inter"
+                      className="px-6 py-3 bg-primary-50 text-primary-700 rounded-lg hover:bg-primary-100 transition-colors font-medium font-poppins"
                     >
                       Continue Shopping
                     </a>
@@ -189,7 +190,7 @@ const Page = () => {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {errors.submit && (
-                    <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 font-inter text-sm">
+                    <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 font-poppins text-sm">
                       {errors.submit}
                     </div>
                   )}
@@ -198,7 +199,7 @@ const Page = () => {
                     <div>
                       <label
                         htmlFor="name"
-                        className="block text-sm font-semibold text-primary-900 mb-2 font-inter"
+                        className="block text-sm font-semibold text-primary-900 mb-2 font-poppins"
                       >
                         Full Name *
                       </label>
@@ -209,22 +210,21 @@ const Page = () => {
                         value={formData.name}
                         onChange={handleInputChange}
                         required
-                        className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-1 transition-all font-inter ${
-                          errors.name 
-                            ? "border-red-300 focus:ring-red-200" 
+                        className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-1 transition-all font-poppins ${errors.name
+                            ? "border-red-300 focus:ring-red-200"
                             : "border-primary-200 focus:border-primary focus:ring-primary-100"
-                        }`}
+                          }`}
                         placeholder="Enter your full name"
                       />
                       {errors.name && (
-                        <p className="mt-2 text-sm text-red-600 font-inter">{errors.name}</p>
+                        <p className="mt-2 text-sm text-red-600 font-poppins">{errors.name}</p>
                       )}
                     </div>
 
                     <div>
                       <label
                         htmlFor="email"
-                        className="block text-sm font-semibold text-primary-900 mb-2 font-inter"
+                        className="block text-sm font-semibold text-primary-900 mb-2 font-poppins"
                       >
                         Email Address *
                       </label>
@@ -235,15 +235,14 @@ const Page = () => {
                         value={formData.email}
                         onChange={handleInputChange}
                         required
-                        className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-1 transition-all font-inter ${
-                          errors.email 
-                            ? "border-red-300 focus:ring-red-200" 
+                        className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-1 transition-all font-poppins ${errors.email
+                            ? "border-red-300 focus:ring-red-200"
                             : "border-primary-200 focus:border-primary focus:ring-primary-100"
-                        }`}
+                          }`}
                         placeholder="your@email.com"
                       />
                       {errors.email && (
-                        <p className="mt-2 text-sm text-red-600 font-inter">{errors.email}</p>
+                        <p className="mt-2 text-sm text-red-600 font-poppins">{errors.email}</p>
                       )}
                     </div>
                   </div>
@@ -252,7 +251,7 @@ const Page = () => {
                     <div>
                       <label
                         htmlFor="phone"
-                        className="block text-sm font-semibold text-primary-900 mb-2 font-inter"
+                        className="block text-sm font-semibold text-primary-900 mb-2 font-poppins"
                       >
                         Phone Number
                       </label>
@@ -262,7 +261,7 @@ const Page = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className="w-full p-3 border border-primary-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary-100 transition-all font-inter"
+                        className="w-full p-3 border border-primary-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary-100 transition-all font-poppins"
                         placeholder="+234 000 000 0000"
                       />
                     </div>
@@ -270,7 +269,7 @@ const Page = () => {
                     <div>
                       <label
                         htmlFor="subject"
-                        className="block text-sm font-semibold text-primary-900 mb-2 font-inter"
+                        className="block text-sm font-semibold text-primary-900 mb-2 font-poppins"
                       >
                         Subject
                       </label>
@@ -279,7 +278,7 @@ const Page = () => {
                         name="subject"
                         value={formData.subject}
                         onChange={handleInputChange}
-                        className="w-full p-3 border border-primary-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary-100 transition-all bg-white font-inter"
+                        className="w-full p-3 border border-primary-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary-100 transition-all bg-white font-poppins"
                       >
                         <option value="">Select a subject</option>
                         <option value="general">General Inquiry</option>
@@ -295,7 +294,7 @@ const Page = () => {
                   <div>
                     <label
                       htmlFor="message"
-                      className="block text-sm font-semibold text-primary-900 mb-2 font-inter"
+                      className="block text-sm font-semibold text-primary-900 mb-2 font-poppins"
                     >
                       Your Message *
                     </label>
@@ -306,26 +305,24 @@ const Page = () => {
                       onChange={handleInputChange}
                       required
                       rows={5}
-                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-1 transition-all resize-vertical font-inter ${
-                        errors.message 
-                          ? "border-red-300 focus:ring-red-200" 
+                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-1 transition-all resize-vertical font-poppins ${errors.message
+                          ? "border-red-300 focus:ring-red-200"
                           : "border-primary-200 focus:border-primary focus:ring-primary-100"
-                      }`}
+                        }`}
                       placeholder="Tell us about your inquiry, custom order request, or how we can help you embrace your Kavan style..."
                     />
                     {errors.message && (
-                      <p className="mt-2 text-sm text-red-600 font-inter">{errors.message}</p>
+                      <p className="mt-2 text-sm text-red-600 font-poppins">{errors.message}</p>
                     )}
                   </div>
 
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`w-full py-3 px-6 rounded-lg font-semibold text-base transition-all duration-300 font-inter ${
-                      isSubmitting
+                    className={`w-full py-3 px-6 rounded-lg font-semibold text-base transition-all duration-300 font-poppins ${isSubmitting
                         ? "bg-primary-300 cursor-not-allowed"
                         : "bg-primary text-white hover:bg-primary-700"
-                    }`}
+                      }`}
                   >
                     {isSubmitting ? (
                       <span className="flex items-center justify-center">
@@ -385,8 +382,8 @@ const Page = () => {
                       </div>
                       <div className="flex-1">
                         <h4 className="font-semibold mb-1 font-playfair text-primary-900 text-sm">{method.title}</h4>
-                        <p className="text-primary-700 text-sm mb-1 font-cormorant">{method.value}</p>
-                        <p className="text-primary-600 text-xs font-inter">{method.description}</p>
+                        <p className="text-primary-700 text-sm mb-1 font-poppins">{method.value}</p>
+                        <p className="text-primary-600 text-xs font-poppins">{method.description}</p>
                       </div>
                       {method.link && (
                         <span className="text-primary text-sm transform group-hover:translate-x-0.5 transition-transform">
@@ -412,12 +409,11 @@ const Page = () => {
                   { days: "Sunday", hours: "Closed", status: "closed" },
                 ].map((schedule, index) => (
                   <div key={index} className="flex justify-between items-center py-1">
-                    <span className={`text-sm ${schedule.status === 'closed' ? 'text-primary-300' : 'text-primary-100'} font-cormorant`}>
+                    <span className={`text-sm ${schedule.status === 'closed' ? 'text-primary-300' : 'text-primary-100'} font-poppins`}>
                       {schedule.days}
                     </span>
-                    <span className={`font-medium text-sm ${
-                      schedule.status === 'closed' ? 'text-primary-400' : 'text-white'
-                    } font-cormorant`}>
+                    <span className={`font-medium text-sm ${schedule.status === 'closed' ? 'text-primary-400' : 'text-white'
+                      } font-poppins`}>
                       {schedule.hours}
                     </span>
                   </div>
@@ -425,8 +421,8 @@ const Page = () => {
               </div>
               <div className="mt-4 pt-3 border-t border-primary-600">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-primary-300 font-cormorant">Current Status</span>
-                  <span className="flex items-center text-primary-200 font-inter">
+                  <span className="text-primary-300 font-poppins">Current Status</span>
+                  <span className="flex items-center text-primary-200 font-poppins">
                     <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
                     Online • WAT
                   </span>

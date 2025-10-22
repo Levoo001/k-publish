@@ -1,44 +1,22 @@
-// src/components/PopupContext.jsx
+// src/components/PopupContext.jsx - UPDATED WITHOUT AUTH
 
 "use client";
 
-import { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 const PopupContext = createContext();
 
 export function PopupProvider({ children }) {
-  const [showAuthPopup, setShowAuthPopup] = useState(false);
+  // We can keep this for future popups if needed, but remove auth-specific logic
   const [popupInitialized, setPopupInitialized] = useState(false);
-  const hasShownPopup = useRef(false);
 
-  const openAuthPopup = () => setShowAuthPopup(true);
-  const closeAuthPopup = () => setShowAuthPopup(false);
-
-  // Auto-show popup after 5 seconds on homepage for unauthenticated users
-  useEffect(() => {
-    if (hasShownPopup.current) return;
-    
-    const timer = setTimeout(() => {
-      // Only show if we're on homepage and user isn't authenticated
-      const isHomepage = window.location.pathname === '/';
-      if (isHomepage && !hasShownPopup.current) {
-        openAuthPopup();
-        hasShownPopup.current = true;
-      }
-    }, 5000);
-
-    setPopupInitialized(true);
-    return () => clearTimeout(timer);
-  }, []);
+  // Remove all auth popup states and functions
+  const value = {
+    popupInitialized
+  };
 
   return (
-    <PopupContext.Provider value={{
-      showAuthPopup,
-      setShowAuthPopup,
-      openAuthPopup,
-      closeAuthPopup,
-      popupInitialized
-    }}>
+    <PopupContext.Provider value={value}>
       {children}
     </PopupContext.Provider>
   );

@@ -1,4 +1,5 @@
 // src/app/delivery-policy/page.js
+
 const DeliveryPolicy = () => {
   return (
     <main className="min-h-screen bg-white py-8">
@@ -26,7 +27,7 @@ const DeliveryPolicy = () => {
                 Order & Production
               </h2>
             </div>
-            <ul className="space-y-2 list-disc list-inside font-cormorant text-primary-700">
+            <ul className="space-y-2 list-disc list-inside font-poppins text-primary-700">
               <li>You'll receive an email confirmation after purchase.</li>
               <li>
                 Each piece is made to order: 6–10 business days production before shipping.
@@ -44,7 +45,7 @@ const DeliveryPolicy = () => {
                 Domestic Shipping (Nigeria)
               </h2>
             </div>
-            <ul className="space-y-2 list-disc list-inside font-cormorant text-primary-700">
+            <ul className="space-y-2 list-disc list-inside font-poppins text-primary-700">
               <li>
                 <strong className="font-playfair text-primary">Abuja:</strong> 1–3 working days after production.
               </li>
@@ -64,7 +65,7 @@ const DeliveryPolicy = () => {
                 International Shipping
               </h2>
             </div>
-            <ul className="space-y-2 list-disc list-inside font-cormorant text-primary-700">
+            <ul className="space-y-2 list-disc list-inside font-poppins text-primary-700">
               <li>
                 Ships via DHL Express, typically delivered 5–7 working days after dispatch.
               </li>
@@ -87,7 +88,7 @@ const DeliveryPolicy = () => {
                 Tracking & Responsibility
               </h2>
             </div>
-            <ul className="space-y-2 list-disc list-inside font-cormorant text-primary-700">
+            <ul className="space-y-2 list-disc list-inside font-poppins text-primary-700">
               <li>Tracking details are emailed once your order ships.</li>
               <li>
                 Please double-check your address and contact info; failed deliveries require a re-delivery fee.
@@ -101,14 +102,14 @@ const DeliveryPolicy = () => {
           {/* Contact Information */}
           <section className="bg-primary rounded-xl p-6 text-center">
             <h2 className="text-xl font-bold mb-3 font-playfair text-white">Need Help?</h2>
-            <p className="text-primary-100 mb-4 font-cormorant">
+            <p className="text-primary-100 mb-4 font-poppins">
               For questions or any concerns about your order, or our shipping policies:
             </p>
             <div className="space-y-2">
-              <p className="font-cormorant text-primary-100">
+              <p className="font-poppins text-primary-100">
                 <strong className="font-playfair">Email:</strong> admin@kavanthebrand.com
               </p>
-              <p className="font-cormorant text-primary-100">
+              <p className="font-poppins text-primary-100">
                 <strong className="font-playfair">WhatsApp/Call:</strong> +234 703 621 0107
               </p>
             </div>
@@ -117,7 +118,7 @@ const DeliveryPolicy = () => {
 
         {/* Additional Info */}
         <div className="mt-8 text-center">
-          <p className="text-sm font-cormorant text-primary-600">
+          <p className="text-sm font-poppins text-primary-600">
             Thank you for choosing <span className="text-primary font-playfair">Kavan The Brand</span>. We appreciate your business and look forward to serving you!
           </p>
         </div>
