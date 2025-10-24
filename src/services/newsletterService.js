@@ -1,4 +1,4 @@
-// src/services/newsletterService.js - UPDATED WITH BETTER ERROR HANDLING
+// src/services/newsletterService.js - UPDATED TO STORE ALL FORM DATA
 import { 
   collection, 
   addDoc, 
@@ -9,8 +9,8 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
-// Subscribe to newsletter
-export const subscribeToNewsletter = async (email) => {
+// Subscribe to newsletter - UPDATED to accept form data
+export const subscribeToNewsletter = async (email, name = '', birthday = '') => {
   try {
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -29,18 +29,39 @@ export const subscribeToNewsletter = async (email) => {
       throw new Error('This email is already subscribed to our newsletter!');
     }
 
-    // Add new subscriber
-    const docRef = await addDoc(subscribersRef, {
+    // Prepare subscriber data with all form fields
+    const subscriberData = {
       email: normalizedEmail,
       subscribedAt: serverTimestamp(),
       status: 'active',
-      source: 'website'
-    });
+      source: 'website_popup'
+    };
+
+    // Add name if provided
+    if (name && name.trim()) {
+      subscriberData.name = name.trim();
+    }
+
+    // Add birthday if provided and valid format
+    if (birthday && birthday.trim()) {
+      // Basic DD/MM format validation
+      const birthdayRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])$/;
+      if (birthdayRegex.test(birthday.trim())) {
+        subscriberData.birthday = birthday.trim();
+      } else {
+        console.warn('Invalid birthday format provided:', birthday);
+        // Still subscribe but without birthday
+      }
+    }
+
+    // Add new subscriber with all data
+    const docRef = await addDoc(subscribersRef, subscriberData);
 
     return {
       success: true,
       message: 'Successfully subscribed to our newsletter!',
-      id: docRef.id
+      id: docRef.id,
+      data: subscriberData
     };
   } catch (error) {
     console.error('Error subscribing to newsletter:', error);

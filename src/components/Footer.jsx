@@ -8,30 +8,11 @@ const Footer = () => {
   const date = new Date().getFullYear();
 
   return (
-    <footer className="py-8 container mx-auto max-w-7xl bg-slate-200">
+    <footer className="py-8 container mx-auto max-w-7xl text-primary">
       <div className="grid md:grid-cols-3 gap-8 mb-8 px-4">
-        {/* Contact Info */}
-        <div className="text-[0.88rem] space-y-3">
-          <h3 className="text-sm font-semibold font-playfair">Contact Us</h3>
-          <div className="space-y-2 font-poppins">
-            <p>
-              <span className="font-playfair">Call:</span>{" "}
-              <a href="tel:+2347036210107" className="hover:text-white font-poppins">
-                +234 703 621 0107
-              </a>
-            </p>
-            <p>
-              <span className="font-playfair">Email:</span>{" "}
-              <a
-                href="mailto:admin@kavanthebrand.com"
-                className="hover:text-white font-poppins"
-              >
-                admin@kavanthebrand.com
-              </a>
-            </p>
-          </div>
-
-          <div className="flex gap-4 mt-4">
+        <div className="flex flex-col items-center gap-3">
+          {/* <img src="/logo.png" alt="Kavanthebrand" className="h-32"/> */}
+          <div className="flex gap-6 mt-4">
             <Link
               href="https://www.instagram.com/kavanthebrand_"
               target="_blank"
@@ -48,37 +29,29 @@ const Footer = () => {
         </div>
 
         {/* Quick Links */}
-        <div className="text-[0.88rem] space-y-3">
-          <h3 className="font-semibold text-sm text-center font-playfair">Quick Links</h3>
+        <div className="flex flex-wrap items-center text-center gap-2 text-[0.88rem]">
+            <Link href="/contact-us" className="block hover:text-white font-poppins underline">
+              Contact Us
+            </Link>
+            <Link href="/about-us" className="block hover:text-white font-poppins underline">
+              About Us
+            </Link>
+            <Link href="/SizeGuide" className="block hover:text-white font-poppins underline">
+              Size Guide
+            </Link>
 
-          <div className="flex justify-between">
-            <div className="space-y-2">
-              <Link href="/contact-us" className="block hover:text-white font-poppins">
-                Contact Us
-              </Link>
-              <Link href="/about-us" className="block hover:text-white font-poppins">
-                About Us
-              </Link>
-              <Link href="/SizeGuide" className="block hover:text-white font-poppins">
-                Size Guide
-              </Link>
-            </div>
-
-            <div className="space-y-2">
-              <Link href="/delivery-policy" className="block hover:text-white font-poppins">
-                Delivery Policy
-              </Link>
-              <Link href="/privacy-policy" className="block hover:text-white font-poppins">
-                Privacy Policy
-              </Link>
-              <Link
-                href="/refund-and-exchange-policy"
-                className="block hover:text-white font-poppins"
-              >
-                Returns & Exchanges
-              </Link>
-            </div>
-          </div>
+            <Link href="/delivery-policy" className="block hover:text-white font-poppins underline">
+              Delivery Policy
+            </Link>
+            <Link href="/privacy-policy" className="block hover:text-white font-poppins underline">
+              Privacy Policy
+            </Link>
+            <Link
+              href="/refund-and-exchange-policy"
+              className="block hover:text-white font-poppins underline"
+            >
+              Returns & Exchanges
+            </Link>
         </div>
 
         {/* Brand Message */}

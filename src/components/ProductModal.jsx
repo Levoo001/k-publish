@@ -110,7 +110,7 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
                         onClick={() => handleThumbnailClick(index)}
                         className={`relative w-12 h-12 rounded-lg overflow-hidden border-2 transition-all duration-200 hover:scale-105 flex-shrink-0 ${
                           index === currentImageIndex
-                            ? "border-black shadow-md"
+                            ? "border-primary shadow-md"
                             : "border-slate-300 hover:border-slate-500"
                         }`}
                       >
@@ -129,19 +129,19 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
             </div>
 
             {/* Product Details Section */}
-            <div className="flex flex-col justify-between p-6">
+            <div className="flex flex-col justify-between p-3">
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-light mb-3 text-slate-900 font-playfair">
+                  <h2 className="text-2xl md:text-3xl font-light mb-3 text-primary font-playfair">
                     {product.name}
                   </h2>
-                  <p className="text-2xl font-bold text-slate-900 mb-4 font-poppins">
+                  <p className="text-2xl font-bold text-primary mb-4 font-poppins">
                     ₦{product.price?.toLocaleString()}
                   </p>
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-lg mb-3 text-slate-800 font-playfair">
+                  <h3 className="font-semibold text-lg mb-3 text-primary font-playfair">
                     Description
                   </h3>
                   <p className="text-slate-600 leading-relaxed text-base font-poppins">
@@ -152,14 +152,14 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
 
               <div className="space-y-4 pt-6">
                 <button
-                  className="w-full bg-black text-white py-3 px-6 hover:bg-slate-800 transition-all duration-300 rounded-xl font-semibold text-lg shadow-lg font-poppins"
+                  className="w-full bg-primary text-white py-3 px-6 hover:bg-slate-800 transition-all duration-300 rounded-xl font-semibold text-lg shadow-lg font-poppins"
                   onClick={handleAddToCartClick}
                 >
                   Add to Cart
                 </button>
 
                 <button
-                  className="w-full border-2 border-slate-300 text-slate-700 py-2 px-6 hover:border-black hover:bg-slate-50 transition-all duration-300 rounded-xl font-semibold text-lg font-poppins"
+                  className="w-full border-2 border-slate-300 text-slate-700 py-2 px-6 hover:border-primary hover:bg-slate-50 transition-all duration-300 rounded-xl font-semibold text-lg font-poppins"
                   onClick={onClose}
                 >
                   Continue Shopping

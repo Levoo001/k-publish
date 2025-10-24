@@ -95,10 +95,10 @@ export default function ShopClient({ products }) {
       <section className="bg-gradient-to-r from-primary-50 to-white py-16">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="">
-            <h1 className="text-2xl md:text-6xl font-playfair mb-4 text-primary-900 text-center">
+            <h1 className="text-2xl md:text-6xl font-playfair mb-4 text-primary text-center">
               The Rebirth Collection 
             </h1>
-            <p className="text-[1.05rem] font-poppins text-primary-600 max-w-2xl mx-auto text-center">
+            <p className="text-[1.05rem] font-poppins text-primary max-w-2xl mx-auto text-center">
               Softness. Strength.
               <br />
               <br />
@@ -149,7 +149,7 @@ export default function ShopClient({ products }) {
               </div>
 
               <div className="text-center p-2 space-y-2">
-                <h3 className="font-light text-base md:text-lg text-primary-900 line-clamp-2 font-playfair">
+                <h3 className="font-light text-base md:text-lg text-primary line-clamp-2 font-playfair">
                   {product.name}
                 </h3>
                 <p className="text-lg font-bold text-primary font-poppins">
@@ -188,7 +188,7 @@ export default function ShopClient({ products }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isSubmitting}
-              className="flex-1 px-4 py-3 border border-primary-700 rounded-xl focus:outline-none focus:border-white text-primary-900 placeholder-primary-300 disabled:opacity-50 font-poppins backdrop-blur-sm bg-white/95"
+              className="flex-1 px-4 py-3 border border-primary rounded-xl focus:outline-none focus:border-white text-primary-900 placeholder-primary-300 disabled:opacity-50 font-poppins backdrop-blur-sm bg-white/95"
               required
             />
             <button

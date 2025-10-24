@@ -17,6 +17,7 @@ import { HiOutlineArrowLongRight } from "react-icons/hi2";
 import { IoIosChatbubbles } from "react-icons/io";
 import NewsletterPopup from "./NewsletterPopup";
 import QuoteCarousel from "./QuoteCarousel";
+import WhatsAppChatPopup from './WhatsAppChatPopup';
 
 // Brand Story Carousel Component
 const BrandStoryCarousel = ({ product }) => {
@@ -430,9 +431,6 @@ export default function Home({ products }) {
         </div>
       </section>
 
-      {/* NEW: Quote Carousel - Kilentar Style */}
-      <QuoteCarousel />
-
       {/* Enhanced Newsletter Section */}
       <section className="py-16 bg-primary text-white overflow-hidden relative">
         <div className="container mx-auto px-4 text-center max-w-4xl">
@@ -543,6 +541,9 @@ export default function Home({ products }) {
         <div className="absolute bottom-0 right-0 w-48 h-48 bg-white/5 rounded-full translate-x-24 translate-y-24"></div>
       </section>
 
+      {/* NEW: Quote Carousel - Kilentar Style */}
+      <QuoteCarousel />
+
       {/* Product Modal */}
       <ProductModal
         product={selectedProduct}
@@ -554,9 +555,7 @@ export default function Home({ products }) {
       <NewsletterPopup />
 
       {/* Floating WhatsApp icon */}
-      <Link href="https://wa.me/2347036210107" target="_blank" className="fixed bottom-14 right-2 p-2 rounded-full bg-primary">
-        <IoIosChatbubbles size={25} color="white" />
-      </Link>
+      <WhatsAppChatPopup />
     </main>
   );
 }
