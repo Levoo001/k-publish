@@ -14,7 +14,6 @@ import ProductModal from "./ProductModal";
 import Link from "next/link";
 import { subscribeToNewsletter } from '../services/newsletterService';
 import { HiOutlineArrowLongRight } from "react-icons/hi2";
-import { IoIosChatbubbles } from "react-icons/io";
 import NewsletterPopup from "./NewsletterPopup";
 import QuoteCarousel from "./QuoteCarousel";
 import WhatsAppChatPopup from './WhatsAppChatPopup';
