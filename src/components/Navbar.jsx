@@ -36,7 +36,7 @@ const Navbar = () => {
     <>
       <header className="sticky top-0 z-50 w-full bg-white border-b border-primary-100">
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center justify-between px-6 py-4">
+        <div className="hidden md:flex items-center justify-between px-6 py-1">
           {/* Left Links */}
           <div className="flex items-center space-x-8">
             <Link href="/shop" className="text-sm font-medium text-primary-700 hover:text-primary transition-colors font-poppins">
@@ -51,9 +51,8 @@ const Navbar = () => {
           </div>
 
           {/* Center Logo */}
-          <Link href="/" className="text-2xl text-primary absolute left-1/2 transform -translate-x-1/2"
-            style={{ fontFamily: 'Cinzel, serif' }}>
-            Kavan
+          <Link href="/">
+            <img src="logo.jpeg" alt="kavanthebrand" className="h-18" />
           </Link>
 
           {/* Right Icons */}
@@ -83,14 +82,8 @@ const Navbar = () => {
           </button>
 
           {/* Center Logo */}
-          <Link href="/" className="font-bold text-primary text-center" style={{ fontFamily: 'Cinzel, serif' }}>
-            <span className="text-3xl border-b border-primary">
-              Kavan
-            </span>
-            <br />       
-            <span className="text-xs">
-              THE BRAND
-            </span>
+          <Link href="/">
+            <img src="logo.jpeg" alt="kavanthebrand" className="h-18" />
           </Link>
 
           {/* Cart Icon */}
