@@ -1,5 +1,4 @@
 // src/components/ProductModal.jsx
-
 "use client";
 
 import { useState, useRef } from "react";
@@ -41,7 +40,7 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90 p-4"
+      className="fixed inset-0 z-[70] flex items-center justify-center bg-black bg-opacity-90 p-4" // Increased z-index to 70
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose();

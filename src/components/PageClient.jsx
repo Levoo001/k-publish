@@ -381,11 +381,11 @@ export default function Home({ products }) {
                       className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
                       onClick={() => handleProductClick(product)}
                     >
-                      <div className="space-y-2">
-                        <div className="text-left text-white text-xs font-semibold font-poppins">
+                      <div className="space-y-1">
+                        <div className="text-left text-white text-sm font-semibold font-poppins">
                           BESTSELLER
                         </div>
-                        <button className="text-white font-semibold text-sm w-fit border-b border-white hover:border-primary-200 transition-colors font-poppins">
+                        <button className="text-white font-semibold text-xs w-fit border-b border-white hover:border-primary-200 transition-colors font-poppins">
                           Shop Now
                         </button>
                       </div>
@@ -408,11 +408,11 @@ export default function Home({ products }) {
                       className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
                       onClick={() => handleProductClick(product)}
                     >
-                      <div className="space-y-2">
-                        <div className="text-left text-white text-xs font-semibold font-poppins">
+                      <div className="space-y-1">
+                        <div className="text-left text-white text-sm font-semibold font-poppins">
                           BESTSELLER
                         </div>
-                        <button className="text-white font-semibold text-sm w-fit border-b border-white hover:border-primary-200 transition-colors font-poppins">
+                        <button className="text-white font-semibold text-xs w-fit border-b border-white hover:border-primary-200 transition-colors font-poppins">
                           Shop Now
                         </button>
                       </div>

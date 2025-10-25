@@ -10,9 +10,15 @@ const Footer = () => {
   return (
     <footer className="py-4 container mx-auto max-w-7xl bg-primary text-white">
       <div className="grid md:grid-cols-3 gap-8 mb-8 px-4">
-        <div className="flex flex-col items-center gap-3">
+        <div className="space-y-2">
           <img src="/logo-2.jpeg" alt="Kavanthebrand" className="h-18" />
-          <div className="flex gap-6">
+
+          <p className="font-poppins leading-relaxed text-[0.88rem]">
+            Where strength meets softness in contemporary fashion.
+            Handcrafted pieces that celebrate the beautiful duality of womanhood.
+          </p>
+
+          <div className="flex gap-4 !mt-6">
             <Link
               href="https://www.instagram.com/kavanthebrand_"
               target="_blank"
@@ -26,15 +32,6 @@ const Footer = () => {
               <BsTiktok size={21} className="hover:text-white" />
             </Link>
           </div>
-        </div>
-
-        {/* Brand Message */}
-        <div className="text-[0.88rem] space-y-1">
-          <h3 className="font-semibold text-base font-playfair">KavanTheBrand</h3>
-          <p className="font-poppins leading-relaxed">
-            Where strength meets softness in contemporary fashion.
-            Handcrafted pieces that celebrate the beautiful duality of womanhood.
-          </p>
         </div>
 
         {/* Copyright */}

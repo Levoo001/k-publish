@@ -1,18 +1,21 @@
-// src/components/Navbar.jsx - UPDATED WITHOUT AUTH
+// src/components/Navbar.jsx - UPDATED WITH SEARCH
 "use client";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { GiShoppingBag } from "react-icons/gi";
 import { BiMenuAltLeft } from "react-icons/bi";
+import { FiSearch } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { IoCloseOutline } from "react-icons/io5";
 import { useCart } from "./CartProvider";
+import { useSearch } from "./SearchContext";
 
 const Navbar = () => {
   const [isHydrated, setIsHydrated] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { openCart } = useCart();
+  const { toggleSearch } = useSearch();
 
   useEffect(() => {
     setIsHydrated(true);
@@ -30,7 +33,7 @@ const Navbar = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const year = new Date().getFullYear()
+  const year = new Date().getFullYear();
 
   return (
     <>
@@ -57,6 +60,15 @@ const Navbar = () => {
 
           {/* Right Icons */}
           <div className="flex items-center space-x-6">
+            {/* Search Icon */}
+            <button
+              onClick={toggleSearch}
+              className="text-primary-600 hover:text-primary transition-colors"
+            >
+              <FiSearch size={22} />
+            </button>
+
+            {/* Cart Icon */}
             <button
               onClick={openCart}
               className="relative text-primary-600 hover:text-primary transition-colors"
@@ -82,22 +94,33 @@ const Navbar = () => {
           </button>
 
           {/* Center Logo */}
-          <Link href="/">
+          <Link href="/" className="-mr-9">
             <img src="logo.jpeg" alt="kavanthebrand" className="h-18" />
           </Link>
 
-          {/* Cart Icon */}
-          <button
-            onClick={openCart}
-            className="relative text-primary-600 hover:text-primary transition-colors"
-          >
-            {isHydrated && cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-primary text-white rounded-full text-xs w-5 h-5 flex items-center justify-center font-medium font-poppins">
-                {cartCount > 99 ? "99+" : cartCount}
-              </span>
-            )}
-            <GiShoppingBag size={24} />
-          </button>
+          {/* Right Icons */}
+          <div className="flex items-center space-x-4">
+            {/* Search Icon */}
+            <button
+              onClick={toggleSearch}
+              className="text-primary-600 hover:text-primary transition-colors"
+            >
+              <FiSearch size={28} />
+            </button>
+
+            {/* Cart Icon */}
+            <button
+              onClick={openCart}
+              className="relative text-primary-600 hover:text-primary transition-colors"
+            >
+              {isHydrated && cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-primary text-white rounded-full text-xs w-5 h-5 flex items-center justify-center font-medium font-poppins">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              )}
+              <GiShoppingBag size={25} />
+            </button>
+          </div>
         </div>
       </header>
 

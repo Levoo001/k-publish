@@ -34,5 +34,11 @@ export const product = defineType({
       type: "markdown",
       validation: (rule) => rule.required(),
     }),
+    defineField({
+      name: "color",
+      type: "string",
+      title: "Color",
+      description: "Product color (optional)",
+    }),
   ],
 });

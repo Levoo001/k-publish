@@ -2,6 +2,10 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import CartDrawer from "@/components/CartDrawer";
+import SearchDrawer from "@/components/SearchDrawer";
+import { SearchProvider } from "@/components/SearchContext";
+import { productQuery } from "@/sanity/lib/queries";
+import { client } from "@/sanity/lib/client";
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
 import { Playfair_Display, Poppins } from 'next/font/google'
@@ -48,19 +52,25 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  // Fetch products for search functionality
+  const products = await client.fetch(productQuery);
+
   return (
     <html lang="en" className={`${playfair.variable} ${poppins.variable}`}>
       <head>
         <link rel="preconnect" href="https://cdn.sanity.io" />
       </head>
       <body className="antialiased">
-        <ClientLayout>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-          <CartDrawer />
-        </ClientLayout>
+        <SearchProvider products={products}>
+          <ClientLayout>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+            <CartDrawer />
+            <SearchDrawer />
+          </ClientLayout>
+        </SearchProvider>
 
         <script src="https://js.paystack.co/v1/inline.js" async></script>
       </body>
