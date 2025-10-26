@@ -118,7 +118,6 @@ function generateOrderConfirmationEmail(orderData) {
     }
     
     .header {
-      background: linear-gradient(135deg, #3A0303 0%, #5A0B0B 100%);
       color: white;
       padding: 40px 30px;
       text-align: center;
@@ -371,9 +370,9 @@ function generateOrderConfirmationEmail(orderData) {
     </div>
     
     <div class="footer">
-      <p style="font-size: 18px; margin-bottom: 20px;">Thank you for choosing Kavan The Brand</p>
+      <p style="font-size: 18px; margin-bottom: 20px;">Thank you for choosing kavanthebrand</p>
       <p style="margin-top: 25px; font-size: 12px; opacity: 0.8;">
-        &copy; 2024 Kavan The Brand. All rights reserved.
+        &copy; 2025 kavanthebrand. All rights reserved.
       </p>
     </div>
   </div>
