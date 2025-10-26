@@ -1,16 +1,18 @@
-// src/app/checkout/page.jsx - UPDATED WITH SEARCHABLE COUNTRY SELECTION
+// src/app/checkout/page.jsx - UPDATED WITH SUCCESS MODAL
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { SHIPPING_LOCATIONS, COUNTRIES } from "@/lib/shippingLocations";
 import PayStackPayment from "@/components/PayStackPayment";
+import { clearCart } from "@/store/CartSlice";
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart?.cartItems || []);
 
   const [selectedLocationType, setSelectedLocationType] = useState('domestic');
@@ -28,7 +30,9 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [agreeToPolicy, setAgreeToPolicy] = useState(false);
   const [showPaystack, setShowPaystack] = useState(false);
-  
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [orderData, setOrderData] = useState(null);
+
   // Country search state
   const [isCountryOpen, setIsCountryOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -170,9 +174,20 @@ export default function CheckoutPage() {
     });
   };
 
-  const handlePaymentSuccess = (response) => {
-    console.log('Payment successful:', response);
-    router.push('/order-success');
+  const handlePaymentSuccess = (response, orderDetails) => {
+    setOrderData(orderDetails);
+    setShowSuccessModal(true);
+    setIsProcessing(false);
+    setShowPaystack(false);
+
+    // Clear the cart immediately
+    dispatch(clearCart());
+  };
+
+  const handleCloseSuccessModal = () => {
+    setShowSuccessModal(false);
+    setOrderData(null);
+    router.push('/shop');
   };
 
   // Check if checkout is ready
@@ -227,8 +242,9 @@ export default function CheckoutPage() {
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   placeholder="Enter your full name"
-                  className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins text-sm"
+                  className="w-full p-3 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins text-base"
                   required
+                  style={{ fontSize: '16px' }} // Prevents zoom on iOS
                 />
               </div>
 
@@ -242,8 +258,9 @@ export default function CheckoutPage() {
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   placeholder="your@email.com"
-                  className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins text-sm"
+                  className="w-full p-3 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins text-base"
                   required
+                  style={{ fontSize: '16px' }}
                 />
               </div>
 
@@ -257,8 +274,9 @@ export default function CheckoutPage() {
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
                   placeholder="+234 800 123 4567"
-                  className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins text-sm"
+                  className="w-full p-3 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins text-base"
                   required
+                  style={{ fontSize: '16px' }}
                 />
               </div>
             </div>
@@ -310,9 +328,8 @@ export default function CheckoutPage() {
                           <button
                             key={country}
                             onClick={() => handleCountrySelect(country)}
-                            className={`w-full text-left px-4 py-3 hover:bg-primary-50 transition-colors font-poppins text-sm ${
-                              formData.country === country ? 'bg-primary-50 text-primary font-semibold' : 'text-primary-900'
-                            }`}
+                            className={`w-full text-left px-4 py-3 hover:bg-primary-50 transition-colors font-poppins text-sm ${formData.country === country ? 'bg-primary-50 text-primary font-semibold' : 'text-primary-900'
+                              }`}
                           >
                             {country}
                           </button>
@@ -499,14 +516,14 @@ export default function CheckoutPage() {
                       <h3 className="font-medium text-sm mb-1 font-poppins text-primary-900 leading-tight">
                         {item.name}
                       </h3>
-                      
+
                       {/* Display selected color if available */}
                       {item.selectedColor && (
                         <p className="text-xs text-primary-600 mb-1 font-poppins">
                           Color: <span className="font-semibold">{item.selectedColor}</span>
                         </p>
                       )}
-                      
+
                       <p className="text-primary-600 text-xs font-poppins mb-2">
                         Quantity: {item.quantity}
                       </p>
@@ -572,12 +589,12 @@ export default function CheckoutPage() {
                 >
                   {!selectedLocation ? 'Select shipping method' :
                     !formData.name ? 'Enter your name' :
-                    !formData.email ? 'Enter email address' :
-                    !formData.state ? 'Enter state/province' :
-                    !formData.address ? 'Enter address' :
-                    !formData.phone ? 'Enter phone number' :
-                    !agreeToPolicy ? 'Agree to policies' :
-                    'Complete required information'}
+                      !formData.email ? 'Enter email address' :
+                        !formData.state ? 'Enter state/province' :
+                          !formData.address ? 'Enter address' :
+                            !formData.phone ? 'Enter phone number' :
+                              !agreeToPolicy ? 'Agree to policies' :
+                                'Complete required information'}
                 </button>
               )}
 
@@ -603,6 +620,58 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
+
+      {/* Success Modal */}
+      {showSuccessModal && orderData && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-playfair text-primary-900 mb-2">Order Confirmed!</h2>
+                <p className="text-primary-600 font-poppins">Thank you for your order. We've sent a confirmation email to {formData.email}</p>
+              </div>
+
+              <div className="border-t border-primary-100 pt-4 mb-6">
+                <h3 className="font-playfair text-primary-900 mb-3">Order Details</h3>
+                <div className="space-y-2 text-sm font-poppins">
+                  <div className="flex justify-between">
+                    <span className="text-primary-600">Order ID:</span>
+                    <span className="font-medium">{orderData.orderId}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-primary-600">Total Paid:</span>
+                    <span className="font-medium">{formatPrice(totalAmount)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-primary-600">Payment Method:</span>
+                    <span className="font-medium">{orderData.paymentMethod}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <button
+                  onClick={handleCloseSuccessModal}
+                  className="w-full bg-primary text-white py-3 px-6 rounded-lg hover:bg-primary-700 transition-colors font-poppins font-medium"
+                >
+                  Continue Shopping
+                </button>
+                <Link
+                  href="/"
+                  className="w-full block border border-primary-200 text-primary-700 py-3 px-6 rounded-lg text-center hover:bg-primary-50 transition-colors font-poppins"
+                >
+                  Back to Home
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

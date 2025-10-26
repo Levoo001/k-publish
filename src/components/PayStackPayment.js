@@ -27,7 +27,6 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
     const checkPaystack = () => {
       if (window.PaystackPop) {
         setPaystackLoaded(true);
-        console.log('PayStack script loaded successfully');
       } else {
         console.log('PayStack script not yet loaded');
       }
@@ -44,22 +43,37 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
 
   // Define the callback function with useCallback to preserve reference
   const paymentCallback = useCallback(async (response) => {
-    console.log('PayStack callback received:', response);
-
     try {
-      // Enhanced order data without user session
+      console.log('🔧 PayStack response:', response);
+
+      // BETTER PAYMENT METHOD DETECTION
+      let paymentMethod = 'Card Payment';
+      if (response.channel === 'bank') {
+        paymentMethod = 'Bank Transfer';
+      } else if (response.channel === 'ussd') {
+        paymentMethod = 'USSD';
+      } else if (response.channel === 'mobile_money') {
+        paymentMethod = 'Mobile Money';
+      } else if (response.channel === 'qr') {
+        paymentMethod = 'QR Code';
+      }
+
       const orderData = {
         // Customer Information
         customerEmail: email,
         customerName: metadata?.customer_name,
         customerPhone: metadata?.customer_phone,
 
-        // Shipping Information
+        // Shipping Information - PASS ALL ADDRESS COMPONENTS
         shippingLocation: metadata?.shipping_location,
         shippingProvider: metadata?.shipping_provider,
         shippingType: metadata?.shipping_type,
         shippingFee: metadata?.shipping_fee,
-        shippingAddress: metadata?.shipping_address,
+
+        // Individual address components for proper construction
+        shipping_address: metadata?.shipping_address,
+        shipping_state: metadata?.shipping_state,
+        shipping_country: metadata?.shipping_country,
 
         // Order Information
         items: metadata?.items,
@@ -67,15 +81,14 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
         subtotal: metadata?.subtotal,
         totalAmount: metadata?.total,
 
-        // Payment Information
-        paymentMethod: response?.channel === "bank" ? "Bank Transfer" : "Card Payment",
+        // Payment Information - USE THE DETECTED METHOD
+        paymentMethod: paymentMethod,
         paymentReference: response.reference,
         paymentChannel: response.channel,
         paymentStatus: 'completed',
 
         // Order Status
         orderStatus: 'confirmed',
-        orderTimestamp: new Date().toISOString(),
 
         // Store Information
         storeContact: metadata?.store_contact,
@@ -85,13 +98,15 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
         notes: `Payment via ${response.channel}. Guest checkout.`
       };
 
-      console.log('Saving order to database...');
+      console.log('📦 Order data for saving:', orderData);
+
+      // Save order to Firebase
       const orderId = await saveOrder(orderData);
-      console.log('Order saved with ID:', orderId);
+      console.log('✅ Order saved with ID:', orderId);
 
       // Send order confirmation email
       try {
-        await fetch('/api/emails/order-confirmation', {
+        const emailResponse = await fetch('/api/emails/order-confirmation', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -101,27 +116,33 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
             orderId
           })
         });
-        console.log('Order confirmation email sent');
+
+        if (!emailResponse.ok) {
+          throw new Error('Email sending failed');
+        }
+        console.log('✅ Order confirmation email sent');
       } catch (emailError) {
-        console.log('Order confirmation email failed:', emailError);
-        // Continue even if email fails
+        console.log('❌ Order confirmation email failed:', emailError);
       }
+
+      // CLEAR CART HERE TOO FOR REDUNDANCY
+      dispatch(clearCart());
 
       // Update UI state
       setPaymentSuccess(true);
-      setPaymentMethod(orderData.paymentMethod);
+      setPaymentMethod(paymentMethod); // Use the detected method
       setDateTime(new Date().toLocaleString());
       setPaymentReference(response.reference);
 
-      // Call onSuccess callback if provided
+      // Call onSuccess callback with order data
       if (onSuccess) {
-        onSuccess(response);
+        onSuccess(response, {
+          ...orderData,
+          orderId
+        });
       }
-
-      console.log('Payment completed successfully');
-
     } catch (error) {
-      console.error('Error in payment callback:', error);
+      console.error('❌ Error in payment callback:', error);
       // Still show success to user but log the error
       setPaymentSuccess(true);
       setPaymentMethod(response?.channel === "bank" ? "Bank Transfer" : "Card Payment");
@@ -129,16 +150,18 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
       setPaymentReference(response.reference);
 
       if (onSuccess) {
-        onSuccess(response);
+        onSuccess(response, {
+          orderId: 'unknown',
+          paymentMethod: response?.channel === "bank" ? "Bank Transfer" : "Card Payment"
+        });
       }
     } finally {
       setIsProcessing(false);
     }
-  }, [email, metadata, onSuccess]);
+  }, [email, metadata, onSuccess, dispatch]); // ADD dispatch to dependencies
 
   // Define the onClose function with useCallback
   const paymentOnClose = useCallback(() => {
-    console.log('Payment window closed by user');
     setIsProcessing(false);
   }, []);
 
@@ -153,22 +176,16 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
       return;
     }
 
-    console.log('PayStack: Starting payment for email:', email);
-    console.log('PayStack public key available:', !!publicKey);
-    console.log('PayStack Pop available:', !!window.PaystackPop);
-    
     setIsProcessing(true);
 
     try {
       // Create a simple callback function that doesn't lose context
-      const callbackFunction = function(response) {
-        console.log('PayStack raw callback triggered');
+      const callbackFunction = function (response) {
         paymentCallback(response);
       };
 
       // Create a simple onClose function
-      const onCloseFunction = function() {
-        console.log('PayStack onClose triggered');
+      const onCloseFunction = function () {
         paymentOnClose();
       };
 
@@ -181,8 +198,6 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
         throw new Error('OnClose is not a valid function');
       }
 
-      console.log('Setting up PayStack with callback...');
-      
       const handler = window.PaystackPop.setup({
         key: publicKey,
         email: email,
@@ -236,9 +251,8 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
         onClose: onCloseFunction
       });
 
-      console.log('PayStack handler created, opening iframe...');
       handler.openIframe();
-      
+
     } catch (error) {
       console.error('Error setting up PayStack:', error);
       alert('Error initializing payment. Please try again.');
