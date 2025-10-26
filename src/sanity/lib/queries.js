@@ -1,3 +1,4 @@
+// src/sanity/lib/queries.js
 import { defineQuery } from "next-sanity";
 
 export const productQuery =
@@ -7,5 +8,6 @@ export const productQuery =
   price,
   description,
   image,
-  _createdAt
+  colors,
+  createdAt
 }`);

@@ -1,3 +1,4 @@
+// src/sanity/schemaTypes/product.js
 import { defineField, defineType } from "sanity";
 
 export const product = defineType({
@@ -35,10 +36,30 @@ export const product = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: "color",
-      type: "string",
-      title: "Color",
-      description: "Product color (optional)",
+      name: "colors",
+      type: "array",
+      title: "Available Colors",
+      description: "Select available colors for this product",
+      of: [{ type: "string" }],
+      options: {
+        list: [
+          { title: "Red", value: "red" },
+          { title: "Blue", value: "blue" },
+          { title: "Green", value: "green" },
+          { title: "Black", value: "black" },
+          { title: "White", value: "white" },
+          { title: "Yellow", value: "yellow" },
+          { title: "Pink", value: "pink" },
+          { title: "Purple", value: "purple" },
+          { title: "Orange", value: "orange" },
+          { title: "Gray", value: "gray" },
+          { title: "Brown", value: "brown" },
+          { title: "Beige", value: "beige" },
+          { title: "Navy", value: "navy" },
+          { title: "Maroon", value: "maroon" },
+          { title: "Teal", value: "teal" },
+        ]
+      }
     }),
   ],
 });

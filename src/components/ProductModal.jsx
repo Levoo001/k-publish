@@ -7,6 +7,7 @@ import { urlFor } from "@/sanity/lib/image";
 
 const ProductModal = ({ product, onClose, onAddToCart }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [selectedColor, setSelectedColor] = useState(null);
   const modalImageRef = useRef(null);
 
   if (!product) return null;
@@ -34,13 +35,28 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
   const images = getImages();
   const mainImage = images[currentImageIndex];
 
-  const handleAddToCartClick = () => {
-    onAddToCart(product);
+  // Handle color selection
+  const handleColorSelect = (color) => {
+    setSelectedColor(color);
   };
+
+  const handleAddToCartClick = () => {
+    // Create a product object with the selected color
+    const productWithColor = {
+      ...product,
+      selectedColor: selectedColor, // Add the selected color to the product
+    };
+
+    onAddToCart(productWithColor); // Pass the product with color to the parent
+    setSelectedColor(null);
+  };
+
+  // Check if product has color options
+  const hasColors = product.colors && product.colors.length > 0;
 
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-center justify-center bg-black bg-opacity-90 p-4" // Increased z-index to 70
+      className="fixed inset-0 z-[70] flex items-center justify-center bg-black bg-opacity-90 p-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose();
@@ -128,7 +144,7 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
             </div>
 
             {/* Product Details Section */}
-            <div className="flex flex-col justify-between p-3">
+            <div className="flex flex-col justify-between p-6">
               <div className="space-y-6">
                 <div>
                   <h2 className="text-2xl md:text-3xl font-light mb-3 text-primary font-playfair">
@@ -139,11 +155,40 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
                   </p>
                 </div>
 
+                {/* Color Selection - Only show if product has colors */}
+                {hasColors && (
+                  <div>
+                    <h3 className="font-semibold text-lg mb-3 text-primary font-playfair">
+                      Available Colors
+                    </h3>
+                    <div className="flex flex-wrap gap-3">
+                      {product.colors.map((color, index) => (
+                        <button
+                          key={index}
+                          onClick={() => handleColorSelect(color)}
+                          className={`flex items-center space-x-2 px-4 py-2 rounded-lg border-2 transition-all duration-200 font-poppins ${
+                            selectedColor === color
+                              ? "border-primary bg-primary-50 text-primary"
+                              : "border-gray-300 hover:border-primary hover:bg-primary-25 text-gray-700"
+                          }`}
+                        >
+                          <span>{color}</span>
+                        </button>
+                      ))}
+                    </div>
+                    {selectedColor && (
+                      <p className="text-sm text-primary-600 mt-2 font-poppins">
+                        Selected: <span className="font-semibold">{selectedColor}</span>
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 <div>
                   <h3 className="font-semibold text-lg mb-3 text-primary font-playfair">
                     Description
                   </h3>
-                  <p className="text-slate-600 leading-relaxed text-base font-poppins">
+                  <p className="text-slate-600 leading-relaxed text-base font-poppins whitespace-pre-line">
                     {product.description}
                   </p>
                 </div>
@@ -151,10 +196,17 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
 
               <div className="space-y-4 pt-6">
                 <button
-                  className="w-full bg-primary text-white py-3 px-6 hover:bg-slate-800 transition-all duration-300 rounded-xl font-semibold text-lg shadow-lg font-poppins"
+                  className={`w-full py-3 px-6 rounded-xl font-semibold text-lg shadow-lg font-poppins transition-all duration-300 ${
+                    hasColors && !selectedColor
+                      ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+                      : "bg-primary text-white hover:bg-slate-800"
+                  }`}
                   onClick={handleAddToCartClick}
+                  disabled={hasColors && !selectedColor}
                 >
-                  Add to Cart
+                  {hasColors && !selectedColor
+                    ? "Please select a color"
+                    : "Add to Cart"}
                 </button>
 
                 <button

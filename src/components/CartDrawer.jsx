@@ -1,4 +1,4 @@
-// src/components/CartDrawer.jsx - UPDATED WITHOUT AUTH
+// src/components/CartDrawer.jsx - UPDATED WITH COLOR DISPLAY
 "use client";
 
 import Image from "next/image";
@@ -102,7 +102,7 @@ const CartDrawer = () => {
                     key={item.id || item._id || `cart-item-${index}`}
                     className="flex gap-3 p-3 bg-primary-50 rounded-lg border border-primary-100"
                   >
-                    <div className="w-16 h-16 relative flex-shrink-0">
+                    <div className="w-20 h-22 relative flex-shrink-0">
                       <Image
                         src={item.image}
                         alt={item.name}
@@ -116,6 +116,16 @@ const CartDrawer = () => {
                       <h3 className="font-medium text-sm line-clamp-2 mb-1 font-poppins">
                         {item.name}
                       </h3>
+                      
+                      {/* Display selected color if available */}
+                      {item.selectedColor && (
+                        <div className="mb-2">
+                          <p className="text-xs text-primary-600 font-poppins">
+                            Color: <span className="font-semibold">{item.selectedColor}</span>
+                          </p>
+                        </div>
+                      )}
+                      
                       <p className="font-semibold text-sm mb-2 text-primary font-poppins">
                         {formatPrice(item.price)}
                       </p>

@@ -1,12 +1,12 @@
-// src/app/checkout/page.jsx - UPDATED WITHOUT AUTH
+// src/app/checkout/page.jsx - UPDATED WITH SEARCHABLE COUNTRY SELECTION
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { SHIPPING_LOCATIONS } from "@/lib/shippingLocations";
+import { SHIPPING_LOCATIONS, COUNTRIES } from "@/lib/shippingLocations";
 import PayStackPayment from "@/components/PayStackPayment";
 
 export default function CheckoutPage() {
@@ -28,6 +28,11 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [agreeToPolicy, setAgreeToPolicy] = useState(false);
   const [showPaystack, setShowPaystack] = useState(false);
+  
+  // Country search state
+  const [isCountryOpen, setIsCountryOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const countryDropdownRef = useRef(null);
 
   const subtotal = cartItems.reduce(
     (total, item) => total + (item?.price || 0) * (item?.quantity || 0),
@@ -35,6 +40,23 @@ export default function CheckoutPage() {
   );
 
   const totalAmount = subtotal + shippingFee;
+
+  // Filter countries based on search
+  const filteredCountries = COUNTRIES.filter(country =>
+    country.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Close country dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (countryDropdownRef.current && !countryDropdownRef.current.contains(event.target)) {
+        setIsCountryOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Update shipping fee when location changes
   useEffect(() => {
@@ -69,6 +91,17 @@ export default function CheckoutPage() {
     }));
   };
 
+  const handleCountrySelect = (country) => {
+    setFormData(prev => ({ ...prev, country }));
+    setIsCountryOpen(false);
+    setSearchQuery('');
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setIsCountryOpen(true);
+  };
+
   // Prepare order metadata for PayStack
   const getOrderMetadata = () => {
     const allLocations = [
@@ -97,7 +130,8 @@ export default function CheckoutPage() {
         name: item.name,
         quantity: item.quantity,
         price: item.price,
-        total: item.price * item.quantity
+        total: item.price * item.quantity,
+        color: item.selectedColor || 'Not specified'
       })),
       subtotal: subtotal,
       total: totalAmount,
@@ -115,14 +149,11 @@ export default function CheckoutPage() {
     setIsProcessing(true);
     setShowPaystack(true);
 
-    // Use requestAnimationFrame for better timing
     requestAnimationFrame(() => {
       setTimeout(() => {
         try {
           const paystackButton = document.querySelector('[data-paystack-button]');
-
           if (paystackButton) {
-            console.log('Found PayStack button, clicking...');
             paystackButton.click();
           } else {
             console.error('PayStack button not found');
@@ -236,23 +267,64 @@ export default function CheckoutPage() {
             <div>
               <h2 className="text-xl font-playfair text-primary-900 mb-6">Shipping address</h2>
 
-              {/* Country */}
-              <div className="mb-4">
+              {/* Country - Searchable Dropdown */}
+              <div className="mb-4 relative" ref={countryDropdownRef}>
                 <label className="block text-sm font-medium mb-2 text-primary-900 font-poppins">
-                  Country
+                  Country *
                 </label>
-                <select
-                  value={formData.country}
-                  onChange={(e) => handleInputChange('country', e.target.value)}
-                  className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins text-sm bg-white"
-                >
-                  <option value="Nigeria">Nigeria</option>
-                  <option value="Ghana">Ghana</option>
-                  <option value="United Kingdom">United Kingdom</option>
-                  <option value="United States">United States</option>
-                  <option value="Canada">Canada</option>
-                  <option value="Other">Other</option>
-                </select>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={isCountryOpen ? searchQuery : formData.country}
+                    onChange={handleSearchChange}
+                    onFocus={() => setIsCountryOpen(true)}
+                    placeholder="Search for a country..."
+                    className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins text-sm bg-white cursor-pointer"
+                  />
+                  <svg
+                    className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary-600 transition-transform ${isCountryOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+
+                {/* Country Dropdown */}
+                {isCountryOpen && (
+                  <div className="absolute z-10 w-full mt-1 bg-white border border-primary-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    <div className="p-2 border-b border-primary-100">
+                      <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        placeholder="Type to search countries..."
+                        className="w-full p-2 border border-primary-200 rounded focus:ring-1 focus:ring-primary focus:border-primary font-poppins text-sm"
+                        autoFocus
+                      />
+                    </div>
+                    <div className="max-h-48 overflow-y-auto">
+                      {filteredCountries.length > 0 ? (
+                        filteredCountries.map((country) => (
+                          <button
+                            key={country}
+                            onClick={() => handleCountrySelect(country)}
+                            className={`w-full text-left px-4 py-3 hover:bg-primary-50 transition-colors font-poppins text-sm ${
+                              formData.country === country ? 'bg-primary-50 text-primary font-semibold' : 'text-primary-900'
+                            }`}
+                          >
+                            {country}
+                          </button>
+                        ))
+                      ) : (
+                        <div className="px-4 py-3 text-primary-600 text-sm font-poppins">
+                          No countries found
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* State/Province */}
@@ -414,7 +486,7 @@ export default function CheckoutPage() {
               <div className="space-y-4 mb-6">
                 {cartItems.map((item, index) => (
                   <div key={item.id || item._id || `checkout-item-${index}`} className="flex gap-4 items-start">
-                    <div className="w-20 h-24 relative flex-shrink-0">
+                    <div className="w-20 h-20 relative flex-shrink-0">
                       <Image
                         src={item.image}
                         alt={item.name}
@@ -427,6 +499,14 @@ export default function CheckoutPage() {
                       <h3 className="font-medium text-sm mb-1 font-poppins text-primary-900 leading-tight">
                         {item.name}
                       </h3>
+                      
+                      {/* Display selected color if available */}
+                      {item.selectedColor && (
+                        <p className="text-xs text-primary-600 mb-1 font-poppins">
+                          Color: <span className="font-semibold">{item.selectedColor}</span>
+                        </p>
+                      )}
+                      
                       <p className="text-primary-600 text-xs font-poppins mb-2">
                         Quantity: {item.quantity}
                       </p>

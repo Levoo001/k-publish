@@ -1,4 +1,4 @@
-// src/sanity/image.js (or wherever you put it)
+// src/sanity/image.js
 import createImageUrlBuilder from "@sanity/image-url";
 import { dataset, projectId } from "../env";
 

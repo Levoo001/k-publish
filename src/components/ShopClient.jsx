@@ -37,6 +37,7 @@ export default function ShopClient({ products }) {
       name: product.name,
       price: product.price,
       image: urlFor(product.image[0]).width(300).height(400).url(),
+      selectedColor: product.selectedColor,
     };
 
     dispatch(addToCart(cartProduct));

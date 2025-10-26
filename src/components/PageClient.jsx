@@ -17,6 +17,7 @@ import { HiOutlineArrowLongRight } from "react-icons/hi2";
 import NewsletterPopup from "./NewsletterPopup";
 import QuoteCarousel from "./QuoteCarousel";
 import WhatsAppChatPopup from './WhatsAppChatPopup';
+import { product } from "@/sanity/schemaTypes/product";
 
 // Brand Story Carousel Component
 const BrandStoryCarousel = ({ product }) => {
@@ -220,6 +221,7 @@ export default function Home({ products }) {
       name: product.name,
       price: product.price,
       image: urlFor(product.image[0]).width(300).height(400).url(),
+      selectedColor: product.selectedColor,
     };
 
     dispatch(addToCart(cartProduct));
