@@ -90,11 +90,6 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
                             sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
                             priority={slideIndex === 0}
                           />
-                          <div className="absolute bottom-3 left-3 right-3 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                            <button className="cursor-pointer w-full bg-primary text-white py-2 text-sm font-medium rounded shadow-lg hover:bg-primary-700 transition-colors font-poppins">
-                              Quick View
-                            </button>
-                          </div>
                         </div>
                         <div className="text-center p-2">
                           <h3 className="font-light text-base mb-1 text-primary-900 line-clamp-1 font-playfair">
