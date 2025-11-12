@@ -297,7 +297,7 @@ export default function CheckoutPage() {
                     onChange={handleSearchChange}
                     onFocus={() => setIsCountryOpen(true)}
                     placeholder="Search for a country..."
-                    className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins text-sm bg-white cursor-pointer"
+                    className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins bg-white cursor-pointer"
                   />
                   <svg
                     className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary-600 transition-transform ${isCountryOpen ? 'rotate-180' : ''}`}
@@ -312,16 +312,6 @@ export default function CheckoutPage() {
                 {/* Country Dropdown */}
                 {isCountryOpen && (
                   <div className="absolute z-10 w-full mt-1 bg-white border border-primary-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                    <div className="p-2 border-b border-primary-100">
-                      <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={handleSearchChange}
-                        placeholder="Type to search countries..."
-                        className="w-full p-2 border border-primary-200 rounded focus:ring-1 focus:ring-primary focus:border-primary font-poppins text-sm"
-                        autoFocus
-                      />
-                    </div>
                     <div className="max-h-48 overflow-y-auto">
                       {filteredCountries.length > 0 ? (
                         filteredCountries.map((country) => (
@@ -354,7 +344,7 @@ export default function CheckoutPage() {
                   value={formData.state}
                   onChange={(e) => handleInputChange('state', e.target.value)}
                   placeholder="Enter your state or province"
-                  className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins text-sm"
+                  className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins"
                   required
                 />
               </div>
@@ -369,7 +359,7 @@ export default function CheckoutPage() {
                   onChange={(e) => handleInputChange('address', e.target.value)}
                   placeholder="Street address, apartment, suite, etc."
                   rows={3}
-                  className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary resize-none font-poppins text-sm"
+                  className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary resize-none font-poppins"
                   required
                 />
               </div>

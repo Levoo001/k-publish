@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import { IoVolumeHighSharp, IoVolumeMute } from "react-icons/io5";
 import { useDispatch } from "react-redux";
@@ -17,13 +17,130 @@ import { HiOutlineArrowLongRight } from "react-icons/hi2";
 import NewsletterPopup from "./NewsletterPopup";
 import QuoteCarousel from "./QuoteCarousel";
 import WhatsAppChatPopup from './WhatsAppChatPopup';
-import { product } from "@/sanity/schemaTypes/product";
 
-// Brand Story Carousel Component
-const BrandStoryCarousel = ({ product }) => {
+// Featured Collections Carousel Component
+const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: 'start',
+    containScroll: 'trimSnaps',
+    slidesToScroll: 1
+  });
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState([]);
+
+  const onDotButtonClick = useCallback((index) => {
+    if (!emblaApi) return;
+    emblaApi.scrollTo(index);
+  }, [emblaApi]);
+
+  const onInit = useCallback((emblaApi) => {
+    setScrollSnaps(emblaApi.scrollSnapList());
+  }, []);
+
+  const onSelect = useCallback((emblaApi) => {
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, []);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    onInit(emblaApi);
+    onSelect(emblaApi);
+    emblaApi.on('reInit', onInit);
+    emblaApi.on('reInit', onSelect);
+    emblaApi.on('select', onSelect);
+  }, [emblaApi, onInit, onSelect]);
+
+  // Calculate how many slides we need based on products (2 products per slide)
+  const totalSlides = Math.ceil(products.length / 2);
+
+  return (
+    <section className="py-10 bg-white">
+      <div className="container mx-auto px-4 max-w-7xl">
+        <div className="embla overflow-hidden" ref={emblaRef}>
+          <div className="embla__container flex">
+            {Array.from({ length: totalSlides }).map((_, slideIndex) => (
+              <div
+                key={slideIndex}
+                className="embla__slide flex-shrink-0 w-full min-w-0"
+                style={{ flex: '0 0 100%' }}
+              >
+                <div className="grid grid-cols-2 gap-4 md:gap-8 px-2">
+                  {products.slice(slideIndex * 2, slideIndex * 2 + 2).map((product) => {
+                    const displayImage = product.image[0]
+                      ? urlFor(product.image[0])
+                        .width(600)
+                        .height(800)
+                        .url()
+                      : "/fallback.jpg";
+
+                    return (
+                      <div
+                        key={product._id}
+                        className="group cursor-pointer transform hover:-translate-y-1 transition-all duration-500"
+                        onClick={() => onProductClick(product)}
+                      >
+                        <div className="relative aspect-[3/4] overflow-hidden mb-4">
+                          <Image
+                            src={displayImage}
+                            alt={product.name}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-700"
+                            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                            priority={slideIndex === 0}
+                          />
+                          <div className="absolute bottom-3 left-3 right-3 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                            <button className="cursor-pointer w-full bg-primary text-white py-2 text-sm font-medium rounded shadow-lg hover:bg-primary-700 transition-colors font-poppins">
+                              Quick View
+                            </button>
+                          </div>
+                        </div>
+                        <div className="text-center p-2">
+                          <h3 className="font-light text-base mb-1 text-primary-900 line-clamp-1 font-playfair">
+                            {product.name}
+                          </h3>
+                          <p className="text-base font-medium text-primary font-poppins">
+                            ₦{product.price.toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bullet Dot Indicators */}
+        <div className="flex items-center justify-center space-x-1 mt-8">
+          {Array.from({ length: totalSlides }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => onDotButtonClick(index)}
+              className="flex items-center justify-center w-6 h-6"
+              aria-label={`Go to slide ${index + 1}`}
+            >
+              <div className={`relative flex items-center justify-center transition-all duration-300 ${selectedIndex === index ? "w-6 h-6 border-2 border-gray-900 rounded-full" : ""
+                }`}>
+                <div className={`rounded-full transition-all duration-300 ${selectedIndex === index
+                  ? "w-1.5 h-1.5 bg-slate-900"
+                  : "w-2 h-2 bg-slate-400 hover:bg-slate-600"
+                  }`} />
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Bottom Cards Carousel Component - Shows random first images from all products
+const BottomCardsCarousel = ({ products, startIndex = 0 }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
-    duration: 15,
   });
 
   useEffect(() => {
@@ -36,17 +153,29 @@ const BrandStoryCarousel = ({ product }) => {
     return () => clearInterval(interval);
   }, [emblaApi]);
 
+  // Get all first images from products
+  const allFirstImages = products.map(product => ({
+    image: product.image[0],
+    productName: product.name
+  }));
+
+  // Start from different positions based on startIndex
+  const reorderedImages = [
+    ...allFirstImages.slice(startIndex),
+    ...allFirstImages.slice(0, startIndex)
+  ];
+
   return (
     <div className="embla overflow-hidden h-full" ref={emblaRef}>
       <div className="embla__container flex h-full">
-        {product.image.map((img, index) => (
+        {reorderedImages.map((item, index) => (
           <div
             className="embla__slide flex-shrink-0 w-full h-full relative"
-            key={img._key || index}
+            key={index}
           >
             <Image
-              src={urlFor(img).width(600).height(600).url()}
-              alt={`${product.name} - View ${index + 1}`}
+              src={urlFor(item.image).width(600).height(600).url()}
+              alt={`${item.productName} - Featured`}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
@@ -59,35 +188,29 @@ const BrandStoryCarousel = ({ product }) => {
   );
 };
 
-// Brand Story Product Card Component
-const BrandStoryProductCard = ({ product }) => {
+// Static Product Card Component (for Bestsellers and Co-ords)
+const StaticProductCard = ({ product }) => {
   return (
     <div className="aspect-square relative rounded-2xl overflow-hidden shadow-luxury group">
-      {product.image.length > 1 ? (
-        <BrandStoryCarousel product={product} />
-      ) : (
-        <Image
-          src={urlFor(product.image[0]).width(600).height(600).url()}
-          alt={product.name}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-          priority
-        />
-      )}
+      <Image
+        src={urlFor(product.image[0]).width(600).height(600).url()}
+        alt={product.name}
+        fill
+        className="object-cover"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+        priority
+      />
     </div>
   );
 };
 
 export default function Home({ products }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [currentSlides, setCurrentSlides] = useState({});
   const dispatch = useDispatch();
   const { openCart } = useCart();
 
   const [isMuted, setIsMuted] = useState(true);
   const [videoError, setVideoError] = useState(false);
-  const [isVideoReady, setIsVideoReady] = useState(false);
   const videoRef = useRef(null);
 
   // Newsletter state
@@ -95,35 +218,26 @@ export default function Home({ products }) {
   const [subscriptionStatus, setSubscriptionStatus] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Simplified video loading
+  // Get specific products for each section
+  const bestsellerProduct = products.find(product => product.name === "The Amara Set");
+  const coordProduct = products.find(product => product.name === "The Zahra Dress");
+
+  // Video loading
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     const handleCanPlay = () => {
-      setIsVideoReady(true);
       setVideoError(false);
-    };
-
-    const handleLoadedData = () => {
-      setIsVideoReady(true);
     };
 
     const handleError = (e) => {
       console.error("Video failed to load:", e);
       setVideoError(true);
-      setIsVideoReady(false);
     };
 
-    const handlePlaying = () => {
-      setIsVideoReady(true);
-    };
-
-    // Add event listeners
     video.addEventListener('canplay', handleCanPlay);
-    video.addEventListener('loadeddata', handleLoadedData);
     video.addEventListener('error', handleError);
-    video.addEventListener('playing', handlePlaying);
 
     // Try to play the video
     const playVideo = async () => {
@@ -131,7 +245,6 @@ export default function Home({ products }) {
         await video.play();
       } catch (error) {
         console.log("Autoplay prevented:", error);
-        // Video is still loaded, just not playing due to autoplay restrictions
       }
     };
 
@@ -139,32 +252,9 @@ export default function Home({ products }) {
 
     return () => {
       video.removeEventListener('canplay', handleCanPlay);
-      video.removeEventListener('loadeddata', handleLoadedData);
       video.removeEventListener('error', handleError);
-      video.removeEventListener('playing', handlePlaying);
     };
   }, []);
-
-  // Auto-slide effect for homepage grid only
-  useEffect(() => {
-    const intervals = {};
-
-    products.forEach((product) => {
-      if (product.image.length > 1) {
-        intervals[product._id] = setInterval(() => {
-          setCurrentSlides((prev) => ({
-            ...prev,
-            [product._id]:
-              ((prev[product._id] || 0) + 1) % product.image.length,
-          }));
-        }, 3000);
-      }
-    });
-
-    return () => {
-      Object.values(intervals).forEach((interval) => clearInterval(interval));
-    };
-  }, [products]);
 
   const toggleMute = () => {
     if (videoRef.current) {
@@ -173,13 +263,12 @@ export default function Home({ products }) {
     }
   };
 
-  // Updated newsletter subscription handler with Firebase
+  // Newsletter subscription handler
   const handleSubscribe = async (e) => {
     e.preventDefault();
 
     if (!email) {
       setSubscriptionStatus('Please enter your email address');
-      // Auto-clear after 4 seconds
       setTimeout(() => setSubscriptionStatus(''), 4000);
       return;
     }
@@ -187,7 +276,6 @@ export default function Home({ products }) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setSubscriptionStatus('Please enter a valid email address');
-      // Auto-clear after 4 seconds
       setTimeout(() => setSubscriptionStatus(''), 4000);
       return;
     }
@@ -201,14 +289,12 @@ export default function Home({ products }) {
       if (result.success) {
         setSubscriptionStatus('success');
         setEmail('');
-        // Auto-clear success message after 5 seconds
         setTimeout(() => setSubscriptionStatus(''), 5000);
       }
     } catch (error) {
       console.error('Subscription error:', error);
       setEmail('');
       setSubscriptionStatus(error.message);
-      // Auto-clear error message after 5 seconds
       setTimeout(() => setSubscriptionStatus(''), 5000);
     } finally {
       setIsSubmitting(false);
@@ -247,7 +333,6 @@ export default function Home({ products }) {
     <main className="min-h-screen">
       <section className="relative h-[60vh] lg:h-[90vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 w-full h-full">
-          {/* Video - Always try to show it first */}
           <video
             ref={videoRef}
             autoPlay
@@ -261,7 +346,6 @@ export default function Home({ products }) {
             <source src="/vid.mp4" type="video/mp4" />
           </video>
 
-          {/* Fallback Image - Only show if video fails */}
           {videoError && (
             <Image
               src="/fallback.jpg"
@@ -272,15 +356,12 @@ export default function Home({ products }) {
             />
           )}
 
-          {/* Text moved to bottom left corner - maintaining exact styling */}
           <div className="absolute left-2 bottom-2 inset-0 flex items-end justify-start text-white z-20 pb-8 pl-6 lg:pl-12">
             <div className="">
-              {/* Main Title - Matches Kilentar exactly */}
               <h1 className="text-lg md:text-xl lg:text-2xl uppercase font-playfair">
                 THE REBIRTH
               </h1>
 
-              {/* Shop Now Button - Kilentar style */}
               <Link
                 href="/shop"
                 className="py-2 flex items-center gap-2 text-white hover:text-primary-200 transition-colors"
@@ -293,7 +374,6 @@ export default function Home({ products }) {
             </div>
           </div>
 
-          {/* Mute Button */}
           <button
             onClick={toggleMute}
             className="absolute bottom-4 right-4 z-30 bg-primary/50 text-white p-3 rounded-full hover:bg-primary/70 transition-all duration-300 backdrop-blur-sm"
@@ -308,126 +388,78 @@ export default function Home({ products }) {
         </div>
       </section>
 
-      {/* Updated Featured Collections - 2 items on mobile */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4 max-w-7xl">
-          <div className="mb-12 text-center">
-            <h2 className="text-3xl md:text-5xl mb-4 font-light tracking-wide text-primary font-playfair">
-              Curated Collection
-            </h2>
-            <p className="text-primary-600 max-w-2xl mx-auto text-lg font-poppins">
-              Discover pieces that transform your wardrobe and elevate your style
-            </p>
-          </div>
+      <FeaturedCollectionsCarousel
+        products={products}
+        onProductClick={handleProductClick}
+      />
 
-          {/* 2 items per row on mobile, 3 on larger screens */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
-            {products.map((product) => {
-              const currentSlide = currentSlides[product._id] || 0;
-              const displayImage = product.image[currentSlide]
-                ? urlFor(product.image[currentSlide])
-                  .width(600)
-                  .height(800)
-                  .url()
-                : "/fallback.jpg";
-
-              return (
-                <div
-                  key={product._id}
-                  className="group cursor-pointer transform hover:-translate-y-1 transition-all duration-500"
-                  onClick={() => handleProductClick(product)}
-                >
-                  <div className="relative aspect-[3/4] overflow-hidden mb-4">
-                    <Image
-                      src={displayImage}
-                      alt={product.name}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-700"
-                      sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                      priority={currentSlide === 0}
-                    />
-                    <div className="absolute bottom-3 left-3 right-3 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                      <button className="cursor-pointer w-full bg-primary text-white py-2 text-sm font-medium rounded shadow-lg hover:bg-primary-700 transition-colors font-poppins">
-                        Quick View
-                      </button>
-                    </div>
-                  </div>
-                  <div className="text-center p-2">
-                    <h3 className="font-light text-base mb-1 text-primary-900 line-clamp-1 font-playfair">
-                      {product.name}
-                    </h3>
-                    <p className="text-base font-medium text-primary font-poppins">
-                      ₦{product.price.toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Brand Story Section */}
       <section className="py-16 bg-gradient-to-br from-primary-50 to-white overflow-hidden">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="grid grid-cols-2 gap-4">
-            {/* Left Column */}
+            {/* Left Column - Bestsellers (Single Card) */}
             <div className="space-y-4">
-              {products.slice(0, 2).map((product, index) => (
-                <div key={product._id} className="relative group">
-                  <BrandStoryProductCard product={product} />
-
-                  {/* Best Seller & Shop Now Overlay */}
-                  {index === 0 && (
-                    <div
-                      className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
-                      onClick={() => handleProductClick(product)}
-                    >
-                      <div className="space-y-1">
-                        <div className="text-left text-white text-sm font-semibold font-poppins">
-                          BESTSELLER
-                        </div>
-                        <button className="text-white font-semibold text-xs w-fit border-b border-white hover:border-primary-200 transition-colors font-poppins">
-                          Shop Now
-                        </button>
+              {bestsellerProduct && (
+                <div className="relative group">
+                  <StaticProductCard product={bestsellerProduct} />
+                  <Link
+                    href="/collections/bestsellers"
+                    className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
+                  >
+                    <div className="space-y-1">
+                      <div className="text-left text-primary text-sm font-semibold font-poppins">
+                        BESTSELLERS
                       </div>
+                      <button className="text-primary font-semibold text-xs w-fit border-b border-primary hover:border-primary-200 transition-colors font-poppins">
+                        Shop Now
+                      </button>
                     </div>
-                  )}
+                  </Link>
                 </div>
-              ))}
+              )}
             </div>
 
-            {/* Right Column */}
+            {/* Right Column - Co-ords (Single Card) - Positioned Lower */}
             <div className="space-y-4 mt-8">
-              {products.slice(2, 4).map((product, index) => (
-                <div key={product._id} className="relative group">
-                  <BrandStoryProductCard product={product} />
-
-                  {/* Best Seller & Shop Now Overlay */}
-                  {index === 0 && (
-
-                    <div
-                      className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
-                      onClick={() => handleProductClick(product)}
-                    >
-                      <div className="space-y-1">
-                        <div className="text-left text-white text-sm font-semibold font-poppins">
-                          BESTSELLER
-                        </div>
-                        <button className="text-white font-semibold text-xs w-fit border-b border-white hover:border-primary-200 transition-colors font-poppins">
-                          Shop Now
-                        </button>
+              {coordProduct && (
+                <div className="relative group">
+                  <StaticProductCard product={coordProduct} />
+                  <Link
+                    href="/collections/co-ords"
+                    className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
+                  >
+                    <div className="space-y-1">
+                      <div className="text-left text-primary text-sm font-semibold font-poppins">
+                        CO-ORDS
                       </div>
+                      <button className="text-primary font-semibold text-xs w-fit border-b border-primary hover:border-primary-200 transition-colors font-poppins">
+                        Shop Now
+                      </button>
                     </div>
-                  )}
+                  </Link>
                 </div>
-              ))}
+              )}
+            </div>
+          </div>
+
+          {/* Bottom Two Cards with Carousel - No Links */}
+          <div className="grid grid-cols-2 gap-4 mt-8">
+            {/* First Bottom Card with Carousel - Starts from index 0 */}
+            <div className="relative group">
+              <div className="aspect-square relative rounded-2xl overflow-hidden shadow-luxury group">
+                <BottomCardsCarousel products={products} startIndex={0} />
+              </div>
+            </div>
+
+            {/* Second Bottom Card with Carousel - Starts from middle index */}
+            <div className="relative group mt-8">
+              <div className="aspect-square relative rounded-2xl overflow-hidden shadow-luxury group">
+                <BottomCardsCarousel products={products} startIndex={Math.floor(products.length / 2)} />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Enhanced Newsletter Section */}
       <section className="py-16 bg-primary text-white overflow-hidden relative">
         <div className="container mx-auto px-4 text-center max-w-4xl">
           <h2 className="text-3xl font-light mb-6 bg-white bg-clip-text text-transparent font-playfair">
@@ -466,9 +498,7 @@ export default function Home({ products }) {
             </button>
           </form>
 
-          {/* Beautiful Status Messages with Auto-timeout */}
           <div className="max-w-md mx-auto mb-4">
-            {/* Success Message */}
             {subscriptionStatus === 'success' && (
               <div className="animate-fadeInUp bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-l-4 border-green-400 p-4 rounded-lg shadow-lg backdrop-blur-sm">
                 <div className="flex items-start space-x-3">
@@ -497,7 +527,6 @@ export default function Home({ products }) {
               </div>
             )}
 
-            {/* Error Message */}
             {subscriptionStatus && subscriptionStatus !== 'success' && (
               <div className="animate-fadeInUp bg-gradient-to-r from-red-500/20 to-pink-500/20 border-l-4 border-red-400 p-4 rounded-lg shadow-lg backdrop-blur-sm">
                 <div className="flex items-start space-x-3">
@@ -532,25 +561,20 @@ export default function Home({ products }) {
           </p>
         </div>
 
-        {/* Background decorative elements */}
         <div className="absolute top-0 left-0 w-32 h-32 bg-white/5 rounded-full -translate-x-16 -translate-y-16"></div>
         <div className="absolute bottom-0 right-0 w-48 h-48 bg-white/5 rounded-full translate-x-24 translate-y-24"></div>
       </section>
 
-      {/* NEW: Quote Carousel - Kilentar Style */}
       <QuoteCarousel />
 
-      {/* Product Modal */}
       <ProductModal
         product={selectedProduct}
         onClose={handleCloseModal}
         onAddToCart={handleAddToCart}
       />
 
-      {/* Newsletter Popup */}
       <NewsletterPopup />
 
-      {/* Floating WhatsApp icon */}
       <WhatsAppChatPopup />
     </main>
   );
