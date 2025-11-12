@@ -191,13 +191,13 @@ const BottomCardsCarousel = ({ products, startIndex = 0 }) => {
 // Static Product Card Component (for Bestsellers and Co-ords)
 const StaticProductCard = ({ product }) => {
   return (
-    <div className="aspect-square relative rounded-2xl overflow-hidden shadow-luxury group">
+    <div className="aspect-[3/3.9] relative rounded-2xl overflow-hidden shadow-luxury group">
       <Image
-        src={urlFor(product.image[0]).width(600).height(600).url()}
+        src={urlFor(product.image[0]).width(600).height(780).url()}
         alt={product.name}
         fill
         className="object-cover"
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
         priority
       />
     </div>
@@ -219,8 +219,8 @@ export default function Home({ products }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Get specific products for each section
-  const bestsellerProduct = products.find(product => product.name === "The Amara Set");
-  const coordProduct = products.find(product => product.name === "The Zahra Dress");
+  const bestsellerProduct = products.find(product => product.name === "The Amarachi Set");
+  const coordProduct = products.find(product => product.name === "The Chisom Dress");
 
   // Video loading
   useEffect(() => {
