@@ -56,7 +56,7 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
   const totalSlides = Math.ceil(products.length / 2);
 
   return (
-    <section className="py-10 bg-white">
+    <section className="bg-white">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="embla overflow-hidden" ref={emblaRef}>
           <div className="embla__container flex">

@@ -97,7 +97,7 @@ export default function ShopClient({ products }) {
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="">
             <h1 className="text-2xl md:text-6xl font-playfair mb-4 text-primary text-center">
-              The Rebirth Collection 
+              The Rebirth Collection
             </h1>
             <p className="text-[1.05rem] font-poppins text-primary max-w-2xl mx-auto text-center">
               Softness. Strength.
@@ -122,31 +122,17 @@ export default function ShopClient({ products }) {
           {products.map((product) => (
             <div
               key={product._id}
-              className="group cursor-pointer transform hover:-translate-y-2 transition-all duration-300 shadow-elegant rounded-xl"
+              className="group cursor-pointer transform hover:-translate-y-2 transition-all duration-300 shadow-lg rounded-xl group-hover:shadow-luxury"
               onClick={() => handleProductClick(product)}
             >
-              <div className="relative aspect-[3/4] overflow-hidden mb-4 rounded-xl shadow-lg group-hover:shadow-luxury transition-all duration-300">
+              <div className="relative aspect-[3/4] overflow-hidden mb-4 rounded-t-xl transition-all duration-300">
                 <Image
-                  src={urlFor(product.image[0]).width(600).height(800).url()}
+                  src={urlFor(product.image[1]).width(600).height(800).url()}
                   alt={product.name}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 />
-
-                <div className="absolute top-2 right-2">
-                  <span className="bg-primary/90 text-white px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm font-poppins">
-                    New
-                  </span>
-                </div>
-
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-primary/10 transition-all duration-300 flex items-center justify-center">
-                  <div className="transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                    <button className="bg-white text-primary px-4 py-2 rounded-lg font-semibold text-sm shadow-lg font-poppins">
-                      Quick View
-                    </button>
-                  </div>
-                </div>
               </div>
 
               <div className="text-center p-2 space-y-2">
