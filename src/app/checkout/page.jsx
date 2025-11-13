@@ -1,4 +1,4 @@
-// src/app/checkout/page.jsx - UPDATED WITH SUCCESS MODAL
+// src/app/checkout/page.jsx
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -604,6 +604,10 @@ export default function CheckoutPage() {
                   amount={totalAmount * 100}
                   metadata={getOrderMetadata()}
                   onSuccess={handlePaymentSuccess}
+                  onClose={() => {
+                    setIsProcessing(false);
+                    setShowPaystack(false);
+                  }}
                 />
               </div>
             )}

@@ -388,6 +388,57 @@ export default function Home({ products }) {
         onProductClick={handleProductClick}
       />
 
+      {/* FEATURED COLLECTIONS - Static Second Images */}
+      <section className="py-10 bg-white">
+        <div className="container mx-auto px-4 max-w-7xl">
+          {/* 2 items per row on mobile, 3 on larger screens */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+            {products.map((product) => {
+              // Use the second image if available, otherwise fall back to first image
+              const displayImageIndex = product.image.length > 1 ? 1 : 0;
+              const displayImage = product.image[displayImageIndex]
+                ? urlFor(product.image[displayImageIndex])
+                  .width(600)
+                  .height(800)
+                  .url()
+                : "/fallback.jpg";
+
+              return (
+                <div
+                  key={product._id}
+                  className="group cursor-pointer transform hover:-translate-y-1 transition-all duration-500"
+                  onClick={() => handleProductClick(product)}
+                >
+                  <div className="relative aspect-[3/4] overflow-hidden mb-4">
+                    <Image
+                      src={displayImage}
+                      alt={product.name}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                      sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                      priority
+                    />
+                    <div className="absolute bottom-3 left-3 right-3 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                      <button className="cursor-pointer w-full bg-primary text-white py-2 text-sm font-medium rounded shadow-lg hover:bg-primary-700 transition-colors font-poppins">
+                        Quick View
+                      </button>
+                    </div>
+                  </div>
+                  <div className="text-center p-2">
+                    <h3 className="font-light text-base mb-1 text-primary-900 line-clamp-1 font-playfair">
+                      {product.name}
+                    </h3>
+                    <p className="text-base font-medium text-primary font-poppins">
+                      ₦{product.price.toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       <section className="py-16 bg-gradient-to-br from-primary-50 to-white overflow-hidden">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="grid grid-cols-2 gap-4">

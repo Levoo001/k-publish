@@ -1,4 +1,5 @@
-// src/components/PayStackPayment.jsx - UPDATED WITHOUT SESSION
+// src/components/PayStackPayment.jsx - CORRECTED VERSION
+
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -10,7 +11,7 @@ import { useDispatch } from "react-redux";
 import { clearCart } from "../store/CartSlice";
 import { saveOrder } from '@/lib/firestoreService';
 
-const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
+const PayStackPayment = ({ email, amount, metadata, onSuccess, onClose }) => {
   const dispatch = useDispatch();
 
   const [paymentSuccess, setPaymentSuccess] = useState(false);
@@ -158,12 +159,16 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess }) => {
     } finally {
       setIsProcessing(false);
     }
-  }, [email, metadata, onSuccess, dispatch]); // ADD dispatch to dependencies
+  }, [email, metadata, onSuccess, dispatch]);
 
-  // Define the onClose function with useCallback
+  // Define the onClose function with useCallback - CORRECTED VERSION
   const paymentOnClose = useCallback(() => {
     setIsProcessing(false);
-  }, []);
+    // Call the onClose prop if provided
+    if (onClose) {
+      onClose();
+    }
+  }, [onClose]); // Add onClose to dependencies
 
   const handlePayment = () => {
     if (!publicKey) {
