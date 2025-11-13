@@ -27,8 +27,8 @@ export default {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        playfair: ['var(--font-playfair)', 'serif'],
-        poppins: ['var(--font-poppins)', 'sans-serif'],
+        playfair: ['var(--font-playfair)'],
+        poppins: ['var(--font-poppins)'],
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',

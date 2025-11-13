@@ -188,7 +188,7 @@ const StaticProductCard = ({ product }) => {
   return (
     <div className="aspect-[3/3.9] relative rounded-2xl overflow-hidden shadow-luxury group">
       <Image
-        src={urlFor(product.image[0]).width(600).height(780).url()}
+        src={urlFor(product.image[1]).width(600).height(780).url()}
         alt={product.name}
         fill
         className="object-cover"
@@ -409,20 +409,15 @@ export default function Home({ products }) {
                   className="group cursor-pointer transform hover:-translate-y-1 transition-all duration-500"
                   onClick={() => handleProductClick(product)}
                 >
-                  <div className="relative aspect-[3/4] overflow-hidden mb-4">
+                  <div className="relative aspect-[3/4] overflow-hidden mb-4 rounded-xl">
                     <Image
                       src={displayImage}
                       alt={product.name}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700 rounded-xl"
                       sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
                       priority
                     />
-                    <div className="absolute bottom-3 left-3 right-3 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                      <button className="cursor-pointer w-full bg-primary text-white py-2 text-sm font-medium rounded shadow-lg hover:bg-primary-700 transition-colors font-poppins">
-                        Quick View
-                      </button>
-                    </div>
                   </div>
                   <div className="text-center p-2">
                     <h3 className="font-light text-base mb-1 text-primary-900 line-clamp-1 font-playfair">
@@ -452,10 +447,10 @@ export default function Home({ products }) {
                     className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
                   >
                     <div className="space-y-1">
-                      <div className="text-left text-primary text-sm font-semibold font-poppins">
+                      <div className="text-left text-white text-sm font-semibold font-poppins">
                         BESTSELLERS
                       </div>
-                      <button className="text-primary font-semibold text-xs w-fit border-b border-primary hover:border-primary-200 transition-colors font-poppins">
+                      <button className="text-white font-semibold text-xs w-fit border-b border-white hover:border-primary-200 transition-colors font-poppins">
                         Shop Now
                       </button>
                     </div>
@@ -474,10 +469,10 @@ export default function Home({ products }) {
                     className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
                   >
                     <div className="space-y-1">
-                      <div className="text-left text-primary text-sm font-semibold font-poppins">
+                      <div className="text-left text-white text-sm font-semibold font-poppins">
                         CO-ORDS
                       </div>
-                      <button className="text-primary font-semibold text-xs w-fit border-b border-primary hover:border-primary-200 transition-colors font-poppins">
+                      <button className="text-white font-semibold text-xs w-fit border-b border-white hover:border-primary-200 transition-colors font-poppins">
                         Shop Now
                       </button>
                     </div>
