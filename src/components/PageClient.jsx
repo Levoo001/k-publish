@@ -57,7 +57,7 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
 
   return (
     <section className="bg-white">
-      <div className="container mx-auto px-4 max-w-7xl">
+      <div className="container mx-auto p-2 max-w-7xl">
         <div className="embla overflow-hidden" ref={emblaRef}>
           <div className="embla__container flex">
             {Array.from({ length: totalSlides }).map((_, slideIndex) => (
@@ -81,7 +81,7 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
                         className="group cursor-pointer transform hover:-translate-y-1 transition-all duration-500"
                         onClick={() => onProductClick(product)}
                       >
-                        <div className="relative aspect-[3/4] overflow-hidden mb-4">
+                        <div className="relative aspect-[3/3.2] overflow-hidden mb-4"> {/* Changed from aspect-[3/4] to aspect-[3/3.5] */}
                           <Image
                             src={displayImage}
                             alt={product.name}
@@ -91,11 +91,11 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
                             priority={slideIndex === 0}
                           />
                         </div>
-                        <div className="text-center p-2">
-                          <h3 className="font-light text-base mb-1 text-primary-900 line-clamp-1 font-playfair">
+                        <div className="text-center">
+                          <h3 className="font-light text-sm mb-1 text-primary-900 line-clamp-1 font-playfair">
                             {product.name}
                           </h3>
-                          <p className="text-base font-medium text-primary font-poppins">
+                          <p className="text-sm font-medium text-primary font-poppins">
                             ₦{product.price.toLocaleString()}
                           </p>
                         </div>
@@ -109,19 +109,19 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
         </div>
 
         {/* Bullet Dot Indicators */}
-        <div className="flex items-center justify-center space-x-1 mt-8">
+        <div className="flex items-center justify-center space-x-1 mt-5">
           {Array.from({ length: totalSlides }).map((_, index) => (
             <button
               key={index}
               onClick={() => onDotButtonClick(index)}
-              className="flex items-center justify-center w-6 h-6"
+              className="flex items-center justify-center w-5 h-5"
               aria-label={`Go to slide ${index + 1}`}
             >
-              <div className={`relative flex items-center justify-center transition-all duration-300 ${selectedIndex === index ? "w-6 h-6 border-2 border-gray-900 rounded-full" : ""
+              <div className={`relative flex items-center justify-center transition-all duration-300 ${selectedIndex === index ? "w-5 h-5 border-2 border-gray-900 rounded-full" : ""
                 }`}>
                 <div className={`rounded-full transition-all duration-300 ${selectedIndex === index
-                  ? "w-1.5 h-1.5 bg-slate-900"
-                  : "w-2 h-2 bg-slate-400 hover:bg-slate-600"
+                  ? "w-1 h-1 bg-slate-900"
+                  : "w-1.5 h-1.5 bg-slate-400 hover:bg-slate-600"
                   }`} />
               </div>
             </button>
