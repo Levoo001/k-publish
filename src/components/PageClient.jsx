@@ -150,7 +150,7 @@ const BottomCardsCarousel = ({ products, startIndex = 0 }) => {
 
   // Get all first images from products
   const allFirstImages = products.map(product => ({
-    image: product.image[0],
+    image: product.image[1],
     productName: product.name
   }));
 
