@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { SHIPPING_LOCATIONS, COUNTRIES } from "@/lib/shippingLocations";
+import { COUNTRIES } from "@/lib/shippingLocations";
+import { calculateShippingRates, getNigerianStates } from "@/lib/shippingCalculator";
 import PayStackPayment from "@/components/PayStackPayment";
 import { clearCart } from "@/store/CartSlice";
 
@@ -15,9 +16,9 @@ export default function CheckoutPage() {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart?.cartItems || []);
 
-  const [selectedLocationType, setSelectedLocationType] = useState('domestic');
-  const [selectedLocation, setSelectedLocation] = useState('');
-  const [shippingFee, setShippingFee] = useState(0);
+  const [shippingRates, setShippingRates] = useState([]);
+  const [selectedShipping, setSelectedShipping] = useState(null);
+  const [isCalculating, setIsCalculating] = useState(false);
   const [isShippingOpen, setIsShippingOpen] = useState(false);
   const [formData, setFormData] = useState({
     country: 'Nigeria',
@@ -33,28 +34,33 @@ export default function CheckoutPage() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [orderData, setOrderData] = useState(null);
 
-  // Country search state
+  // Dropdown states
   const [isCountryOpen, setIsCountryOpen] = useState(false);
+  const [isStateOpen, setIsStateOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const countryDropdownRef = useRef(null);
+  const stateDropdownRef = useRef(null);
 
   const subtotal = cartItems.reduce(
     (total, item) => total + (item?.price || 0) * (item?.quantity || 0),
     0
   );
 
-  const totalAmount = subtotal + shippingFee;
+  const totalAmount = subtotal + (selectedShipping?.cost || 0);
 
-  // Filter countries based on search
+  const nigerianStates = getNigerianStates();
   const filteredCountries = COUNTRIES.filter(country =>
     country.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Close country dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (countryDropdownRef.current && !countryDropdownRef.current.contains(event.target)) {
         setIsCountryOpen(false);
+      }
+      if (stateDropdownRef.current && !stateDropdownRef.current.contains(event.target)) {
+        setIsStateOpen(false);
       }
     };
 
@@ -62,24 +68,35 @@ export default function CheckoutPage() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Update shipping fee when location changes
+  // Calculate shipping when country or state changes
   useEffect(() => {
-    if (selectedLocation) {
-      const allLocations = [
-        ...SHIPPING_LOCATIONS.domestic.flatMap(group => group.options),
-        ...SHIPPING_LOCATIONS.international.flatMap(group => group.options)
-      ];
-      const location = allLocations.find(loc => loc.id === selectedLocation);
-      setShippingFee(location ? location.fee : 0);
+    if (formData.country && formData.state && cartItems.length > 0) {
+      calculateShipping();
+    } else {
+      setShippingRates([]);
+      setSelectedShipping(null);
     }
-  }, [selectedLocation]);
+  }, [formData.country, formData.state, cartItems]);
 
-  // Redirect if cart is empty
-  useEffect(() => {
-    if (cartItems.length === 0) {
-      router.push('/shop');
+  const calculateShipping = async () => {
+    setIsCalculating(true);
+
+    try {
+      const rates = calculateShippingRates(formData.country, formData.state, cartItems);
+      setShippingRates(rates);
+
+      // Auto-select the first (cheapest) rate
+      if (rates.length > 0) {
+        setSelectedShipping(rates[0]);
+      }
+    } catch (error) {
+      console.error('Shipping calculation error:', error);
+      setShippingRates([]);
+      setSelectedShipping(null);
+    } finally {
+      setIsCalculating(false);
     }
-  }, [cartItems, router]);
+  };
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-NG", {
@@ -96,9 +113,18 @@ export default function CheckoutPage() {
   };
 
   const handleCountrySelect = (country) => {
-    setFormData(prev => ({ ...prev, country }));
+    setFormData(prev => ({
+      ...prev,
+      country,
+      state: '' // Reset state when country changes
+    }));
     setIsCountryOpen(false);
     setSearchQuery('');
+  };
+
+  const handleStateSelect = (state) => {
+    setFormData(prev => ({ ...prev, state }));
+    setIsStateOpen(false);
   };
 
   const handleSearchChange = (e) => {
@@ -108,17 +134,6 @@ export default function CheckoutPage() {
 
   // Prepare order metadata for PayStack
   const getOrderMetadata = () => {
-    const allLocations = [
-      ...SHIPPING_LOCATIONS.domestic.flatMap(group => group.options),
-      ...SHIPPING_LOCATIONS.international.flatMap(group => group.options)
-    ];
-    const selectedLocationData = allLocations.find(loc => loc.id === selectedLocation);
-    const providerGroup = SHIPPING_LOCATIONS.domestic.find(group =>
-      group.options.some(opt => opt.id === selectedLocation)
-    ) || SHIPPING_LOCATIONS.international.find(group =>
-      group.options.some(opt => opt.id === selectedLocation)
-    );
-
     return {
       customer_name: formData.name,
       customer_email: formData.email,
@@ -126,10 +141,9 @@ export default function CheckoutPage() {
       shipping_country: formData.country,
       shipping_state: formData.state,
       shipping_address: formData.address,
-      shipping_location: selectedLocationData?.name || 'Not selected',
-      shipping_provider: providerGroup?.provider || 'Not selected',
-      shipping_type: selectedLocationType,
-      shipping_fee: shippingFee,
+      shipping_provider: selectedShipping?.provider || 'Not selected',
+      shipping_service: selectedShipping?.service || 'Not selected',
+      shipping_fee: selectedShipping?.cost || 0,
       items: cartItems.map(item => ({
         name: item.name,
         quantity: item.quantity,
@@ -192,7 +206,7 @@ export default function CheckoutPage() {
 
   // Check if checkout is ready
   const isFormComplete = formData.name && formData.email && formData.country && formData.state && formData.address && formData.phone;
-  const isCheckoutReady = isFormComplete && selectedLocation && agreeToPolicy && cartItems.length > 0;
+  const isCheckoutReady = isFormComplete && selectedShipping && agreeToPolicy && cartItems.length > 0;
 
   if (cartItems.length === 0) {
     return (
@@ -244,7 +258,7 @@ export default function CheckoutPage() {
                   placeholder="Enter your full name"
                   className="w-full p-3 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins text-base"
                   required
-                  style={{ fontSize: '16px' }} // Prevents zoom on iOS
+                  style={{ fontSize: '16px' }}
                 />
               </div>
 
@@ -334,20 +348,64 @@ export default function CheckoutPage() {
                 )}
               </div>
 
-              {/* State/Province */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2 text-primary-900 font-poppins">
-                  State / Province *
-                </label>
-                <input
-                  type="text"
-                  value={formData.state}
-                  onChange={(e) => handleInputChange('state', e.target.value)}
-                  placeholder="Enter your state or province"
-                  className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins"
-                  required
-                />
-              </div>
+              {/* State Dropdown for Nigeria */}
+              {formData.country === 'Nigeria' && (
+                <div className="mb-4 relative" ref={stateDropdownRef}>
+                  <label className="block text-sm font-medium mb-2 text-primary-900 font-poppins">
+                    State *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={formData.state}
+                      onChange={(e) => handleInputChange('state', e.target.value)}
+                      onFocus={() => setIsStateOpen(true)}
+                      placeholder="Select your state"
+                      className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins bg-white cursor-pointer"
+                    />
+                    <svg
+                      className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary-600 transition-transform ${isStateOpen ? 'rotate-180' : ''}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+
+                  {/* State Dropdown */}
+                  {isStateOpen && (
+                    <div className="absolute z-10 w-full mt-1 bg-white border border-primary-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                      {nigerianStates.map((state) => (
+                        <button
+                          key={state}
+                          onClick={() => handleStateSelect(state)}
+                          className={`w-full text-left px-4 py-3 hover:bg-primary-50 transition-colors font-poppins text-sm ${formData.state === state ? 'bg-primary-50 text-primary font-semibold' : 'text-primary-900'}`}
+                        >
+                          {state}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* State Input for International */}
+              {formData.country !== 'Nigeria' && (
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-2 text-primary-900 font-poppins">
+                    State / Province *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.state}
+                    onChange={(e) => handleInputChange('state', e.target.value)}
+                    placeholder="Enter your state or province"
+                    className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins"
+                    required
+                  />
+                </div>
+              )}
 
               {/* Address */}
               <div className="mb-4">
@@ -364,7 +422,7 @@ export default function CheckoutPage() {
                 />
               </div>
 
-              {/* Shipping Provider - Collapsible */}
+              {/* Shipping Options - Auto Calculated */}
               <div className="border border-primary-200 rounded-lg">
                 <button
                   onClick={() => setIsShippingOpen(!isShippingOpen)}
@@ -372,9 +430,19 @@ export default function CheckoutPage() {
                 >
                   <div>
                     <h3 className="font-medium text-primary-900 font-poppins">Shipping method</h3>
-                    {selectedLocation && (
+                    {selectedShipping && (
                       <p className="text-sm text-primary-600 mt-1 font-poppins">
-                        {SHIPPING_LOCATIONS[selectedLocationType].flatMap(group => group.options).find(opt => opt.id === selectedLocation)?.name}
+                        {selectedShipping.provider} - {selectedShipping.service} ({formatPrice(selectedShipping.cost)})
+                      </p>
+                    )}
+                    {!selectedShipping && formData.state && (
+                      <p className="text-sm text-primary-600 mt-1 font-poppins">
+                        Select a shipping option
+                      </p>
+                    )}
+                    {!formData.state && (
+                      <p className="text-sm text-primary-600 mt-1 font-poppins">
+                        Enter your state to see shipping options
                       </p>
                     )}
                   </div>
@@ -389,70 +457,47 @@ export default function CheckoutPage() {
                 </button>
 
                 {isShippingOpen && (
-                  <div className="p-4 border-t border-primary-200 space-y-4">
-                    {/* Location Type Selection */}
-                    <div>
-                      <label className="block text-sm font-medium mb-3 text-primary-900 font-poppins">
-                        Location Type
-                      </label>
-                      <div className="flex space-x-4">
-                        <button
-                          onClick={() => {
-                            setSelectedLocationType('domestic');
-                            setSelectedLocation('');
-                          }}
-                          className={`px-4 py-2 rounded border font-poppins text-sm transition-colors ${selectedLocationType === 'domestic'
-                            ? 'border-primary bg-primary text-white'
-                            : 'border-primary-200 text-primary-700 hover:bg-primary-50'
-                            }`}
-                        >
-                          Domestic
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedLocationType('international');
-                            setSelectedLocation('');
-                          }}
-                          className={`px-4 py-2 rounded border font-poppins text-sm transition-colors ${selectedLocationType === 'international'
-                            ? 'border-primary bg-primary text-white'
-                            : 'border-primary-200 text-primary-700 hover:bg-primary-50'
-                            }`}
-                        >
-                          International
-                        </button>
+                  <div className="p-4 border-t border-primary-200">
+                    {isCalculating ? (
+                      <div className="text-center py-4">
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto"></div>
+                        <p className="text-sm text-primary-600 mt-2">Calculating shipping options...</p>
                       </div>
-                    </div>
-
-                    {/* Shipping Provider Selection */}
-                    {selectedLocationType && (
-                      <div>
-                        <label className="block text-sm font-medium mb-3 text-primary-900 font-poppins">
-                          Select shipping option
+                    ) : shippingRates.length > 0 ? (
+                      <div className="space-y-3">
+                        <label className="block text-sm font-medium text-primary-900 font-poppins">
+                          Available shipping options
                         </label>
-                        <div className="space-y-3 max-h-60 overflow-y-auto">
-                          {SHIPPING_LOCATIONS[selectedLocationType].map((group) => (
-                            <div key={group.provider} className="space-y-2">
-                              <p className="text-sm font-medium text-primary-700 font-poppins">{group.provider}</p>
-                              <div className="grid gap-2">
-                                {group.options.map((location) => (
-                                  <button
-                                    key={location.id}
-                                    onClick={() => setSelectedLocation(location.id)}
-                                    className={`p-3 rounded border text-left font-poppins text-sm transition-colors ${selectedLocation === location.id
-                                      ? 'border-primary bg-primary-50'
-                                      : 'border-primary-200 hover:bg-primary-50'
-                                      }`}
-                                  >
-                                    <div className="flex justify-between items-center">
-                                      <span className="text-primary-900">{location.name}</span>
-                                      <span className="text-primary font-semibold">{formatPrice(location.fee)}</span>
-                                    </div>
-                                  </button>
-                                ))}
+                        {shippingRates.map((rate, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setSelectedShipping(rate)}
+                            className={`w-full p-3 rounded border text-left font-poppins text-sm transition-colors ${selectedShipping?.provider === rate.provider && selectedShipping?.service === rate.service
+                                ? 'border-primary bg-primary-50'
+                                : 'border-primary-200 hover:bg-primary-50'
+                              }`}
+                          >
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1">
+                                <p className="font-semibold text-primary-900">{rate.provider}</p>
+                                <p className="text-primary-600">{rate.service}</p>
+                                <p className="text-xs text-primary-500 mt-1">
+                                  Est. delivery: {rate.estimatedDelivery.min} - {rate.estimatedDelivery.max}
+                                </p>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-semibold text-primary">{formatPrice(rate.cost)}</p>
+                                <p className="text-xs text-primary-500">{rate.deliveryDays}</p>
                               </div>
                             </div>
-                          ))}
-                        </div>
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-4">
+                        <p className="text-primary-600 text-sm">
+                          {formData.state ? 'No shipping options available for this location' : 'Select your state to see shipping options'}
+                        </p>
                       </div>
                     )}
                   </div>
@@ -535,7 +580,7 @@ export default function CheckoutPage() {
                 <div className="flex justify-between text-sm font-poppins">
                   <span className="text-primary-700">Shipping</span>
                   <span className="text-primary-900 font-semibold">
-                    {shippingFee > 0 ? formatPrice(shippingFee) : '—'}
+                    {selectedShipping ? formatPrice(selectedShipping.cost) : '—'}
                   </span>
                 </div>
 
@@ -546,10 +591,10 @@ export default function CheckoutPage() {
               </div>
 
               {/* Delivery Timeline */}
-              {selectedLocation && (
+              {selectedShipping && (
                 <div className="bg-white p-2 rounded-lg border border-primary-200 mt-4">
                   <p className="text-primary-800 text-xs font-poppins leading-relaxed">
-                    Please allow up 4-6 days for your order to be processed | worldwide shipping
+                    {selectedShipping.deliveryDays} | {selectedShipping.provider}
                   </p>
                 </div>
               )}
@@ -577,7 +622,7 @@ export default function CheckoutPage() {
                   disabled
                   className="w-full bg-primary-200 text-primary-600 py-4 px-6 rounded-lg cursor-not-allowed font-poppins text-sm font-medium"
                 >
-                  {!selectedLocation ? 'Select shipping method' :
+                  {!selectedShipping ? 'Select shipping method' :
                     !formData.name ? 'Enter your name' :
                       !formData.email ? 'Enter email address' :
                         !formData.state ? 'Enter state/province' :
@@ -644,6 +689,10 @@ export default function CheckoutPage() {
                   <div className="flex justify-between">
                     <span className="text-primary-600">Payment Method:</span>
                     <span className="font-medium">{orderData.paymentMethod}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-primary-600">Shipping Provider:</span>
+                    <span className="font-medium">{selectedShipping?.provider}</span>
                   </div>
                 </div>
               </div>
