@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { COUNTRIES } from "@/lib/shippingLocations";
+import { COUNTRIES } from "@/lib/shippingConfig";
 import { calculateShippingRates, getNigerianStates } from "@/lib/shippingCalculator";
 import PayStackPayment from "@/components/PayStackPayment";
 import { clearCart } from "@/store/CartSlice";
@@ -348,7 +348,7 @@ export default function CheckoutPage() {
                 )}
               </div>
 
-              {/* State Dropdown for Nigeria */}
+              {/* State Dropdown for Nigeria - WITH SEARCH */}
               {formData.country === 'Nigeria' && (
                 <div className="mb-4 relative" ref={stateDropdownRef}>
                   <label className="block text-sm font-medium mb-2 text-primary-900 font-poppins">
@@ -357,10 +357,13 @@ export default function CheckoutPage() {
                   <div className="relative">
                     <input
                       type="text"
-                      value={formData.state}
-                      onChange={(e) => handleInputChange('state', e.target.value)}
+                      value={isStateOpen ? searchQuery : formData.state}
+                      onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        setIsStateOpen(true);
+                      }}
                       onFocus={() => setIsStateOpen(true)}
-                      placeholder="Select your state"
+                      placeholder="Search for a state..."
                       className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins bg-white cursor-pointer"
                     />
                     <svg
@@ -373,18 +376,35 @@ export default function CheckoutPage() {
                     </svg>
                   </div>
 
-                  {/* State Dropdown */}
+                  {/* State Dropdown with Search */}
                   {isStateOpen && (
                     <div className="absolute z-10 w-full mt-1 bg-white border border-primary-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                      {nigerianStates.map((state) => (
-                        <button
-                          key={state}
-                          onClick={() => handleStateSelect(state)}
-                          className={`w-full text-left px-4 py-3 hover:bg-primary-50 transition-colors font-poppins text-sm ${formData.state === state ? 'bg-primary-50 text-primary font-semibold' : 'text-primary-900'}`}
-                        >
-                          {state}
-                        </button>
-                      ))}
+                      <div className="max-h-48 overflow-y-auto">
+                        {(() => {
+                          const filteredStates = nigerianStates.filter(state =>
+                            state.toLowerCase().includes(searchQuery.toLowerCase())
+                          );
+
+                          return filteredStates.length > 0 ? (
+                            filteredStates.map((state) => (
+                              <button
+                                key={state}
+                                onClick={() => {
+                                  handleStateSelect(state);
+                                  setSearchQuery('');
+                                }}
+                                className={`w-full text-left px-4 py-3 hover:bg-primary-50 transition-colors font-poppins text-sm ${formData.state === state ? 'bg-primary-50 text-primary font-semibold' : 'text-primary-900'}`}
+                              >
+                                {state}
+                              </button>
+                            ))
+                          ) : (
+                            <div className="px-4 py-3 text-primary-600 text-sm font-poppins">
+                              No states found
+                            </div>
+                          );
+                        })()}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -473,8 +493,8 @@ export default function CheckoutPage() {
                             key={index}
                             onClick={() => setSelectedShipping(rate)}
                             className={`w-full p-3 rounded border text-left font-poppins text-sm transition-colors ${selectedShipping?.provider === rate.provider && selectedShipping?.service === rate.service
-                                ? 'border-primary bg-primary-50'
-                                : 'border-primary-200 hover:bg-primary-50'
+                              ? 'border-primary bg-primary-50'
+                              : 'border-primary-200 hover:bg-primary-50'
                               }`}
                           >
                             <div className="flex justify-between items-start">

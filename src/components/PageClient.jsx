@@ -70,8 +70,12 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
                   {products.slice(slideIndex * 2, slideIndex * 2 + 2).map((product) => {
                     const displayImage = product.image[0]
                       ? urlFor(product.image[0])
-                        .width(600)
-                        .height(800)
+                        .width(600)  // Keep original width
+                        .height(800) // Keep original height
+                        .quality(90) // Increase quality
+                        .format('jpg')
+                        .fit('fill') // Ensure no black background
+                        .bg('FFFFFF') // White background instead of black
                         .url()
                       : "/fallback.jpg";
 
@@ -81,7 +85,7 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
                         className="group cursor-pointer transform hover:-translate-y-1 transition-all duration-500"
                         onClick={() => onProductClick(product)}
                       >
-                        <div className="relative aspect-[3/3.2] overflow-hidden mb-4"> {/* Changed from aspect-[3/4] to aspect-[3/3.5] */}
+                        <div className="relative aspect-[3/4] overflow-hidden mb-4 bg-white rounded-lg">
                           <Image
                             src={displayImage}
                             alt={product.name}
@@ -169,7 +173,12 @@ const BottomCardsCarousel = ({ products, startIndex = 0 }) => {
             key={index}
           >
             <Image
-              src={urlFor(item.image).width(600).height(600).url()}
+              src={urlFor(item.image)
+                .width(800)
+                .height(800)
+                .quality(85)
+                .format('jpg')
+                .url()}
               alt={`${item.productName} - Featured`}
               fill
               className="object-cover"
@@ -188,7 +197,12 @@ const StaticProductCard = ({ product }) => {
   return (
     <div className="aspect-[3/3.9] relative rounded-2xl overflow-hidden shadow-luxury group">
       <Image
-        src={urlFor(product.image[1]).width(600).height(780).url()}
+        src={urlFor(product.image[1])
+          .width(800)
+          .height(1040)
+          .quality(85)
+          .format('jpg')
+          .url()}
         alt={product.name}
         fill
         className="object-cover"
@@ -301,7 +315,12 @@ export default function Home({ products }) {
       id: product._id,
       name: product.name,
       price: product.price,
-      image: urlFor(product.image[0]).width(300).height(400).url(),
+      image: urlFor(product.image[0])
+        .width(400)
+        .height(533)
+        .quality(80)
+        .format('jpg')
+        .url(),
       selectedColor: product.selectedColor,
     };
 
@@ -314,7 +333,12 @@ export default function Home({ products }) {
     const modalProduct = {
       ...product,
       processedImages: product.image.map((img) =>
-        urlFor(img).width(600).height(800).url()
+        urlFor(img)
+          .width(1200)
+          .height(1600)
+          .quality(90)
+          .format('jpg')
+          .url()
       ),
     };
     setSelectedProduct(modalProduct);
@@ -398,8 +422,10 @@ export default function Home({ products }) {
               const displayImageIndex = product.image.length > 1 ? 1 : 0;
               const displayImage = product.image[displayImageIndex]
                 ? urlFor(product.image[displayImageIndex])
-                  .width(600)
-                  .height(800)
+                  .width(800)
+                  .height(1000)
+                  .quality(85)
+                  .format('jpg')
                   .url()
                 : "/fallback.jpg";
 

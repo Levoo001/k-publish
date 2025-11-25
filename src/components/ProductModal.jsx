@@ -123,11 +123,10 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
                       <button
                         key={index}
                         onClick={() => handleThumbnailClick(index)}
-                        className={`relative w-12 h-12 rounded-lg overflow-hidden border-2 transition-all duration-200 hover:scale-105 flex-shrink-0 ${
-                          index === currentImageIndex
+                        className={`relative w-12 h-12 rounded-lg overflow-hidden border-2 transition-all duration-200 hover:scale-105 flex-shrink-0 ${index === currentImageIndex
                             ? "border-primary shadow-md"
                             : "border-slate-300 hover:border-slate-500"
-                        }`}
+                          }`}
                       >
                         <Image
                           src={img}
@@ -166,11 +165,10 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
                         <button
                           key={index}
                           onClick={() => handleColorSelect(color)}
-                          className={`flex items-center space-x-2 px-4 py-2 rounded-lg border-2 transition-all duration-200 font-poppins ${
-                            selectedColor === color
+                          className={`flex items-center space-x-2 px-4 py-2 rounded-lg border-2 transition-all duration-200 font-poppins ${selectedColor === color
                               ? "border-primary bg-primary-50 text-primary"
                               : "border-gray-300 hover:border-primary hover:bg-primary-25 text-gray-700"
-                          }`}
+                            }`}
                         >
                           <span>{color}</span>
                         </button>
@@ -196,11 +194,10 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
 
               <div className="space-y-4 pt-6">
                 <button
-                  className={`w-full py-3 px-6 rounded-xl font-semibold text-lg shadow-lg font-poppins transition-all duration-300 ${
-                    hasColors && !selectedColor
+                  className={`w-full py-3 px-6 rounded-xl font-semibold text-lg shadow-lg font-poppins transition-all duration-300 ${hasColors && !selectedColor
                       ? "bg-gray-400 text-gray-200 cursor-not-allowed"
                       : "bg-primary text-white hover:bg-slate-800"
-                  }`}
+                    }`}
                   onClick={handleAddToCartClick}
                   disabled={hasColors && !selectedColor}
                 >

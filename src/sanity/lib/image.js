@@ -4,4 +4,9 @@ import { dataset, projectId } from "../env";
 
 const builder = createImageUrlBuilder({ projectId, dataset });
 
-export const urlFor = (source) => builder.image(source);
+export const urlFor = (source) => {
+    return builder.image(source)
+        .auto('format') // Optimize format automatically
+        .fit('fill')
+        .bg('FFFFFF');
+};
