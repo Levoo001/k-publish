@@ -1,4 +1,4 @@
-// src/components/ProductModal.jsx
+// src/components/ProductModal.jsx - OPTIMIZED WITH MAX QUALITY
 "use client";
 
 import { useState, useRef } from "react";
@@ -6,7 +6,7 @@ import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
 
 const ProductModal = ({ product, onClose, onAddToCart }) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(1);
   const [selectedColor, setSelectedColor] = useState(null);
   const modalImageRef = useRef(null);
 
@@ -16,7 +16,7 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
     setCurrentImageIndex(index);
   };
 
-  // Handle both processedImages and original image arrays
+  // Handle both processedImages and original image arrays - FIXED
   const getImages = () => {
     if (product.processedImages) {
       return product.processedImages;
@@ -26,7 +26,14 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
     }
     if (product.image) {
       return product.image.map((img) =>
-        typeof img === "string" ? img : urlFor(img).width(600).height(800).url()
+        typeof img === "string" ? img : urlFor(img)
+          .width(1200)        // HIGH RES for modal
+          .height(1600)
+          .quality(95)        // MAX QUALITY for modal
+          .format('jpg')
+          .fit('fill')
+          .bg('FFFFFF')
+          .url()
       );
     }
     return [];
@@ -63,7 +70,7 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
         }
       }}
     >
-      <div className="bg-white max-w-6xl w-full max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl">
+      <div className="max-w-6xl w-full max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl">
         <div className="relative h-full">
           {/* Close Button */}
           <button
@@ -87,7 +94,7 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
 
           <div className="grid lg:grid-cols-2 h-full">
             {/* Image Gallery Section */}
-            <div className="relative bg-slate-50">
+            <div className="relative bg-white">
               <div className="relative aspect-[3/4] w-full h-full">
                 {mainImage && (
                   <Image
@@ -115,7 +122,7 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
                 )}
               </div>
 
-              {/* Thumbnail Gallery */}
+              {/* Thumbnail Gallery - FIXED QUALITY */}
               {images.length > 1 && (
                 <div className="absolute bottom-2 left-2">
                   <div className="flex gap-2 justify-center overflow-x-auto">
@@ -129,7 +136,14 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
                           }`}
                       >
                         <Image
-                          src={img}
+                          src={urlFor(product.image?.[index] || img)
+                            .width(120)
+                            .height(120)
+                            .quality(80)
+                            .format('jpg')
+                            .fit('fill')
+                            .bg('FFFFFF')
+                            .url()}
                           alt={`${product.name} view ${index + 1}`}
                           fill
                           className="object-cover"
@@ -143,7 +157,7 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
             </div>
 
             {/* Product Details Section */}
-            <div className="flex flex-col justify-between p-6">
+            <div className="bg-white flex flex-col justify-between p-6">
               <div className="space-y-6">
                 <div>
                   <h2 className="text-2xl md:text-3xl font-light mb-3 text-primary font-playfair">

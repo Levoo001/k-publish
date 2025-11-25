@@ -1,4 +1,4 @@
-// src/app/collections/bestsellers/BestsellersClient.jsx
+// src/app/collections/bestsellers/BestsellersClient.jsx - OPTIMIZED
 
 "use client";
 
@@ -25,7 +25,14 @@ export default function BestsellersClient({ products }) {
             id: product._id,
             name: product.name,
             price: product.price,
-            image: urlFor(product.image[0]).width(300).height(400).url(),
+            image: urlFor(product.image[0])
+                .width(400)
+                .height(533)
+                .quality(80)
+                .format('jpg')
+                .fit('fill')
+                .bg('FFFFFF')
+                .url(),
             selectedColor: product.selectedColor,
         };
 
@@ -38,7 +45,14 @@ export default function BestsellersClient({ products }) {
         const modalProduct = {
             ...product,
             processedImages: product.image.map((img) =>
-                urlFor(img).width(600).height(800).url()
+                urlFor(img)
+                    .width(1200)
+                    .height(1600)
+                    .quality(95)
+                    .format('jpg')
+                    .fit('fill')
+                    .bg('FFFFFF')
+                    .url()
             ),
         };
         setSelectedProduct(modalProduct);
@@ -67,6 +81,10 @@ export default function BestsellersClient({ products }) {
                             ? urlFor(product.image[0])
                                 .width(600)
                                 .height(800)
+                                .quality(90)
+                                .format('jpg')
+                                .fit('fill')
+                                .bg('FFFFFF')
                                 .url()
                             : "/fallback.jpg";
 
@@ -76,7 +94,7 @@ export default function BestsellersClient({ products }) {
                                 className="group cursor-pointer transform hover:-translate-y-1 transition-all duration-500"
                                 onClick={() => handleProductClick(product)}
                             >
-                                <div className="relative aspect-[3/4] overflow-hidden mb-4">
+                                <div className="relative aspect-[3/4] overflow-hidden mb-4 bg-white rounded-lg">
                                     <Image
                                         src={displayImage}
                                         alt={product.name}

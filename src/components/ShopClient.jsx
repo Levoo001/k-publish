@@ -25,7 +25,14 @@ export default function ShopClient({ products }) {
     const modalProduct = {
       ...product,
       processedImages: product.image.map((img) =>
-        urlFor(img).width(600).height(800).url()
+        urlFor(img)
+          .width(1200)        // Increased for modal
+          .height(1600)
+          .quality(95)        // Highest quality for modal
+          .format('jpg')
+          .fit('fill')
+          .bg('FFFFFF')
+          .url()
       ),
     };
     setSelectedProduct(modalProduct);
@@ -36,7 +43,14 @@ export default function ShopClient({ products }) {
       id: product._id,
       name: product.name,
       price: product.price,
-      image: urlFor(product.image[0]).width(300).height(400).url(),
+      image: urlFor(product.image[0])
+        .width(400)
+        .height(533)
+        .quality(80)        // Good balance for thumbnails
+        .format('jpg')
+        .fit('fill')
+        .bg('FFFFFF')
+        .url(),
       selectedColor: product.selectedColor,
     };
 
@@ -127,7 +141,14 @@ export default function ShopClient({ products }) {
             >
               <div className="relative aspect-[3/4] overflow-hidden mb-4 rounded-t-xl transition-all duration-300">
                 <Image
-                  src={urlFor(product.image[1]).width(600).height(800).url()}
+                  src={urlFor(product.image[1])
+                    .width(600)
+                    .height(800)
+                    .quality(90)        // ADD THIS
+                    .format('jpg')      // ADD THIS
+                    .fit('fill')        // ADD THIS
+                    .bg('FFFFFF')       // ADD THIS
+                    .url()}
                   alt={product.name}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"

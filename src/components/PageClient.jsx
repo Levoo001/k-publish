@@ -176,8 +176,10 @@ const BottomCardsCarousel = ({ products, startIndex = 0 }) => {
               src={urlFor(item.image)
                 .width(800)
                 .height(800)
-                .quality(85)
+                .quality(90)        // Change from 85 to 90
                 .format('jpg')
+                .fit('fill')        // ADD THIS
+                .bg('FFFFFF')       // ADD THIS
                 .url()}
               alt={`${item.productName} - Featured`}
               fill
@@ -200,8 +202,10 @@ const StaticProductCard = ({ product }) => {
         src={urlFor(product.image[1])
           .width(800)
           .height(1040)
-          .quality(85)
+          .quality(90)        // Change from 85 to 90  
           .format('jpg')
+          .fit('fill')        // ADD THIS
+          .bg('FFFFFF')       // ADD THIS
           .url()}
         alt={product.name}
         fill
@@ -336,8 +340,10 @@ export default function Home({ products }) {
         urlFor(img)
           .width(1200)
           .height(1600)
-          .quality(90)
+          .quality(95)        // Increase to 95% for modal zoom
           .format('jpg')
+          .fit('fill')
+          .bg('FFFFFF')
           .url()
       ),
     };
@@ -424,8 +430,10 @@ export default function Home({ products }) {
                 ? urlFor(product.image[displayImageIndex])
                   .width(800)
                   .height(1000)
-                  .quality(85)
+                  .quality(90)        // Change from 85 to 90
                   .format('jpg')
+                  .fit('fill')        // ADD THIS
+                  .bg('FFFFFF')       // ADD THIS
                   .url()
                 : "/fallback.jpg";
 

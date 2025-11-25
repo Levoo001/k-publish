@@ -6,7 +6,6 @@ const builder = createImageUrlBuilder({ projectId, dataset });
 
 export const urlFor = (source) => {
     return builder.image(source)
-        .auto('format') // Optimize format automatically
-        .fit('fill')
-        .bg('FFFFFF');
+        .auto('format')
+        .bg('FFFFFF'); // Keep white background as default
 };
