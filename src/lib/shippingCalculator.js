@@ -1,5 +1,3 @@
-// src/lib/shippingCalculator.js
-
 import {
   NIGERIAN_STATES,
   SHIPPING_RATES,
@@ -56,20 +54,6 @@ export const calculateShippingRates = (country, state, cartItems) => {
         estimatedDelivery: calculateDeliveryDate(2, 4),
         zone: stateData.dhl,
       });
-
-      // Special handling for orders above 200,000 Naira
-      if (subtotal >= 200000) {
-        rates.push({
-          provider: "Contact Logistics",
-          service: "Special Delivery",
-          cost: 0,
-          deliveryDays: "Contact for quote",
-          estimatedDelivery: calculateDeliveryDate(0, 0),
-          zone: "special",
-          notes:
-            "For orders above ₦200,000 - Please contact logistics department for delivery arrangement",
-        });
-      }
     }
   } else {
     // International shipping - DHL only
@@ -114,7 +98,7 @@ export const hasGUOService = (state) => {
   return stateData && stateData.guo !== null;
 };
 
-// Helper function to get GUO service note - CORRECTED
+// Helper function to get GUO service note
 export const getGUOServiceNote = (state, subtotal) => {
   const stateData = NIGERIAN_STATES[state];
   if (!stateData || !stateData.guo) return "";
@@ -126,7 +110,7 @@ export const getGUOServiceNote = (state, subtotal) => {
   return "Standard rate (₦5,000) applies";
 };
 
-// Add this function to get GUO rate explanation - CORRECTED
+// Add this function to get GUO rate explanation
 export const getGUORateExplanation = (state, subtotal) => {
   const stateData = NIGERIAN_STATES[state];
   if (!stateData || !stateData.guo) return "";
