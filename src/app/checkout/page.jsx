@@ -1,4 +1,3 @@
-// src/app/checkout/page.jsx
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -23,7 +22,10 @@ export default function CheckoutPage() {
   const [formData, setFormData] = useState({
     country: 'Nigeria',
     state: '',
+    city: '',
     address: '',
+    apartment: '',
+    postalCode: '',
     phone: '',
     email: '',
     name: ''
@@ -134,13 +136,25 @@ export default function CheckoutPage() {
 
   // Prepare order metadata for PayStack
   const getOrderMetadata = () => {
+    const fullAddress = [
+      formData.address,
+      formData.apartment && `Apt/Suite: ${formData.apartment}`,
+      formData.city,
+      formData.state,
+      formData.country,
+      formData.postalCode && `Postal Code: ${formData.postalCode}`
+    ].filter(Boolean).join(', ');
+
     return {
       customer_name: formData.name,
       customer_email: formData.email,
       customer_phone: formData.phone,
       shipping_country: formData.country,
       shipping_state: formData.state,
-      shipping_address: formData.address,
+      shipping_city: formData.city,
+      shipping_address: fullAddress,
+      shipping_apartment: formData.apartment || 'Not provided',
+      shipping_postal_code: formData.postalCode || 'Not provided',
       shipping_provider: selectedShipping?.provider || 'Not selected',
       shipping_service: selectedShipping?.service || 'Not selected',
       shipping_fee: selectedShipping?.cost || 0,
@@ -205,7 +219,8 @@ export default function CheckoutPage() {
   };
 
   // Check if checkout is ready
-  const isFormComplete = formData.name && formData.email && formData.country && formData.state && formData.address && formData.phone;
+  const isFormComplete = formData.name && formData.email && formData.country && 
+    formData.state && formData.city && formData.address && formData.phone;
   const isCheckoutReady = isFormComplete && selectedShipping && agreeToPolicy && cartItems.length > 0;
 
   if (cartItems.length === 0) {
@@ -427,18 +442,61 @@ export default function CheckoutPage() {
                 </div>
               )}
 
+              {/* City - NEW FIELD */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2 text-primary-900 font-poppins">
+                  City *
+                </label>
+                <input
+                  type="text"
+                  value={formData.city}
+                  onChange={(e) => handleInputChange('city', e.target.value)}
+                  placeholder="Enter your city"
+                  className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins"
+                  required
+                />
+              </div>
+
               {/* Address */}
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2 text-primary-900 font-poppins">
-                  Address *
+                  Street Address *
                 </label>
                 <textarea
                   value={formData.address}
                   onChange={(e) => handleInputChange('address', e.target.value)}
-                  placeholder="Street address, apartment, suite, etc."
+                  placeholder="Street name, building number, etc."
                   rows={3}
                   className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary resize-none font-poppins"
                   required
+                />
+              </div>
+
+              {/* Apartment, suite, etc. (Optional) */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2 text-primary-900 font-poppins">
+                  Apartment, suite, etc. (optional)
+                </label>
+                <input
+                  type="text"
+                  value={formData.apartment}
+                  onChange={(e) => handleInputChange('apartment', e.target.value)}
+                  placeholder="Apartment, suite, etc."
+                  className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins"
+                />
+              </div>
+
+              {/* Postal Code (Optional) */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium mb-2 text-primary-900 font-poppins">
+                  Postal Code (optional)
+                </label>
+                <input
+                  type="text"
+                  value={formData.postalCode}
+                  onChange={(e) => handleInputChange('postalCode', e.target.value)}
+                  placeholder="Enter postal code"
+                  className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins"
                 />
               </div>
 
@@ -646,10 +704,11 @@ export default function CheckoutPage() {
                     !formData.name ? 'Enter your name' :
                       !formData.email ? 'Enter email address' :
                         !formData.state ? 'Enter state/province' :
-                          !formData.address ? 'Enter address' :
-                            !formData.phone ? 'Enter phone number' :
-                              !agreeToPolicy ? 'Agree to policies' :
-                                'Complete required information'}
+                          !formData.city ? 'Enter city' :
+                            !formData.address ? 'Enter street address' :
+                              !formData.phone ? 'Enter phone number' :
+                                !agreeToPolicy ? 'Agree to policies' :
+                                  'Complete required information'}
                 </button>
               )}
 

@@ -1,4 +1,4 @@
-// src/app/collections/bestsellers/BestsellersClient.jsx - OPTIMIZED
+// src/app/collections/dressess/DressessClient.jsx
 
 "use client";
 
@@ -10,13 +10,13 @@ import { urlFor } from "@/sanity/lib/image";
 import ProductModal from "@/components/ProductModal";
 import Image from "next/image";
 
-export default function BestsellersClient({ products }) {
+export default function DressessClient({ products }) {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const dispatch = useDispatch();
     const { openCart } = useCart();
 
-    const bestsellers = products?.filter(product =>
-        product.name === "The Chisom Dress" || product.name === "The Amarachi Set"
+    const coords = products?.filter(product =>
+        product.name === "The Adanna Dress" || product.name === "The Chisom Dress" || product.name === "The Zahra Dress"
     ) || [];
 
     const handleAddToCart = (product) => {
@@ -66,16 +66,16 @@ export default function BestsellersClient({ products }) {
             <div className="container mx-auto px-4 max-w-7xl">
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-light text-primary-900 mb-4 font-playfair">
-                        Bestsellers
+                        Dressess
                     </h1>
                     <p className="text-lg text-primary-700 max-w-2xl mx-auto font-poppins">
-                        Discover our most loved and frequently purchased pieces
+                        Cohesive outfits for timeless appeal
                     </p>
                 </div>
 
                 {/* Products Grid - No Carousel */}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
-                    {bestsellers.map((product) => {
+                    {coords.map((product) => {
                         const displayImage = product.image[0]
                             ? urlFor(product.image[0])
                                 .width(600)

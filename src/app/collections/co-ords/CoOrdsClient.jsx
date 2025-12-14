@@ -15,9 +15,8 @@ export default function CoOrdsClient({ products }) {
     const dispatch = useDispatch();
     const { openCart } = useCart();
 
-    // Filter co-ords - The Chisom Dress and The Zahra Dress
     const coords = products?.filter(product =>
-        product.name === "The Chisom Dress" || product.name === "The Zahra Dress"
+        product.name === "The Amara Set" || product.name === "The Amarachi Set"
     ) || [];
 
     const handleAddToCart = (product) => {

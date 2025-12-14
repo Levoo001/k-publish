@@ -233,7 +233,8 @@ export default function Home({ products }) {
 
   // Get specific products for each section
   const bestsellerProduct = products.find(product => product.name === "The Amarachi Set");
-  const coordProduct = products.find(product => product.name === "The Chisom Dress");
+  const coordProduct = products.find(product => product.name === "The Amara Set");
+  const dressessProduct = products.find(product => product.name === "The Chisom Dress");
 
   // Video loading
   useEffect(() => {
@@ -505,6 +506,28 @@ export default function Home({ products }) {
                     <div className="space-y-1">
                       <div className="text-left text-white text-sm font-semibold font-poppins">
                         CO-ORDS
+                      </div>
+                      <button className="text-white font-semibold text-xs w-fit border-b border-white hover:border-primary-200 transition-colors font-poppins">
+                        Shop Now
+                      </button>
+                    </div>
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Bottom Left Column - Dressess (Single Card) - Positioned Lower */}
+            <div className="space-y-4">
+              {coordProduct && (
+                <div className="relative group">
+                  <StaticProductCard product={dressessProduct} />
+                  <Link
+                    href="/collections/dressess"
+                    className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
+                  >
+                    <div className="space-y-1">
+                      <div className="text-left text-white text-sm font-semibold font-poppins">
+                        Dressess
                       </div>
                       <button className="text-white font-semibold text-xs w-fit border-b border-white hover:border-primary-200 transition-colors font-poppins">
                         Shop Now
