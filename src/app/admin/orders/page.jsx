@@ -288,7 +288,7 @@ export default function AdminOrdersPage() {
             <div className="p-3 sm:p-4 border-b border-primary-200 bg-white rounded-t-xl flex-shrink-0">
               <div className="flex justify-between items-start sm:items-center">
                 <div className="flex-1 min-w-0">
-                  <h2 className="text-lg sm:text-2xl font-playfair text-primary-900 truncate">
+                  <h2 className="sm:text-xl font-playfair text-primary-900 truncate">
                     Order #{selectedOrder.orderId}
                   </h2>
                   <div className="flex flex-wrap items-center gap-2 mt-1 text-xs sm:text-sm font-poppins">
@@ -330,7 +330,7 @@ export default function AdminOrdersPage() {
                 </div>
                 <button
                   onClick={closeOrderDetails}
-                  className="text-primary-600 hover:text-primary-900 text-2xl p-1 ml-2 flex-shrink-0"
+                  className="text-primary-600 text-2xl w-8 h-8 border rounded-full"
                 >
                   ×
                 </button>
@@ -558,9 +558,24 @@ export default function AdminOrdersPage() {
                             <p className="font-medium font-poppins text-primary-900 text-sm">
                               {item.name}
                             </p>
+
+                            {/* SHOW SIZE */}
+                            {item.size && item.size !== "Not specified" && (
+                              <p className="text-xs text-primary-600 mt-1">
+                                Size:{" "}
+                                <span className="font-semibold">
+                                  {item.size}
+                                </span>
+                              </p>
+                            )}
+
+                            {/* SHOW COLOR */}
                             {item.color && item.color !== "Not specified" && (
                               <p className="text-xs text-primary-600 mt-1">
-                                Color: {item.color}
+                                Color:{" "}
+                                <span className="font-semibold">
+                                  {item.color}
+                                </span>
                               </p>
                             )}
                           </div>
@@ -577,49 +592,7 @@ export default function AdminOrdersPage() {
                         </div>
                       </div>
                     ))}
-
-                    {/* Show "View All" if more than 3 items */}
-                    {selectedOrder.items && selectedOrder.items.length > 3 && (
-                      <button className="w-full text-center text-primary text-sm font-poppins py-2 border border-primary-200 rounded-lg hover:bg-primary-50">
-                        + {selectedOrder.items.length - 3} more items
-                      </button>
-                    )}
                   </div>
-
-                  {/* Quick Stats */}
-                  {selectedOrder.items && (
-                    <div className="mt-4 pt-4 border-t border-primary-200">
-                      <div className="flex justify-between text-sm">
-                        <div className="text-center p-2 bg-primary-25 rounded flex-1 mx-1">
-                          <p className="text-primary-600 text-xs">
-                            Total Items
-                          </p>
-                          <p className="font-semibold">
-                            {selectedOrder.items.reduce(
-                              (sum, item) => sum + (item.quantity || 0),
-                              0
-                            )}
-                          </p>
-                        </div>
-                        <div className="text-center p-2 bg-primary-25 rounded flex-1 mx-1">
-                          <p className="text-primary-600 text-xs">
-                            Items Count
-                          </p>
-                          <p className="font-semibold">
-                            {selectedOrder.items.length}
-                          </p>
-                        </div>
-                        <div className="text-center p-2 bg-primary-25 rounded flex-1 mx-1">
-                          <p className="text-primary-600 text-xs">
-                            Total Value
-                          </p>
-                          <p className="font-semibold">
-                            {formatPrice(selectedOrder.subtotal)}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
 
@@ -631,34 +604,19 @@ export default function AdminOrdersPage() {
             </div>
 
             {/* Action Buttons - Fixed at bottom */}
-            <div className="p-3 sm:p-4 border-t border-primary-200 bg-white rounded-b-xl flex-shrink-0">
-              <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
-                <div className="text-xs sm:text-sm font-poppins text-primary-600 truncate w-full text-center sm:text-left">
-                  Order #{selectedOrder.orderId} • {selectedOrder.customerName}
-                </div>
-                <div className="flex gap-2 w-full sm:w-auto justify-center sm:justify-end">
-                  <button
-                    onClick={closeOrderDetails}
-                    className="px-3 py-2 sm:px-4 sm:py-2 border border-primary-200 text-primary-700 rounded-lg hover:bg-primary-50 transition-colors font-poppins text-sm flex-1 sm:flex-none"
-                  >
-                    Close
-                  </button>
-                  <button
-                    onClick={() => window.print()}
-                    className="px-3 py-2 sm:px-4 sm:py-2 bg-primary text-white rounded-lg hover:bg-primary-700 transition-colors font-poppins text-sm flex-1 sm:flex-none"
-                  >
-                    Print
-                  </button>
-                  <button
-                    onClick={() => {
-                      // Add edit/ship functionality here
-                    }}
-                    className="px-3 py-2 sm:px-4 sm:py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-poppins text-sm flex-1 sm:flex-none"
-                  >
-                    Update Status
-                  </button>
-                </div>
-              </div>
+            <div className="flex gap-2 w-full sm:w-auto justify-center sm:justify-end p-3 sm:p-4 border-t border-primary-200 rounded-b-xl">
+              <button
+                onClick={closeOrderDetails}
+                className="px-3 py-2 sm:px-4 sm:py-2 border border-primary-200 text-primary-700 rounded-lg hover:bg-primary-50 transition-colors font-poppins text-sm flex-1 sm:flex-none"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => window.print()}
+                className="px-3 py-2 sm:px-4 sm:py-2 bg-primary text-white rounded-lg hover:bg-primary-700 transition-colors font-poppins text-sm flex-1 sm:flex-none"
+              >
+                Print
+              </button>
             </div>
           </div>
         </div>

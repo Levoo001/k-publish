@@ -4,8 +4,6 @@ import { db } from "./firebase";
 // Save order details - UPDATED WITH NEW ADDRESS FIELDS
 export const saveOrder = async (orderData) => {
   try {
-    console.log("🔧 Saving order to Firestore...", orderData);
-
     const orderRef = doc(collection(db, "orders"));
     const orderId = orderRef.id;
 
@@ -77,10 +75,7 @@ export const saveOrder = async (orderData) => {
       carrier: orderData.shippingProvider || "Standard Shipping",
     };
 
-    console.log("📦 Final order object:", order);
-
     await setDoc(orderRef, order);
-    console.log("✅ Order saved successfully with ID:", orderId);
 
     return orderId;
   } catch (error) {

@@ -407,6 +407,7 @@ function generateOrderConfirmationEmail(orderData) {
         <thead>
           <tr>
             <th>Product</th>
+            <th>Size</th>
             <th>Color</th>
             <th>Qty</th>
             <th>Price</th>
@@ -419,6 +420,7 @@ function generateOrderConfirmationEmail(orderData) {
               (item) => `
             <tr>
               <td style="font-weight: 500;">${item.name}</td>
+              <td style="color: #666;">${item.selectedSize || "N/A"}</td>
               <td style="color: #666;">${item.color || "N/A"}</td>
               <td style="color: #666;">${item.quantity}</td>
               <td style="color: #666;">₦${(item.price || 0).toLocaleString()}</td>
@@ -768,6 +770,7 @@ function generateAdminNotificationEmail(orderData) {
             <thead>
               <tr>
                 <th>Product Name</th>
+                <th>Size</th>
                 <th>Color</th>
                 <th>Quantity</th>
                 <th>Unit Price</th>
@@ -780,6 +783,7 @@ function generateAdminNotificationEmail(orderData) {
                   (item) => `
                 <tr>
                   <td>${item.name}</td>
+                  <td>${item.selectedSize || "N/A"}</td>
                   <td>${item.color || "N/A"}</td>
                   <td>${item.quantity}</td>
                   <td>₦${(item.price || 0).toLocaleString()}</td>

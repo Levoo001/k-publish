@@ -2,7 +2,7 @@
 
 import { productQuery } from "@/sanity/lib/queries";
 import { client } from "@/sanity/lib/client";
-import ShopClient from "@/components/ShopClient";
+import ShopClient from "./ShopClient";
 
 export default async function ShopPage() {
   const products = await client.fetch(productQuery);

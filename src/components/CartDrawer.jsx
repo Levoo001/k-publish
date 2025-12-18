@@ -1,4 +1,5 @@
-// src/components/CartDrawer.jsx - UPDATED WITH COLOR DISPLAY
+// src/components/CartDrawer.jsx - FIXED VERSION
+
 "use client";
 
 import Image from "next/image";
@@ -23,16 +24,19 @@ const CartDrawer = () => {
     0
   );
 
-  const handleIncrement = (itemId) => {
-    dispatch(incrementQuantity(itemId));
+  const handleIncrement = (item) => {
+    const identifier = item.cartItemId || item.id;
+    dispatch(incrementQuantity(identifier));
   };
 
-  const handleDecrement = (itemId) => {
-    dispatch(decrementQuantity(itemId));
+  const handleDecrement = (item) => {
+    const identifier = item.cartItemId || item.id;
+    dispatch(decrementQuantity(identifier));
   };
 
-  const handleRemove = (itemId) => {
-    dispatch(removeFromCart(itemId));
+  const handleRemove = (item) => {
+    const identifier = item.cartItemId || item.id;
+    dispatch(removeFromCart(identifier));
   };
 
   const formatPrice = (price) => {
@@ -83,15 +87,17 @@ const CartDrawer = () => {
                 <div className="w-20 h-20 bg-primary-50 rounded-full flex items-center justify-center mb-4">
                   <HiOutlineShoppingCart size={32} className="text-primary" />
                 </div>
-                <h3 className="text-lg font-medium mb-2 font-playfair">Your cart is empty</h3>
-                <p className="text-slate-600 mb-6 font-poppins">Add some items to get started</p>
+                <h3 className="text-lg font-medium mb-2 font-playfair">
+                  Your cart is empty
+                </h3>
+                <p className="text-slate-600 mb-6 font-poppins">
+                  Add some items to get started
+                </p>
                 <button
                   onClick={closeCart}
                   className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors font-poppins"
                 >
-                  <Link href="/shop">
-                  Continue Shopping
-                  </Link>
+                  <Link href="/shop">Continue Shopping</Link>
                 </button>
               </div>
             ) : (
@@ -99,7 +105,7 @@ const CartDrawer = () => {
                 {/* Cart Items */}
                 {cartItems.map((item, index) => (
                   <div
-                    key={item.id || item._id || `cart-item-${index}`}
+                    key={item.cartItemId || item.id || `cart-item-${index}`}
                     className="flex gap-3 p-3 bg-primary-50 rounded-lg border border-primary-100"
                   >
                     <div className="w-20 h-22 relative flex-shrink-0">
@@ -116,16 +122,31 @@ const CartDrawer = () => {
                       <h3 className="font-medium text-sm line-clamp-2 mb-1 font-poppins">
                         {item.name}
                       </h3>
-                      
+
+                      {/* Display selected size if available */}
+                      {item.selectedSize && (
+                        <div className="mb-1">
+                          <p className="text-xs text-primary-600 font-poppins">
+                            Size:{" "}
+                            <span className="font-semibold">
+                              {item.selectedSize}
+                            </span>
+                          </p>
+                        </div>
+                      )}
+
                       {/* Display selected color if available */}
                       {item.selectedColor && (
                         <div className="mb-2">
                           <p className="text-xs text-primary-600 font-poppins">
-                            Color: <span className="font-semibold">{item.selectedColor}</span>
+                            Color:{" "}
+                            <span className="font-semibold">
+                              {item.selectedColor}
+                            </span>
                           </p>
                         </div>
                       )}
-                      
+
                       <p className="font-semibold text-sm mb-2 text-primary font-poppins">
                         {formatPrice(item.price)}
                       </p>
@@ -133,7 +154,7 @@ const CartDrawer = () => {
                       <div className="flex items-center gap-3">
                         <div className="flex items-center border border-primary-200 rounded">
                           <button
-                            onClick={() => handleDecrement(item.id)}
+                            onClick={() => handleDecrement(item)}
                             className="w-8 h-8 flex items-center justify-center hover:bg-primary-50 disabled:opacity-30 text-primary"
                             disabled={item.quantity <= 1}
                           >
@@ -143,7 +164,7 @@ const CartDrawer = () => {
                             {item.quantity}
                           </span>
                           <button
-                            onClick={() => handleIncrement(item.id)}
+                            onClick={() => handleIncrement(item)}
                             className="w-8 h-8 flex items-center justify-center hover:bg-primary-50 text-primary"
                           >
                             <span className="text-lg">+</span>
@@ -151,11 +172,21 @@ const CartDrawer = () => {
                         </div>
 
                         <button
-                          onClick={() => handleRemove(item.id)}
+                          onClick={() => handleRemove(item)}
                           className="text-primary-400 hover:text-red-500 p-1 transition-colors"
                         >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
                           </svg>
                         </button>
                       </div>
@@ -170,9 +201,34 @@ const CartDrawer = () => {
           {cartItems.length > 0 && (
             <div className="border-t border-primary-100 bg-white p-4">
               {/* Order Summary */}
-              <div className="flex justify-between font-semibold text-lg mb-4">
-                <span className="text-primary-900 font-playfair">Total</span>
-                <span className="text-primary font-playfair">{formatPrice(subtotal)}</span>
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between text-sm">
+                  <span className="text-primary-600 font-poppins">
+                    Subtotal
+                  </span>
+                  <span className="font-medium font-poppins">
+                    {formatPrice(subtotal)}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-primary-600 font-poppins">Items</span>
+                  <span className="font-medium font-poppins">
+                    {cartItems.reduce(
+                      (total, item) => total + item.quantity,
+                      0
+                    )}
+                  </span>
+                </div>
+                <div className="border-t border-primary-100 pt-2">
+                  <div className="flex justify-between font-semibold text-lg">
+                    <span className="text-primary-900 font-playfair">
+                      Total
+                    </span>
+                    <span className="text-primary font-playfair">
+                      {formatPrice(subtotal)}
+                    </span>
+                  </div>
+                </div>
               </div>
 
               {/* Action Buttons */}
@@ -182,16 +238,14 @@ const CartDrawer = () => {
                   onClick={closeCart}
                   className="w-full block bg-primary text-white py-3 px-6 rounded-lg text-center font-medium hover:bg-primary-700 transition-colors font-poppins"
                 >
-                  Check Out
+                  Proceed to Checkout
                 </Link>
 
                 <button
                   onClick={closeCart}
                   className="w-full border border-primary-200 text-primary-700 py-3 px-6 rounded-lg font-medium hover:bg-primary-50 transition-colors font-poppins"
                 >
-                  <Link href="/shop">
-                    Continue Shopping
-                  </Link>
+                  <Link href="/shop">Continue Shopping</Link>
                 </button>
               </div>
             </div>

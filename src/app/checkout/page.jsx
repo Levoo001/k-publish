@@ -1,3 +1,5 @@
+// src/app/checkout/page.jsx
+
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -6,7 +8,10 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { COUNTRIES } from "@/lib/shippingConfig";
-import { calculateShippingRates, getNigerianStates } from "@/lib/shippingCalculator";
+import {
+  calculateShippingRates,
+  getNigerianStates,
+} from "@/lib/shippingCalculator";
 import PayStackPayment from "@/components/PayStackPayment";
 import { clearCart } from "@/store/CartSlice";
 
@@ -20,15 +25,15 @@ export default function CheckoutPage() {
   const [isCalculating, setIsCalculating] = useState(false);
   const [isShippingOpen, setIsShippingOpen] = useState(false);
   const [formData, setFormData] = useState({
-    country: 'Nigeria',
-    state: '',
-    city: '',
-    address: '',
-    apartment: '',
-    postalCode: '',
-    phone: '',
-    email: '',
-    name: ''
+    country: "Nigeria",
+    state: "",
+    city: "",
+    address: "",
+    apartment: "",
+    postalCode: "",
+    phone: "",
+    email: "",
+    name: "",
   });
   const [isProcessing, setIsProcessing] = useState(false);
   const [agreeToPolicy, setAgreeToPolicy] = useState(false);
@@ -39,7 +44,7 @@ export default function CheckoutPage() {
   // Dropdown states
   const [isCountryOpen, setIsCountryOpen] = useState(false);
   const [isStateOpen, setIsStateOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const countryDropdownRef = useRef(null);
   const stateDropdownRef = useRef(null);
 
@@ -51,23 +56,29 @@ export default function CheckoutPage() {
   const totalAmount = subtotal + (selectedShipping?.cost || 0);
 
   const nigerianStates = getNigerianStates();
-  const filteredCountries = COUNTRIES.filter(country =>
+  const filteredCountries = COUNTRIES.filter((country) =>
     country.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (countryDropdownRef.current && !countryDropdownRef.current.contains(event.target)) {
+      if (
+        countryDropdownRef.current &&
+        !countryDropdownRef.current.contains(event.target)
+      ) {
         setIsCountryOpen(false);
       }
-      if (stateDropdownRef.current && !stateDropdownRef.current.contains(event.target)) {
+      if (
+        stateDropdownRef.current &&
+        !stateDropdownRef.current.contains(event.target)
+      ) {
         setIsStateOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   // Calculate shipping when country or state changes
@@ -84,7 +95,11 @@ export default function CheckoutPage() {
     setIsCalculating(true);
 
     try {
-      const rates = calculateShippingRates(formData.country, formData.state, cartItems);
+      const rates = calculateShippingRates(
+        formData.country,
+        formData.state,
+        cartItems
+      );
       setShippingRates(rates);
 
       // Auto-select the first (cheapest) rate
@@ -92,7 +107,7 @@ export default function CheckoutPage() {
         setSelectedShipping(rates[0]);
       }
     } catch (error) {
-      console.error('Shipping calculation error:', error);
+      console.error("Shipping calculation error:", error);
       setShippingRates([]);
       setSelectedShipping(null);
     } finally {
@@ -108,24 +123,24 @@ export default function CheckoutPage() {
   };
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
   const handleCountrySelect = (country) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       country,
-      state: '' // Reset state when country changes
+      state: "", // Reset state when country changes
     }));
     setIsCountryOpen(false);
-    setSearchQuery('');
+    setSearchQuery("");
   };
 
   const handleStateSelect = (state) => {
-    setFormData(prev => ({ ...prev, state }));
+    setFormData((prev) => ({ ...prev, state }));
     setIsStateOpen(false);
   };
 
@@ -142,8 +157,10 @@ export default function CheckoutPage() {
       formData.city,
       formData.state,
       formData.country,
-      formData.postalCode && `Postal Code: ${formData.postalCode}`
-    ].filter(Boolean).join(', ');
+      formData.postalCode && `Postal Code: ${formData.postalCode}`,
+    ]
+      .filter(Boolean)
+      .join(", ");
 
     return {
       customer_name: formData.name,
@@ -153,17 +170,18 @@ export default function CheckoutPage() {
       shipping_state: formData.state,
       shipping_city: formData.city,
       shipping_address: fullAddress,
-      shipping_apartment: formData.apartment || 'Not provided',
-      shipping_postal_code: formData.postalCode || 'Not provided',
-      shipping_provider: selectedShipping?.provider || 'Not selected',
-      shipping_service: selectedShipping?.service || 'Not selected',
+      shipping_apartment: formData.apartment || "Not provided",
+      shipping_postal_code: formData.postalCode || "Not provided",
+      shipping_provider: selectedShipping?.provider || "Not selected",
+      shipping_service: selectedShipping?.service || "Not selected",
       shipping_fee: selectedShipping?.cost || 0,
-      items: cartItems.map(item => ({
+      items: cartItems.map((item) => ({
         name: item.name,
         quantity: item.quantity,
         price: item.price,
         total: item.price * item.quantity,
-        color: item.selectedColor || 'Not specified'
+        color: item.selectedColor || "Not specified",
+        size: item.selectedSize || "Not specified",
       })),
       subtotal: subtotal,
       total: totalAmount,
@@ -171,7 +189,7 @@ export default function CheckoutPage() {
       store_name: "Kavan The Brand",
       store_contact: "+234 703 621 0107",
       store_email: "admin@kavanthebrand.com",
-      store_address: "Lagos, Nigeria"
+      store_address: "Lagos, Nigeria",
     };
   };
 
@@ -184,17 +202,21 @@ export default function CheckoutPage() {
     requestAnimationFrame(() => {
       setTimeout(() => {
         try {
-          const paystackButton = document.querySelector('[data-paystack-button]');
+          const paystackButton = document.querySelector(
+            "[data-paystack-button]"
+          );
           if (paystackButton) {
             paystackButton.click();
           } else {
-            console.error('PayStack button not found');
+            console.error("PayStack button not found");
             setIsProcessing(false);
             setShowPaystack(false);
-            alert('Payment system error. Please refresh the page and try again.');
+            alert(
+              "Payment system error. Please refresh the page and try again."
+            );
           }
         } catch (error) {
-          console.error('Error triggering payment:', error);
+          console.error("Error triggering payment:", error);
           setIsProcessing(false);
           setShowPaystack(false);
         }
@@ -215,20 +237,31 @@ export default function CheckoutPage() {
   const handleCloseSuccessModal = () => {
     setShowSuccessModal(false);
     setOrderData(null);
-    router.push('/shop');
+    router.push("/shop");
   };
 
   // Check if checkout is ready
-  const isFormComplete = formData.name && formData.email && formData.country && 
-    formData.state && formData.city && formData.address && formData.phone;
-  const isCheckoutReady = isFormComplete && selectedShipping && agreeToPolicy && cartItems.length > 0;
+  const isFormComplete =
+    formData.name &&
+    formData.email &&
+    formData.country &&
+    formData.state &&
+    formData.city &&
+    formData.address &&
+    formData.phone;
+  const isCheckoutReady =
+    isFormComplete && selectedShipping && agreeToPolicy && cartItems.length > 0;
 
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="text-center max-w-md">
-          <h1 className="text-2xl font-playfair text-primary-900 mb-4">Your cart is empty</h1>
-          <p className="text-primary-600 mb-6 font-poppins">Add some items to get started.</p>
+          <h1 className="text-2xl font-playfair text-primary-900 mb-4">
+            Your cart is empty
+          </h1>
+          <p className="text-primary-600 mb-6 font-poppins">
+            Add some items to get started.
+          </p>
           <Link
             href="/shop"
             className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors font-poppins"
@@ -244,7 +277,9 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-white py-12">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-playfair text-primary-900 mb-4">Checkout</h1>
+          <h1 className="text-3xl font-playfair text-primary-900 mb-4">
+            Checkout
+          </h1>
           <div className="flex justify-center items-center space-x-8 text-sm text-primary-600 font-poppins">
             <span className="text-primary font-semibold">Cart</span>
             <span>→</span>
@@ -259,7 +294,9 @@ export default function CheckoutPage() {
           <div className="space-y-8">
             {/* Customer Information */}
             <div>
-              <h2 className="text-xl font-playfair text-primary-900 mb-6">Customer information</h2>
+              <h2 className="text-xl font-playfair text-primary-900 mb-6">
+                Customer information
+              </h2>
 
               {/* Name */}
               <div className="mb-4">
@@ -269,11 +306,11 @@ export default function CheckoutPage() {
                 <input
                   type="text"
                   value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  onChange={(e) => handleInputChange("name", e.target.value)}
                   placeholder="Enter your full name"
                   className="w-full p-3 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins text-base"
                   required
-                  style={{ fontSize: '16px' }}
+                  style={{ fontSize: "16px" }}
                 />
               </div>
 
@@ -285,11 +322,11 @@ export default function CheckoutPage() {
                 <input
                   type="email"
                   value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
                   placeholder="your@email.com"
                   className="w-full p-3 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins text-base"
                   required
-                  style={{ fontSize: '16px' }}
+                  style={{ fontSize: "16px" }}
                 />
               </div>
 
@@ -301,18 +338,20 @@ export default function CheckoutPage() {
                 <input
                   type="tel"
                   value={formData.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
                   placeholder="+234 800 123 4567"
                   className="w-full p-3 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins text-base"
                   required
-                  style={{ fontSize: '16px' }}
+                  style={{ fontSize: "16px" }}
                 />
               </div>
             </div>
 
             {/* Shipping Address */}
             <div>
-              <h2 className="text-xl font-playfair text-primary-900 mb-6">Shipping address</h2>
+              <h2 className="text-xl font-playfair text-primary-900 mb-6">
+                Shipping address
+              </h2>
 
               {/* Country - Searchable Dropdown */}
               <div className="mb-4 relative" ref={countryDropdownRef}>
@@ -329,12 +368,17 @@ export default function CheckoutPage() {
                     className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins bg-white cursor-pointer"
                   />
                   <svg
-                    className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary-600 transition-transform ${isCountryOpen ? 'rotate-180' : ''}`}
+                    className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary-600 transition-transform ${isCountryOpen ? "rotate-180" : ""}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </div>
 
@@ -347,8 +391,11 @@ export default function CheckoutPage() {
                           <button
                             key={country}
                             onClick={() => handleCountrySelect(country)}
-                            className={`w-full text-left px-4 py-3 hover:bg-primary-50 transition-colors font-poppins text-sm ${formData.country === country ? 'bg-primary-50 text-primary font-semibold' : 'text-primary-900'
-                              }`}
+                            className={`w-full text-left px-4 py-3 hover:bg-primary-50 transition-colors font-poppins text-sm ${
+                              formData.country === country
+                                ? "bg-primary-50 text-primary font-semibold"
+                                : "text-primary-900"
+                            }`}
                           >
                             {country}
                           </button>
@@ -364,7 +411,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* State Dropdown for Nigeria - WITH SEARCH */}
-              {formData.country === 'Nigeria' && (
+              {formData.country === "Nigeria" && (
                 <div className="mb-4 relative" ref={stateDropdownRef}>
                   <label className="block text-sm font-medium mb-2 text-primary-900 font-poppins">
                     State *
@@ -382,12 +429,17 @@ export default function CheckoutPage() {
                       className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins bg-white cursor-pointer"
                     />
                     <svg
-                      className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary-600 transition-transform ${isStateOpen ? 'rotate-180' : ''}`}
+                      className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary-600 transition-transform ${isStateOpen ? "rotate-180" : ""}`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
                     </svg>
                   </div>
 
@@ -396,8 +448,11 @@ export default function CheckoutPage() {
                     <div className="absolute z-10 w-full mt-1 bg-white border border-primary-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                       <div className="max-h-48 overflow-y-auto">
                         {(() => {
-                          const filteredStates = nigerianStates.filter(state =>
-                            state.toLowerCase().includes(searchQuery.toLowerCase())
+                          const filteredStates = nigerianStates.filter(
+                            (state) =>
+                              state
+                                .toLowerCase()
+                                .includes(searchQuery.toLowerCase())
                           );
 
                           return filteredStates.length > 0 ? (
@@ -406,9 +461,9 @@ export default function CheckoutPage() {
                                 key={state}
                                 onClick={() => {
                                   handleStateSelect(state);
-                                  setSearchQuery('');
+                                  setSearchQuery("");
                                 }}
-                                className={`w-full text-left px-4 py-3 hover:bg-primary-50 transition-colors font-poppins text-sm ${formData.state === state ? 'bg-primary-50 text-primary font-semibold' : 'text-primary-900'}`}
+                                className={`w-full text-left px-4 py-3 hover:bg-primary-50 transition-colors font-poppins text-sm ${formData.state === state ? "bg-primary-50 text-primary font-semibold" : "text-primary-900"}`}
                               >
                                 {state}
                               </button>
@@ -426,7 +481,7 @@ export default function CheckoutPage() {
               )}
 
               {/* State Input for International */}
-              {formData.country !== 'Nigeria' && (
+              {formData.country !== "Nigeria" && (
                 <div className="mb-4">
                   <label className="block text-sm font-medium mb-2 text-primary-900 font-poppins">
                     State / Province *
@@ -434,7 +489,7 @@ export default function CheckoutPage() {
                   <input
                     type="text"
                     value={formData.state}
-                    onChange={(e) => handleInputChange('state', e.target.value)}
+                    onChange={(e) => handleInputChange("state", e.target.value)}
                     placeholder="Enter your state or province"
                     className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins"
                     required
@@ -450,7 +505,7 @@ export default function CheckoutPage() {
                 <input
                   type="text"
                   value={formData.city}
-                  onChange={(e) => handleInputChange('city', e.target.value)}
+                  onChange={(e) => handleInputChange("city", e.target.value)}
                   placeholder="Enter your city"
                   className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins"
                   required
@@ -464,7 +519,7 @@ export default function CheckoutPage() {
                 </label>
                 <textarea
                   value={formData.address}
-                  onChange={(e) => handleInputChange('address', e.target.value)}
+                  onChange={(e) => handleInputChange("address", e.target.value)}
                   placeholder="Street name, building number, etc."
                   rows={3}
                   className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary resize-none font-poppins"
@@ -480,7 +535,9 @@ export default function CheckoutPage() {
                 <input
                   type="text"
                   value={formData.apartment}
-                  onChange={(e) => handleInputChange('apartment', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("apartment", e.target.value)
+                  }
                   placeholder="Apartment, suite, etc."
                   className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins"
                 />
@@ -494,7 +551,9 @@ export default function CheckoutPage() {
                 <input
                   type="text"
                   value={formData.postalCode}
-                  onChange={(e) => handleInputChange('postalCode', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("postalCode", e.target.value)
+                  }
                   placeholder="Enter postal code"
                   className="w-full p-4 border border-primary-200 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary font-poppins"
                 />
@@ -507,10 +566,13 @@ export default function CheckoutPage() {
                   className="w-full p-4 text-left flex justify-between items-center hover:bg-primary-50 transition-colors"
                 >
                   <div>
-                    <h3 className="font-medium text-primary-900 font-poppins">Shipping method</h3>
+                    <h3 className="font-medium text-primary-900 font-poppins">
+                      Shipping method
+                    </h3>
                     {selectedShipping && (
                       <p className="text-sm text-primary-600 mt-1 font-poppins">
-                        {selectedShipping.provider} - {selectedShipping.service} ({formatPrice(selectedShipping.cost)})
+                        {selectedShipping.provider} - {selectedShipping.service}{" "}
+                        ({formatPrice(selectedShipping.cost)})
                       </p>
                     )}
                     {!selectedShipping && formData.state && (
@@ -525,12 +587,17 @@ export default function CheckoutPage() {
                     )}
                   </div>
                   <svg
-                    className={`w-5 h-5 text-primary-600 transition-transform ${isShippingOpen ? 'rotate-180' : ''}`}
+                    className={`w-5 h-5 text-primary-600 transition-transform ${isShippingOpen ? "rotate-180" : ""}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </button>
 
@@ -539,7 +606,9 @@ export default function CheckoutPage() {
                     {isCalculating ? (
                       <div className="text-center py-4">
                         <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto"></div>
-                        <p className="text-sm text-primary-600 mt-2">Calculating shipping options...</p>
+                        <p className="text-sm text-primary-600 mt-2">
+                          Calculating shipping options...
+                        </p>
                       </div>
                     ) : shippingRates.length > 0 ? (
                       <div className="space-y-3">
@@ -550,22 +619,33 @@ export default function CheckoutPage() {
                           <button
                             key={index}
                             onClick={() => setSelectedShipping(rate)}
-                            className={`w-full p-3 rounded border text-left font-poppins text-sm transition-colors ${selectedShipping?.provider === rate.provider && selectedShipping?.service === rate.service
-                              ? 'border-primary bg-primary-50'
-                              : 'border-primary-200 hover:bg-primary-50'
-                              }`}
+                            className={`w-full p-3 rounded border text-left font-poppins text-sm transition-colors ${
+                              selectedShipping?.provider === rate.provider &&
+                              selectedShipping?.service === rate.service
+                                ? "border-primary bg-primary-50"
+                                : "border-primary-200 hover:bg-primary-50"
+                            }`}
                           >
                             <div className="flex justify-between items-start">
                               <div className="flex-1">
-                                <p className="font-semibold text-primary-900">{rate.provider}</p>
-                                <p className="text-primary-600">{rate.service}</p>
+                                <p className="font-semibold text-primary-900">
+                                  {rate.provider}
+                                </p>
+                                <p className="text-primary-600">
+                                  {rate.service}
+                                </p>
                                 <p className="text-xs text-primary-500 mt-1">
-                                  Est. delivery: {rate.estimatedDelivery.min} - {rate.estimatedDelivery.max}
+                                  Est. delivery: {rate.estimatedDelivery.min} -{" "}
+                                  {rate.estimatedDelivery.max}
                                 </p>
                               </div>
                               <div className="text-right">
-                                <p className="font-semibold text-primary">{formatPrice(rate.cost)}</p>
-                                <p className="text-xs text-primary-500">{rate.deliveryDays}</p>
+                                <p className="font-semibold text-primary">
+                                  {formatPrice(rate.cost)}
+                                </p>
+                                <p className="text-xs text-primary-500">
+                                  {rate.deliveryDays}
+                                </p>
                               </div>
                             </div>
                           </button>
@@ -574,7 +654,9 @@ export default function CheckoutPage() {
                     ) : (
                       <div className="text-center py-4">
                         <p className="text-primary-600 text-sm">
-                          {formData.state ? 'No shipping options available for this location' : 'Select your state to see shipping options'}
+                          {formData.state
+                            ? "No shipping options available for this location"
+                            : "Select your state to see shipping options"}
                         </p>
                       </div>
                     )}
@@ -593,13 +675,22 @@ export default function CheckoutPage() {
                   onChange={(e) => setAgreeToPolicy(e.target.checked)}
                   className="mt-1 text-primary focus:ring-primary"
                 />
-                <label htmlFor="policy-agreement" className="text-sm text-primary-700 font-poppins leading-relaxed">
+                <label
+                  htmlFor="policy-agreement"
+                  className="text-sm text-primary-700 font-poppins leading-relaxed"
+                >
                   I agree with the{" "}
-                  <Link href="/delivery-policy" className="text-primary underline hover:no-underline">
+                  <Link
+                    href="/delivery-policy"
+                    className="text-primary underline hover:no-underline"
+                  >
                     delivery policy
                   </Link>{" "}
                   and{" "}
-                  <Link href="/refund-and-exchange-policy" className="text-primary underline hover:no-underline">
+                  <Link
+                    href="/refund-and-exchange-policy"
+                    className="text-primary underline hover:no-underline"
+                  >
                     return/exchange policy
                   </Link>
                 </label>
@@ -610,13 +701,18 @@ export default function CheckoutPage() {
           {/* Right Column - Order Summary */}
           <div className="space-y-6">
             <div className="bg-primary-50 rounded-lg p-6">
-              <h2 className="text-xl font-playfair text-primary-900 mb-6">Order summary</h2>
+              <h2 className="text-xl font-playfair text-primary-900 mb-6">
+                Order summary
+              </h2>
 
               {/* Cart Items */}
               <div className="space-y-4 mb-6">
                 {cartItems.map((item, index) => (
-                  <div key={item.id || item._id || `checkout-item-${index}`} className="flex gap-4 items-start">
-                    <div className="w-20 h-20 relative flex-shrink-0">
+                  <div
+                    key={item.cartItemId || item.id || `checkout-item-${index}`}
+                    className="flex gap-4 items-start"
+                  >
+                    <div className="w-24 h-24 relative flex-shrink-0">
                       <Image
                         src={item.image}
                         alt={item.name}
@@ -630,10 +726,23 @@ export default function CheckoutPage() {
                         {item.name}
                       </h3>
 
+                      {/* Display selected size if available */}
+                      {item.selectedSize && (
+                        <p className="text-xs text-primary-600 mb-1 font-poppins">
+                          Size:{" "}
+                          <span className="font-semibold">
+                            {item.selectedSize}
+                          </span>
+                        </p>
+                      )}
+
                       {/* Display selected color if available */}
                       {item.selectedColor && (
                         <p className="text-xs text-primary-600 mb-1 font-poppins">
-                          Color: <span className="font-semibold">{item.selectedColor}</span>
+                          Color:{" "}
+                          <span className="font-semibold">
+                            {item.selectedColor}
+                          </span>
                         </p>
                       )}
 
@@ -652,19 +761,25 @@ export default function CheckoutPage() {
               <div className="space-y-3 border-t border-primary-200 pt-4">
                 <div className="flex justify-between text-sm font-poppins">
                   <span className="text-primary-700">Subtotal</span>
-                  <span className="text-primary-900 font-semibold">{formatPrice(subtotal)}</span>
+                  <span className="text-primary-900 font-semibold">
+                    {formatPrice(subtotal)}
+                  </span>
                 </div>
 
                 <div className="flex justify-between text-sm font-poppins">
                   <span className="text-primary-700">Shipping</span>
                   <span className="text-primary-900 font-semibold">
-                    {selectedShipping ? formatPrice(selectedShipping.cost) : '—'}
+                    {selectedShipping
+                      ? formatPrice(selectedShipping.cost)
+                      : "—"}
                   </span>
                 </div>
 
                 <div className="flex justify-between text-lg font-playfair pt-3 border-t border-primary-200">
                   <span className="text-primary-900">Total</span>
-                  <span className="text-primary">{formatPrice(totalAmount)}</span>
+                  <span className="text-primary">
+                    {formatPrice(totalAmount)}
+                  </span>
                 </div>
               </div>
 
@@ -672,7 +787,8 @@ export default function CheckoutPage() {
               {selectedShipping && (
                 <div className="bg-white p-2 rounded-lg border border-primary-200 mt-4">
                   <p className="text-primary-800 text-xs font-poppins leading-relaxed">
-                    {selectedShipping.deliveryDays} | {selectedShipping.provider}
+                    {selectedShipping.deliveryDays} |{" "}
+                    {selectedShipping.provider}
                   </p>
                 </div>
               )}
@@ -700,15 +816,23 @@ export default function CheckoutPage() {
                   disabled
                   className="w-full bg-primary-200 text-primary-600 py-4 px-6 rounded-lg cursor-not-allowed font-poppins text-sm font-medium"
                 >
-                  {!selectedShipping ? 'Select shipping method' :
-                    !formData.name ? 'Enter your name' :
-                      !formData.email ? 'Enter email address' :
-                        !formData.state ? 'Enter state/province' :
-                          !formData.city ? 'Enter city' :
-                            !formData.address ? 'Enter street address' :
-                              !formData.phone ? 'Enter phone number' :
-                                !agreeToPolicy ? 'Agree to policies' :
-                                  'Complete required information'}
+                  {!selectedShipping
+                    ? "Select shipping method"
+                    : !formData.name
+                      ? "Enter your name"
+                      : !formData.email
+                        ? "Enter email address"
+                        : !formData.state
+                          ? "Enter state/province"
+                          : !formData.city
+                            ? "Enter city"
+                            : !formData.address
+                              ? "Enter street address"
+                              : !formData.phone
+                                ? "Enter phone number"
+                                : !agreeToPolicy
+                                  ? "Agree to policies"
+                                  : "Complete required information"}
                 </button>
               )}
 
@@ -746,16 +870,33 @@ export default function CheckoutPage() {
             <div className="p-6">
               <div className="text-center mb-6">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <svg
+                    className="w-8 h-8 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                 </div>
-                <h2 className="text-2xl font-playfair text-primary-900 mb-2">Order Confirmed!</h2>
-                <p className="text-primary-600 font-poppins">Thank you for your order. We've sent a confirmation email to {formData.email}</p>
+                <h2 className="text-2xl font-playfair text-primary-900 mb-2">
+                  Order Confirmed!
+                </h2>
+                <p className="text-primary-600 font-poppins">
+                  Thank you for your order. We've sent a confirmation email to{" "}
+                  {formData.email}
+                </p>
               </div>
 
               <div className="border-t border-primary-100 pt-4 mb-6">
-                <h3 className="font-playfair text-primary-900 mb-3">Order Details</h3>
+                <h3 className="font-playfair text-primary-900 mb-3">
+                  Order Details
+                </h3>
                 <div className="space-y-2 text-sm font-poppins">
                   <div className="flex justify-between">
                     <span className="text-primary-600">Order ID:</span>
@@ -763,15 +904,21 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-primary-600">Total Paid:</span>
-                    <span className="font-medium">{formatPrice(totalAmount)}</span>
+                    <span className="font-medium">
+                      {formatPrice(totalAmount)}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-primary-600">Payment Method:</span>
-                    <span className="font-medium">{orderData.paymentMethod}</span>
+                    <span className="font-medium">
+                      {orderData.paymentMethod}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-primary-600">Shipping Provider:</span>
-                    <span className="font-medium">{selectedShipping?.provider}</span>
+                    <span className="font-medium">
+                      {selectedShipping?.provider}
+                    </span>
                   </div>
                 </div>
               </div>

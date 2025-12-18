@@ -1,24 +1,19 @@
-// src/components/ShopClient.jsx - UPDATED WITH PRIMARY COLORS
+// src/components/ShopClient.jsx
 
 "use client";
 
 import { useState } from "react";
 import Image from "next/image";
-import { useDispatch } from "react-redux";
-import { addToCart } from "@/store/CartSlice";
-import { useCart } from "./CartProvider";
 import { urlFor } from "@/sanity/lib/image";
-import ProductModal from "./ProductModal";
-import { subscribeToNewsletter } from '../services/newsletterService';
+import ProductModal from "@/components/ProductModal";
+import { subscribeToNewsletter } from "@/services/newsletterService";
 
 export default function ShopClient({ products }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const dispatch = useDispatch();
-  const { openCart } = useCart();
 
   // Newsletter state
-  const [email, setEmail] = useState('');
-  const [subscriptionStatus, setSubscriptionStatus] = useState('');
+  const [email, setEmail] = useState("");
+  const [subscriptionStatus, setSubscriptionStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleProductClick = (product) => {
@@ -26,37 +21,16 @@ export default function ShopClient({ products }) {
       ...product,
       processedImages: product.image.map((img) =>
         urlFor(img)
-          .width(1200)        // Increased for modal
+          .width(1200) // Increased for modal
           .height(1600)
-          .quality(95)        // Highest quality for modal
-          .format('jpg')
-          .fit('fill')
-          .bg('FFFFFF')
+          .quality(95) // Highest quality for modal
+          .format("jpg")
+          .fit("fill")
+          .bg("FFFFFF")
           .url()
       ),
     };
     setSelectedProduct(modalProduct);
-  };
-
-  const handleAddToCart = (product) => {
-    const cartProduct = {
-      id: product._id,
-      name: product.name,
-      price: product.price,
-      image: urlFor(product.image[0])
-        .width(400)
-        .height(533)
-        .quality(80)        // Good balance for thumbnails
-        .format('jpg')
-        .fit('fill')
-        .bg('FFFFFF')
-        .url(),
-      selectedColor: product.selectedColor,
-    };
-
-    dispatch(addToCart(cartProduct));
-    setSelectedProduct(null);
-    openCart();
   };
 
   const handleCloseModal = () => {
@@ -68,37 +42,37 @@ export default function ShopClient({ products }) {
     e.preventDefault();
 
     if (!email) {
-      setSubscriptionStatus('Please enter your email address');
+      setSubscriptionStatus("Please enter your email address");
       // Auto-clear after 4 seconds
-      setTimeout(() => setSubscriptionStatus(''), 4000);
+      setTimeout(() => setSubscriptionStatus(""), 4000);
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setSubscriptionStatus('Please enter a valid email address');
+      setSubscriptionStatus("Please enter a valid email address");
       // Auto-clear after 4 seconds
-      setTimeout(() => setSubscriptionStatus(''), 4000);
+      setTimeout(() => setSubscriptionStatus(""), 4000);
       return;
     }
 
     setIsSubmitting(true);
-    setSubscriptionStatus('');
+    setSubscriptionStatus("");
 
     try {
       const result = await subscribeToNewsletter(email);
 
       if (result.success) {
-        setSubscriptionStatus('success');
-        setEmail('');
+        setSubscriptionStatus("success");
+        setEmail("");
         // Auto-clear success message after 5 seconds
-        setTimeout(() => setSubscriptionStatus(''), 5000);
+        setTimeout(() => setSubscriptionStatus(""), 5000);
       }
     } catch (error) {
-      console.error('Subscription error:', error);
+      console.error("Subscription error:", error);
       setSubscriptionStatus(error.message);
       // Auto-clear error message after 5 seconds
-      setTimeout(() => setSubscriptionStatus(''), 5000);
+      setTimeout(() => setSubscriptionStatus(""), 5000);
     } finally {
       setIsSubmitting(false);
     }
@@ -144,10 +118,10 @@ export default function ShopClient({ products }) {
                   src={urlFor(product.image[1])
                     .width(600)
                     .height(800)
-                    .quality(90)        // ADD THIS
-                    .format('jpg')      // ADD THIS
-                    .fit('fill')        // ADD THIS
-                    .bg('FFFFFF')       // ADD THIS
+                    .quality(90) // ADD THIS
+                    .format("jpg") // ADD THIS
+                    .fit("fill") // ADD THIS
+                    .bg("FFFFFF") // ADD THIS
                     .url()}
                   alt={product.name}
                   fill
@@ -186,10 +160,14 @@ export default function ShopClient({ products }) {
             Stay Updated
           </h2>
           <p className="text-primary-200 mb-8 max-w-2xl mx-auto font-poppins text-lg">
-            Be the first to know about new arrivals, exclusive offers, and styling tips
+            Be the first to know about new arrivals, exclusive offers, and
+            styling tips
           </p>
 
-          <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-4">
+          <form
+            onSubmit={handleSubscribe}
+            className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-4"
+          >
             <input
               type="email"
               placeholder="Enter your email address"
@@ -206,14 +184,30 @@ export default function ShopClient({ products }) {
             >
               {isSubmitting ? (
                 <span className="flex items-center justify-center">
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-primary"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   Subscribing...
                 </span>
               ) : (
-                'Subscribe'
+                "Subscribe"
               )}
             </button>
           </form>
@@ -221,12 +215,20 @@ export default function ShopClient({ products }) {
           {/* Beautiful Status Messages with Auto-timeout */}
           <div className="max-w-md mx-auto mb-4">
             {/* Success Message */}
-            {subscriptionStatus === 'success' && (
+            {subscriptionStatus === "success" && (
               <div className="animate-fadeInUp bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-l-4 border-green-400 p-4 rounded-lg shadow-lg backdrop-blur-sm">
                 <div className="flex items-start space-x-3">
                   <div className="flex-shrink-0 w-6 h-6 bg-green-400 rounded-full flex items-center justify-center mt-0.5">
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    <svg
+                      className="w-3 h-3 text-white"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </div>
                   <div className="flex-1 text-left">
@@ -234,15 +236,26 @@ export default function ShopClient({ products }) {
                       Welcome to Kavan! 🎉
                     </h4>
                     <p className="text-green-200 text-xs font-poppins leading-relaxed">
-                      You're now part of our style community. Check your email for exclusive offers!
+                      You're now part of our style community. Check your email
+                      for exclusive offers!
                     </p>
                   </div>
                   <button
-                    onClick={() => setSubscriptionStatus('')}
+                    onClick={() => setSubscriptionStatus("")}
                     className="flex-shrink-0 text-green-300 hover:text-green-100 transition-colors"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -250,12 +263,20 @@ export default function ShopClient({ products }) {
             )}
 
             {/* Error Message */}
-            {subscriptionStatus && subscriptionStatus !== 'success' && (
+            {subscriptionStatus && subscriptionStatus !== "success" && (
               <div className="animate-fadeInUp bg-gradient-to-r from-red-500/20 to-pink-500/20 border-l-4 border-red-400 p-4 rounded-lg shadow-lg backdrop-blur-sm">
                 <div className="flex items-start space-x-3">
                   <div className="flex-shrink-0 w-6 h-6 bg-red-400 rounded-full flex items-center justify-center mt-0.5">
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    <svg
+                      className="w-3 h-3 text-white"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </div>
                   <div className="flex-1 text-left">
@@ -267,11 +288,21 @@ export default function ShopClient({ products }) {
                     </p>
                   </div>
                   <button
-                    onClick={() => setSubscriptionStatus('')}
+                    onClick={() => setSubscriptionStatus("")}
                     className="flex-shrink-0 text-red-300 hover:text-red-100 transition-colors"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18-6M6 6l12 12" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18-6M6 6l12 12"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -280,7 +311,8 @@ export default function ShopClient({ products }) {
           </div>
 
           <p className="text-primary-300 text-xs font-poppins">
-            By subscribing, you agree to our Privacy Policy. Unsubscribe at any time.
+            By subscribing, you agree to our Privacy Policy. Unsubscribe at any
+            time.
           </p>
         </div>
 
@@ -290,11 +322,7 @@ export default function ShopClient({ products }) {
       </section>
 
       {/* Product Modal */}
-      <ProductModal
-        product={selectedProduct}
-        onClose={handleCloseModal}
-        onAddToCart={handleAddToCart}
-      />
+      <ProductModal product={selectedProduct} onClose={handleCloseModal} />
     </main>
   );
 }

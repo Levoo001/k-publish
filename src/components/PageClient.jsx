@@ -5,34 +5,34 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import { IoVolumeHighSharp, IoVolumeMute } from "react-icons/io5";
-import { useDispatch } from "react-redux";
-import { addToCart } from "@/store/CartSlice";
-import { useCart } from "./CartProvider";
 import { urlFor } from "@/sanity/lib/image";
 import useEmblaCarousel from "embla-carousel-react";
 import ProductModal from "./ProductModal";
 import Link from "next/link";
-import { subscribeToNewsletter } from '../services/newsletterService';
+import { subscribeToNewsletter } from "../services/newsletterService";
 import { HiOutlineArrowLongRight } from "react-icons/hi2";
 import NewsletterPopup from "./NewsletterPopup";
 import QuoteCarousel from "./QuoteCarousel";
-import WhatsAppChatPopup from './WhatsAppChatPopup';
+import WhatsAppChatPopup from "./WhatsAppChatPopup";
 
 // Featured Collections Carousel Component
 const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: 'start',
-    containScroll: 'trimSnaps',
-    slidesToScroll: 1
+    align: "start",
+    containScroll: "trimSnaps",
+    slidesToScroll: 1,
   });
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState([]);
 
-  const onDotButtonClick = useCallback((index) => {
-    if (!emblaApi) return;
-    emblaApi.scrollTo(index);
-  }, [emblaApi]);
+  const onDotButtonClick = useCallback(
+    (index) => {
+      if (!emblaApi) return;
+      emblaApi.scrollTo(index);
+    },
+    [emblaApi]
+  );
 
   const onInit = useCallback((emblaApi) => {
     setScrollSnaps(emblaApi.scrollSnapList());
@@ -47,9 +47,9 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
 
     onInit(emblaApi);
     onSelect(emblaApi);
-    emblaApi.on('reInit', onInit);
-    emblaApi.on('reInit', onSelect);
-    emblaApi.on('select', onSelect);
+    emblaApi.on("reInit", onInit);
+    emblaApi.on("reInit", onSelect);
+    emblaApi.on("select", onSelect);
   }, [emblaApi, onInit, onSelect]);
 
   // Calculate how many slides we need based on products (2 products per slide)
@@ -64,48 +64,50 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
               <div
                 key={slideIndex}
                 className="embla__slide flex-shrink-0 w-full min-w-0"
-                style={{ flex: '0 0 100%' }}
+                style={{ flex: "0 0 100%" }}
               >
                 <div className="grid grid-cols-2 gap-4 md:gap-8 px-2">
-                  {products.slice(slideIndex * 2, slideIndex * 2 + 2).map((product) => {
-                    const displayImage = product.image[0]
-                      ? urlFor(product.image[0])
-                        .width(600)  // Keep original width
-                        .height(800) // Keep original height
-                        .quality(90) // Increase quality
-                        .format('jpg')
-                        .fit('fill') // Ensure no black background
-                        .bg('FFFFFF') // White background instead of black
-                        .url()
-                      : "/fallback.jpg";
+                  {products
+                    .slice(slideIndex * 2, slideIndex * 2 + 2)
+                    .map((product) => {
+                      const displayImage = product.image[0]
+                        ? urlFor(product.image[0])
+                            .width(600) // Keep original width
+                            .height(800) // Keep original height
+                            .quality(90) // Increase quality
+                            .format("jpg")
+                            .fit("fill") // Ensure no black background
+                            .bg("FFFFFF") // White background instead of black
+                            .url()
+                        : "/fallback.jpg";
 
-                    return (
-                      <div
-                        key={product._id}
-                        className="group cursor-pointer transform hover:-translate-y-1 transition-all duration-500"
-                        onClick={() => onProductClick(product)}
-                      >
-                        <div className="relative aspect-[3/4] overflow-hidden mb-4 bg-white rounded-lg">
-                          <Image
-                            src={displayImage}
-                            alt={product.name}
-                            fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-700"
-                            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                            priority={slideIndex === 0}
-                          />
+                      return (
+                        <div
+                          key={product._id}
+                          className="group cursor-pointer transform hover:-translate-y-1 transition-all duration-500"
+                          onClick={() => onProductClick(product)}
+                        >
+                          <div className="relative aspect-[3/4] overflow-hidden mb-4 bg-white rounded-lg">
+                            <Image
+                              src={displayImage}
+                              alt={product.name}
+                              fill
+                              className="object-cover group-hover:scale-105 transition-transform duration-700"
+                              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                              priority={slideIndex === 0}
+                            />
+                          </div>
+                          <div className="text-center">
+                            <h3 className="font-light text-sm mb-1 text-primary-900 line-clamp-1 font-playfair">
+                              {product.name}
+                            </h3>
+                            <p className="text-sm font-medium text-primary font-poppins">
+                              ₦{product.price.toLocaleString()}
+                            </p>
+                          </div>
                         </div>
-                        <div className="text-center">
-                          <h3 className="font-light text-sm mb-1 text-primary-900 line-clamp-1 font-playfair">
-                            {product.name}
-                          </h3>
-                          <p className="text-sm font-medium text-primary font-poppins">
-                            ₦{product.price.toLocaleString()}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
                 </div>
               </div>
             ))}
@@ -121,12 +123,20 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
               className="flex items-center justify-center w-5 h-5"
               aria-label={`Go to slide ${index + 1}`}
             >
-              <div className={`relative flex items-center justify-center transition-all duration-300 ${selectedIndex === index ? "w-5 h-5 border-2 border-gray-900 rounded-full" : ""
-                }`}>
-                <div className={`rounded-full transition-all duration-300 ${selectedIndex === index
-                  ? "w-1 h-1 bg-slate-900"
-                  : "w-1.5 h-1.5 bg-slate-400 hover:bg-slate-600"
-                  }`} />
+              <div
+                className={`relative flex items-center justify-center transition-all duration-300 ${
+                  selectedIndex === index
+                    ? "w-5 h-5 border-2 border-gray-900 rounded-full"
+                    : ""
+                }`}
+              >
+                <div
+                  className={`rounded-full transition-all duration-300 ${
+                    selectedIndex === index
+                      ? "w-1 h-1 bg-slate-900"
+                      : "w-1.5 h-1.5 bg-slate-400 hover:bg-slate-600"
+                  }`}
+                />
               </div>
             </button>
           ))}
@@ -153,15 +163,15 @@ const BottomCardsCarousel = ({ products, startIndex = 0 }) => {
   }, [emblaApi]);
 
   // Get all first images from products
-  const allFirstImages = products.map(product => ({
+  const allFirstImages = products.map((product) => ({
     image: product.image[1],
-    productName: product.name
+    productName: product.name,
   }));
 
   // Start from different positions based on startIndex
   const reorderedImages = [
     ...allFirstImages.slice(startIndex),
-    ...allFirstImages.slice(0, startIndex)
+    ...allFirstImages.slice(0, startIndex),
   ];
 
   return (
@@ -176,10 +186,10 @@ const BottomCardsCarousel = ({ products, startIndex = 0 }) => {
               src={urlFor(item.image)
                 .width(800)
                 .height(800)
-                .quality(90)        // Change from 85 to 90
-                .format('jpg')
-                .fit('fill')        // ADD THIS
-                .bg('FFFFFF')       // ADD THIS
+                .quality(90) // Change from 85 to 90
+                .format("jpg")
+                .fit("fill") // ADD THIS
+                .bg("FFFFFF") // ADD THIS
                 .url()}
               alt={`${item.productName} - Featured`}
               fill
@@ -202,10 +212,10 @@ const StaticProductCard = ({ product }) => {
         src={urlFor(product.image[1])
           .width(800)
           .height(1040)
-          .quality(90)        // Change from 85 to 90  
-          .format('jpg')
-          .fit('fill')        // ADD THIS
-          .bg('FFFFFF')       // ADD THIS
+          .quality(90) // Change from 85 to 90
+          .format("jpg")
+          .fit("fill") // ADD THIS
+          .bg("FFFFFF") // ADD THIS
           .url()}
         alt={product.name}
         fill
@@ -219,22 +229,26 @@ const StaticProductCard = ({ product }) => {
 
 export default function Home({ products }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const dispatch = useDispatch();
-  const { openCart } = useCart();
 
   const [isMuted, setIsMuted] = useState(true);
   const [videoError, setVideoError] = useState(false);
   const videoRef = useRef(null);
 
   // Newsletter state
-  const [email, setEmail] = useState('');
-  const [subscriptionStatus, setSubscriptionStatus] = useState('');
+  const [email, setEmail] = useState("");
+  const [subscriptionStatus, setSubscriptionStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Get specific products for each section
-  const bestsellerProduct = products.find(product => product.name === "The Amarachi Set");
-  const coordProduct = products.find(product => product.name === "The Amara Set");
-  const dressessProduct = products.find(product => product.name === "The Chisom Dress");
+  const bestsellerProduct = products.find(
+    (product) => product.name === "The Amarachi Set"
+  );
+  const coordProduct = products.find(
+    (product) => product.name === "The Amara Set"
+  );
+  const dressessProduct = products.find(
+    (product) => product.name === "The Chisom Dress"
+  );
 
   // Video loading
   useEffect(() => {
@@ -250,23 +264,23 @@ export default function Home({ products }) {
       setVideoError(true);
     };
 
-    video.addEventListener('canplay', handleCanPlay);
-    video.addEventListener('error', handleError);
+    video.addEventListener("canplay", handleCanPlay);
+    video.addEventListener("error", handleError);
 
     // Try to play the video
     const playVideo = async () => {
       try {
         await video.play();
       } catch (error) {
-        console.log("Autoplay prevented:", error);
+        console.error("Autoplay prevented:", error);
       }
     };
 
     playVideo();
 
     return () => {
-      video.removeEventListener('canplay', handleCanPlay);
-      video.removeEventListener('error', handleError);
+      video.removeEventListener("canplay", handleCanPlay);
+      video.removeEventListener("error", handleError);
     };
   }, []);
 
@@ -282,56 +296,37 @@ export default function Home({ products }) {
     e.preventDefault();
 
     if (!email) {
-      setSubscriptionStatus('Please enter your email address');
-      setTimeout(() => setSubscriptionStatus(''), 4000);
+      setSubscriptionStatus("Please enter your email address");
+      setTimeout(() => setSubscriptionStatus(""), 4000);
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setSubscriptionStatus('Please enter a valid email address');
-      setTimeout(() => setSubscriptionStatus(''), 4000);
+      setSubscriptionStatus("Please enter a valid email address");
+      setTimeout(() => setSubscriptionStatus(""), 4000);
       return;
     }
 
     setIsSubmitting(true);
-    setSubscriptionStatus('');
+    setSubscriptionStatus("");
 
     try {
       const result = await subscribeToNewsletter(email);
 
       if (result.success) {
-        setSubscriptionStatus('success');
-        setEmail('');
-        setTimeout(() => setSubscriptionStatus(''), 5000);
+        setSubscriptionStatus("success");
+        setEmail("");
+        setTimeout(() => setSubscriptionStatus(""), 5000);
       }
     } catch (error) {
-      console.error('Subscription error:', error);
-      setEmail('');
+      console.error("Subscription error:", error);
+      setEmail("");
       setSubscriptionStatus(error.message);
-      setTimeout(() => setSubscriptionStatus(''), 5000);
+      setTimeout(() => setSubscriptionStatus(""), 5000);
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleAddToCart = (product) => {
-    const cartProduct = {
-      id: product._id,
-      name: product.name,
-      price: product.price,
-      image: urlFor(product.image[0])
-        .width(400)
-        .height(533)
-        .quality(80)
-        .format('jpg')
-        .url(),
-      selectedColor: product.selectedColor,
-    };
-
-    dispatch(addToCart(cartProduct));
-    setSelectedProduct(null);
-    openCart();
   };
 
   const handleProductClick = (product) => {
@@ -341,10 +336,10 @@ export default function Home({ products }) {
         urlFor(img)
           .width(1200)
           .height(1600)
-          .quality(95)        // Increase to 95% for modal zoom
-          .format('jpg')
-          .fit('fill')
-          .bg('FFFFFF')
+          .quality(95)
+          .format("jpg")
+          .fit("fill")
+          .bg("FFFFFF")
           .url()
       ),
     };
@@ -429,13 +424,13 @@ export default function Home({ products }) {
               const displayImageIndex = product.image.length > 1 ? 1 : 0;
               const displayImage = product.image[displayImageIndex]
                 ? urlFor(product.image[displayImageIndex])
-                  .width(800)
-                  .height(1000)
-                  .quality(90)        // Change from 85 to 90
-                  .format('jpg')
-                  .fit('fill')        // ADD THIS
-                  .bg('FFFFFF')       // ADD THIS
-                  .url()
+                    .width(800)
+                    .height(1000)
+                    .quality(90) // Change from 85 to 90
+                    .format("jpg")
+                    .fit("fill") // ADD THIS
+                    .bg("FFFFFF") // ADD THIS
+                    .url()
                 : "/fallback.jpg";
 
               return (
@@ -551,7 +546,10 @@ export default function Home({ products }) {
             {/* Second Bottom Card with Carousel - Starts from middle index */}
             <div className="relative group mt-8">
               <div className="aspect-square relative rounded-2xl overflow-hidden shadow-luxury group">
-                <BottomCardsCarousel products={products} startIndex={Math.floor(products.length / 2)} />
+                <BottomCardsCarousel
+                  products={products}
+                  startIndex={Math.floor(products.length / 2)}
+                />
               </div>
             </div>
           </div>
@@ -564,10 +562,14 @@ export default function Home({ products }) {
             Join Our Style Community
           </h2>
           <p className="text-lg text-primary-200 mb-8 max-w-2xl mx-auto font-poppins">
-            Get exclusive access to new collections, styling tips, and special offers
+            Get exclusive access to new collections, styling tips, and special
+            offers
           </p>
 
-          <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-4">
+          <form
+            onSubmit={handleSubscribe}
+            className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-4"
+          >
             <input
               type="email"
               placeholder="Enter your email address"
@@ -584,25 +586,49 @@ export default function Home({ products }) {
             >
               {isSubmitting ? (
                 <span className="flex items-center justify-center">
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-primary"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   Subscribing...
                 </span>
               ) : (
-                'Subscribe'
+                "Subscribe"
               )}
             </button>
           </form>
 
           <div className="max-w-md mx-auto mb-4">
-            {subscriptionStatus === 'success' && (
+            {subscriptionStatus === "success" && (
               <div className="animate-fadeInUp bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-l-4 border-green-400 p-4 rounded-lg shadow-lg backdrop-blur-sm">
                 <div className="flex items-start space-x-3">
                   <div className="flex-shrink-0 w-6 h-6 bg-green-400 rounded-full flex items-center justify-center mt-0.5">
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    <svg
+                      className="w-3 h-3 text-white"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </div>
                   <div className="flex-1 text-left">
@@ -610,27 +636,46 @@ export default function Home({ products }) {
                       Welcome to Kavan! 🎉
                     </h4>
                     <p className="text-green-200 text-xs font-poppins leading-relaxed">
-                      You're now part of our style community. Check your email for exclusive offers!
+                      You're now part of our style community. Check your email
+                      for exclusive offers!
                     </p>
                   </div>
                   <button
-                    onClick={() => setSubscriptionStatus('')}
+                    onClick={() => setSubscriptionStatus("")}
                     className="flex-shrink-0 text-green-300 hover:text-green-100 transition-colors"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
                     </svg>
                   </button>
                 </div>
               </div>
             )}
 
-            {subscriptionStatus && subscriptionStatus !== 'success' && (
+            {subscriptionStatus && subscriptionStatus !== "success" && (
               <div className="animate-fadeInUp bg-gradient-to-r from-red-500/20 to-pink-500/20 border-l-4 border-red-400 p-4 rounded-lg shadow-lg backdrop-blur-sm">
                 <div className="flex items-start space-x-3">
                   <div className="flex-shrink-0 w-6 h-6 bg-red-400 rounded-full flex items-center justify-center mt-0.5">
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    <svg
+                      className="w-3 h-3 text-white"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </div>
                   <div className="flex-1 text-left">
@@ -642,11 +687,21 @@ export default function Home({ products }) {
                     </p>
                   </div>
                   <button
-                    onClick={() => setSubscriptionStatus('')}
+                    onClick={() => setSubscriptionStatus("")}
                     className="flex-shrink-0 text-red-300 hover:text-red-100 transition-colors"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18-6M6 6l12 12" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18-6M6 6l12 12"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -655,7 +710,8 @@ export default function Home({ products }) {
           </div>
 
           <p className="text-primary-300 text-xs font-poppins">
-            By subscribing, you agree to our Privacy Policy. Unsubscribe at any time.
+            By subscribing, you agree to our Privacy Policy. Unsubscribe at any
+            time.
           </p>
         </div>
 
@@ -665,11 +721,7 @@ export default function Home({ products }) {
 
       <QuoteCarousel />
 
-      <ProductModal
-        product={selectedProduct}
-        onClose={handleCloseModal}
-        onAddToCart={handleAddToCart}
-      />
+      <ProductModal product={selectedProduct} onClose={handleCloseModal} />
 
       <NewsletterPopup />
 

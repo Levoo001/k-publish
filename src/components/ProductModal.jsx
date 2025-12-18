@@ -1,22 +1,78 @@
-// src/components/ProductModal.jsx - OPTIMIZED WITH MAX QUALITY
+// src/components/ProductModal.jsx
 "use client";
 
 import { useState, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { useCart } from "./CartProvider";
+import { addToCart } from "@/store/CartSlice";
 import { urlFor } from "@/sanity/lib/image";
 
-const ProductModal = ({ product, onClose, onAddToCart }) => {
+const ProductModal = ({ product, onClose }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(1);
   const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
   const modalImageRef = useRef(null);
 
+  const dispatch = useDispatch();
+  const { openCart } = useCart();
+
   if (!product) return null;
+
+  // Available sizes based on your requirements
+  const availableSizes = [6, 8, 10, 12, 14, 16, 18, 20, 22];
 
   const handleThumbnailClick = (index) => {
     setCurrentImageIndex(index);
   };
 
-  // Handle both processedImages and original image arrays - FIXED
+  const handleColorSelect = (color) => {
+    setSelectedColor(color);
+  };
+
+  const handleSizeSelect = (size) => {
+    setSelectedSize(size);
+  };
+
+  const handleAddToCartClick = () => {
+    // Validate size selection
+    if (!selectedSize) {
+      alert("Please select a size before adding to cart");
+      return;
+    }
+
+    // Create cart-ready product object
+    const cartProduct = {
+      id: product._id || product.id,
+      name: product.name,
+      price: product.price,
+      // Use the first image for cart thumbnail
+      image: product.processedImages
+        ? product.processedImages[0]
+        : urlFor(product.image[0])
+            .width(400)
+            .height(533)
+            .quality(80)
+            .format("jpg")
+            .url(),
+      selectedColor: selectedColor,
+      selectedSize: selectedSize,
+      // Optional: Keep reference to original product for details
+      _id: product._id,
+      originalImages: product.image,
+    };
+
+    dispatch(addToCart(cartProduct));
+
+    openCart();
+
+    setSelectedColor(null);
+    setSelectedSize(null);
+
+    onClose();
+  };
+
   const getImages = () => {
     if (product.processedImages) {
       return product.processedImages;
@@ -26,14 +82,16 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
     }
     if (product.image) {
       return product.image.map((img) =>
-        typeof img === "string" ? img : urlFor(img)
-          .width(1200)        // HIGH RES for modal
-          .height(1600)
-          .quality(95)        // MAX QUALITY for modal
-          .format('jpg')
-          .fit('fill')
-          .bg('FFFFFF')
-          .url()
+        typeof img === "string"
+          ? img
+          : urlFor(img)
+              .width(1200)
+              .height(1600)
+              .quality(95)
+              .format("jpg")
+              .fit("fill")
+              .bg("FFFFFF")
+              .url()
       );
     }
     return [];
@@ -41,24 +99,6 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
 
   const images = getImages();
   const mainImage = images[currentImageIndex];
-
-  // Handle color selection
-  const handleColorSelect = (color) => {
-    setSelectedColor(color);
-  };
-
-  const handleAddToCartClick = () => {
-    // Create a product object with the selected color
-    const productWithColor = {
-      ...product,
-      selectedColor: selectedColor, // Add the selected color to the product
-    };
-
-    onAddToCart(productWithColor); // Pass the product with color to the parent
-    setSelectedColor(null);
-  };
-
-  // Check if product has color options
   const hasColors = product.colors && product.colors.length > 0;
 
   return (
@@ -93,7 +133,7 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
           </button>
 
           <div className="grid lg:grid-cols-2 h-full">
-            {/* Image Gallery Section */}
+            {/* Image Gallery Section - Keep as is */}
             <div className="relative bg-white">
               <div className="relative aspect-[3/4] w-full h-full">
                 {mainImage && (
@@ -122,7 +162,7 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
                 )}
               </div>
 
-              {/* Thumbnail Gallery - FIXED QUALITY */}
+              {/* Thumbnail Gallery */}
               {images.length > 1 && (
                 <div className="absolute bottom-2 left-2">
                   <div className="flex gap-2 justify-center overflow-x-auto">
@@ -130,19 +170,20 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
                       <button
                         key={index}
                         onClick={() => handleThumbnailClick(index)}
-                        className={`relative w-12 h-12 rounded-lg overflow-hidden border-2 transition-all duration-200 hover:scale-105 flex-shrink-0 ${index === currentImageIndex
+                        className={`relative w-12 h-12 rounded-lg overflow-hidden border-2 transition-all duration-200 hover:scale-105 flex-shrink-0 ${
+                          index === currentImageIndex
                             ? "border-primary shadow-md"
                             : "border-slate-300 hover:border-slate-500"
-                          }`}
+                        }`}
                       >
                         <Image
                           src={urlFor(product.image?.[index] || img)
                             .width(120)
                             .height(120)
                             .quality(80)
-                            .format('jpg')
-                            .fit('fill')
-                            .bg('FFFFFF')
+                            .format("jpg")
+                            .fit("fill")
+                            .bg("FFFFFF")
                             .url()}
                           alt={`${product.name} view ${index + 1}`}
                           fill
@@ -156,8 +197,8 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
               )}
             </div>
 
-            {/* Product Details Section */}
-            <div className="bg-white flex flex-col justify-between p-6">
+            {/* Product Details Section - UPDATED WITH SIZE SELECTION */}
+            <div className="bg-white flex flex-col justify-between py-6 px-2">
               <div className="space-y-6">
                 <div>
                   <h2 className="text-2xl md:text-3xl font-light mb-3 text-primary font-playfair">
@@ -166,6 +207,45 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
                   <p className="text-2xl font-bold text-primary mb-4 font-poppins">
                     ₦{product.price?.toLocaleString()}
                   </p>
+                </div>
+
+                {/* Size Selection - NEW SECTION */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-semibold text-lg text-primary font-playfair">
+                      Select Size
+                    </h3>
+                    <Link
+                      href="/SizeGuide"
+                      className="text-primary-600 text-sm font-poppins hover:text-primary underline hover:no-underline"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      View Size Guide →
+                    </Link>
+                  </div>
+
+                  <div className="grid grid-cols-6 sm:grid-cols-8 gap-2">
+                    {availableSizes.map((size) => (
+                      <button
+                        key={size}
+                        onClick={() => handleSizeSelect(size)}
+                        className={`p-1 rounded-lg border-2 transition-all duration-200 font-poppins font-medium text-sm ${
+                          selectedSize === size
+                            ? "border-primary bg-primary text-white"
+                            : "border-gray-300 hover:border-primary hover:bg-primary-25 text-gray-700"
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+
+                  {selectedSize && (
+                    <p className="text-sm text-primary-600 mt-4 font-poppins">
+                      Selected Size:{" "}
+                      <span className="font-semibold">{selectedSize}</span>
+                    </p>
+                  )}
                 </div>
 
                 {/* Color Selection - Only show if product has colors */}
@@ -179,10 +259,11 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
                         <button
                           key={index}
                           onClick={() => handleColorSelect(color)}
-                          className={`flex items-center space-x-2 px-4 py-2 rounded-lg border-2 transition-all duration-200 font-poppins ${selectedColor === color
+                          className={`flex items-center space-x-2 px-4 py-1 rounded-lg border-2 transition-all duration-200 font-poppins ${
+                            selectedColor === color
                               ? "border-primary bg-primary-50 text-primary"
                               : "border-gray-300 hover:border-primary hover:bg-primary-25 text-gray-700"
-                            }`}
+                          }`}
                         >
                           <span>{color}</span>
                         </button>
@@ -190,7 +271,8 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
                     </div>
                     {selectedColor && (
                       <p className="text-sm text-primary-600 mt-2 font-poppins">
-                        Selected: <span className="font-semibold">{selectedColor}</span>
+                        Selected Color:{" "}
+                        <span className="font-semibold">{selectedColor}</span>
                       </p>
                     )}
                   </div>
@@ -208,20 +290,24 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
 
               <div className="space-y-4 pt-6">
                 <button
-                  className={`w-full py-3 px-6 rounded-xl font-semibold text-lg shadow-lg font-poppins transition-all duration-300 ${hasColors && !selectedColor
+                  className={`w-full py-3 px-6 rounded-xl font-semibold shadow-lg font-poppins transition-all duration-300 ${
+                    !selectedSize || (hasColors && !selectedColor)
                       ? "bg-gray-400 text-gray-200 cursor-not-allowed"
                       : "bg-primary text-white hover:bg-slate-800"
-                    }`}
+                  }`}
                   onClick={handleAddToCartClick}
-                  disabled={hasColors && !selectedColor}
+                  disabled={!selectedSize || (hasColors && !selectedColor)}
                 >
-                  {hasColors && !selectedColor
-                    ? "Please select a color"
-                    : "Add to Cart"}
+                  {(() => {
+                    if (!selectedSize) return "Please select a size";
+                    if (hasColors && !selectedColor)
+                      return "Please select a color";
+                    return "Add to Cart";
+                  })()}
                 </button>
 
                 <button
-                  className="w-full border-2 border-slate-300 text-slate-700 py-2 px-6 hover:border-primary hover:bg-slate-50 transition-all duration-300 rounded-xl font-semibold text-lg font-poppins"
+                  className="w-full border-2 border-slate-300 text-slate-700 py-2 px-6 hover:border-primary hover:bg-slate-50 transition-all duration-300 rounded-xl font-semibold font-poppins"
                   onClick={onClose}
                 >
                   Continue Shopping

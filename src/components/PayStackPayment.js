@@ -27,7 +27,7 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, onClose }) => {
       if (window.PaystackPop) {
         setPaystackLoaded(true);
       } else {
-        console.log("PayStack script not yet loaded");
+        console.warn("PayStack script not yet loaded");
       }
     };
 
@@ -44,8 +44,6 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, onClose }) => {
   const paymentCallback = useCallback(
     async (response) => {
       try {
-        console.log("🔧 PayStack response:", response);
-
         // BETTER PAYMENT METHOD DETECTION
         let paymentMethod = "Card Payment";
         if (response.channel === "bank") {
@@ -101,11 +99,8 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, onClose }) => {
           notes: `Payment via ${response.channel}. Guest checkout.`,
         };
 
-        console.log("📦 Order data for saving:", orderData);
-
         // Save order to Firebase
         const orderId = await saveOrder(orderData);
-        console.log("✅ Order saved with ID:", orderId);
 
         // Send order confirmation email
         try {
@@ -123,9 +118,8 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, onClose }) => {
           if (!emailResponse.ok) {
             throw new Error("Email sending failed");
           }
-          console.log("✅ Order confirmation email sent");
         } catch (emailError) {
-          console.log("❌ Order confirmation email failed:", emailError);
+          console.error("❌ Order confirmation email failed:", emailError);
         }
 
         // CLEAR CART HERE TOO FOR REDUNDANCY
@@ -168,14 +162,13 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, onClose }) => {
     [email, metadata, onSuccess, dispatch]
   );
 
-  // Define the onClose function with useCallback - CORRECTED VERSION
+  // Define the onClose function with useCallback
   const paymentOnClose = useCallback(() => {
     setIsProcessing(false);
-    // Call the onClose prop if provided
     if (onClose) {
       onClose();
     }
-  }, [onClose]); // Add onClose to dependencies
+  }, [onClose]);
 
   const handlePayment = () => {
     if (!publicKey) {
@@ -530,6 +523,9 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, onClose }) => {
                   <div key={index} className="flex justify-between text-xs">
                     <span className="flex-1">
                       {item.name} (Qty: {item.quantity})
+                      {item.size &&
+                        item.size !== "Not specified" &&
+                        ` - Size: ${item.size}`}
                       {item.color &&
                         item.color !== "Not specified" &&
                         ` - Color: ${item.color}`}
