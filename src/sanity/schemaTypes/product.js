@@ -58,6 +58,7 @@ export const product = defineType({
           { title: "Navy", value: "navy" },
           { title: "Maroon", value: "maroon" },
           { title: "Teal", value: "teal" },
+          { title: "Fuchsia Pink", value: "fuchsia pink" },
           { title: "Skyblue", value: "skyblue" },
           { title: "Chocolate", value: "chocolate" },
         ],

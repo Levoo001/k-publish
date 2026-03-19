@@ -3,8 +3,8 @@ import {defineCliConfig} from 'sanity/cli'
 
 export default defineCliConfig({
   api: {
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'gg32m6p9',
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
   },
   deployment: {
     /**
@@ -13,5 +13,5 @@ export default defineCliConfig({
      */
     appId: 'hjtznb5wzs5ygcp32rglh7t3',
     autoUpdates: true,
-  }
+  },
 })
