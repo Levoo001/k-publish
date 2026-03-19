@@ -31,7 +31,7 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
       if (!emblaApi) return;
       emblaApi.scrollTo(index);
     },
-    [emblaApi]
+    [emblaApi],
   );
 
   const onInit = useCallback((emblaApi) => {
@@ -58,88 +58,133 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
   return (
     <section className="bg-white">
       <div className="container mx-auto p-2 max-w-7xl">
-        <div className="embla overflow-hidden" ref={emblaRef}>
-          <div className="embla__container flex">
-            {Array.from({ length: totalSlides }).map((_, slideIndex) => (
-              <div
-                key={slideIndex}
-                className="embla__slide flex-shrink-0 w-full min-w-0"
-                style={{ flex: "0 0 100%" }}
-              >
-                <div className="grid grid-cols-2 gap-4 md:gap-8 px-2">
-                  {products
-                    .slice(slideIndex * 2, slideIndex * 2 + 2)
-                    .map((product) => {
-                      const displayImage = product.image[0]
-                        ? urlFor(product.image[0])
-                            .width(600) // Keep original width
-                            .height(800) // Keep original height
-                            .quality(90) // Increase quality
-                            .format("jpg")
-                            .fit("fill") // Ensure no black background
-                            .bg("FFFFFF") // White background instead of black
-                            .url()
-                        : "/fallback.jpg";
+        {/* Mobile: Carousel (hidden on lg+) */}
+        <div className="lg:hidden">
+          <div className="embla overflow-hidden" ref={emblaRef}>
+            <div className="embla__container flex">
+              {Array.from({ length: totalSlides }).map((_, slideIndex) => (
+                <div
+                  key={slideIndex}
+                  className="embla__slide flex-shrink-0 w-full min-w-0"
+                  style={{ flex: "0 0 100%" }}
+                >
+                  <div className="grid grid-cols-2 gap-4 md:gap-8 px-2">
+                    {products
+                      .slice(slideIndex * 2, slideIndex * 2 + 2)
+                      .map((product) => {
+                        const displayImage = product.image[0]
+                          ? urlFor(product.image[0])
+                              .width(600)
+                              .height(800)
+                              .quality(90)
+                              .format("jpg")
+                              .fit("fill")
+                              .bg("FFFFFF")
+                              .url()
+                          : "/fallback.jpg";
 
-                      return (
-                        <div
-                          key={product._id}
-                          className="group cursor-pointer transform hover:-translate-y-1 transition-all duration-500"
-                          onClick={() => onProductClick(product)}
-                        >
-                          <div className="relative aspect-[3/4] overflow-hidden mb-4 bg-white rounded-lg">
-                            <Image
-                              src={displayImage}
-                              alt={product.name}
-                              fill
-                              className="object-cover group-hover:scale-105 transition-transform duration-700"
-                              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                              priority={slideIndex === 0}
-                            />
+                        return (
+                          <div
+                            key={product._id}
+                            className="group cursor-pointer transform hover:-translate-y-1 transition-all duration-500"
+                            onClick={() => onProductClick(product)}
+                          >
+                            <div className="relative aspect-[3/4] overflow-hidden mb-4 bg-white rounded-lg">
+                              <Image
+                                src={displayImage}
+                                alt={product.name}
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                                sizes="50vw"
+                                priority={slideIndex === 0}
+                              />
+                            </div>
+                            <div className="text-center">
+                              <h3 className="font-light text-sm mb-1 text-primary-900 line-clamp-1 font-playfair">
+                                {product.name}
+                              </h3>
+                              <p className="text-sm font-medium text-primary font-poppins">
+                                ₦{product.price.toLocaleString()}
+                              </p>
+                            </div>
                           </div>
-                          <div className="text-center">
-                            <h3 className="font-light text-sm mb-1 text-primary-900 line-clamp-1 font-playfair">
-                              {product.name}
-                            </h3>
-                            <p className="text-sm font-medium text-primary font-poppins">
-                              ₦{product.price.toLocaleString()}
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                  </div>
                 </div>
-              </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bullet Dot Indicators */}
+          <div className="flex items-center justify-center space-x-1 mt-5">
+            {Array.from({ length: totalSlides }).map((_, index) => (
+              <button
+                key={index}
+                onClick={() => onDotButtonClick(index)}
+                className="flex items-center justify-center w-5 h-5"
+                aria-label={`Go to slide ${index + 1}`}
+              >
+                <div
+                  className={`relative flex items-center justify-center transition-all duration-300 ${
+                    selectedIndex === index
+                      ? "w-5 h-5 border-2 border-gray-900 rounded-full"
+                      : ""
+                  }`}
+                >
+                  <div
+                    className={`rounded-full transition-all duration-300 ${
+                      selectedIndex === index
+                        ? "w-1 h-1 bg-slate-900"
+                        : "w-1.5 h-1.5 bg-slate-400 hover:bg-slate-600"
+                    }`}
+                  />
+                </div>
+              </button>
             ))}
           </div>
         </div>
 
-        {/* Bullet Dot Indicators */}
-        <div className="flex items-center justify-center space-x-1 mt-5">
-          {Array.from({ length: totalSlides }).map((_, index) => (
-            <button
-              key={index}
-              onClick={() => onDotButtonClick(index)}
-              className="flex items-center justify-center w-5 h-5"
-              aria-label={`Go to slide ${index + 1}`}
-            >
+        {/* Desktop: Static Grid (lg+) */}
+        <div className="hidden lg:grid lg:grid-cols-4 xl:grid-cols-5 gap-6 px-2 py-4">
+          {products.map((product) => {
+            const displayImage = product.image[0]
+              ? urlFor(product.image[0])
+                  .width(600)
+                  .height(800)
+                  .quality(90)
+                  .format("jpg")
+                  .fit("fill")
+                  .bg("FFFFFF")
+                  .url()
+              : "/fallback.jpg";
+
+            return (
               <div
-                className={`relative flex items-center justify-center transition-all duration-300 ${
-                  selectedIndex === index
-                    ? "w-5 h-5 border-2 border-gray-900 rounded-full"
-                    : ""
-                }`}
+                key={product._id}
+                className="group cursor-pointer transform hover:-translate-y-1 transition-all duration-500"
+                onClick={() => onProductClick(product)}
               >
-                <div
-                  className={`rounded-full transition-all duration-300 ${
-                    selectedIndex === index
-                      ? "w-1 h-1 bg-slate-900"
-                      : "w-1.5 h-1.5 bg-slate-400 hover:bg-slate-600"
-                  }`}
-                />
+                <div className="relative aspect-[3/4] overflow-hidden mb-4 bg-white rounded-lg">
+                  <Image
+                    src={displayImage}
+                    alt={product.name}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    sizes="(max-width: 1280px) 25vw, 20vw"
+                  />
+                </div>
+                <div className="text-center">
+                  <h3 className="font-light text-sm mb-1 text-primary-900 line-clamp-1 font-playfair">
+                    {product.name}
+                  </h3>
+                  <p className="text-sm font-medium text-primary font-poppins">
+                    ₦{product.price.toLocaleString()}
+                  </p>
+                </div>
               </div>
-            </button>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
@@ -241,13 +286,13 @@ export default function Home({ products }) {
 
   // Get specific products for each section
   const bestsellerProduct = products.find(
-    (product) => product.name === "The Amarachi Set"
+    (product) => product.name === "The Amarachi Set",
   );
   const coordProduct = products.find(
-    (product) => product.name === "The Amara Set"
+    (product) => product.name === "The Amara Set",
   );
   const dressessProduct = products.find(
-    (product) => product.name === "The Chisom Dress"
+    (product) => product.name === "The Chisom Dress",
   );
 
   // Video loading
@@ -270,9 +315,21 @@ export default function Home({ products }) {
     // Try to play the video
     const playVideo = async () => {
       try {
-        await video.play();
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((error) => {
+            if (
+              error.name !== "AbortError" &&
+              error.name !== "NotAllowedError"
+            ) {
+              console.error("Autoplay prevented:", error);
+            }
+          });
+        }
       } catch (error) {
-        console.error("Autoplay prevented:", error);
+        if (error.name !== "AbortError" && error.name !== "NotAllowedError") {
+          console.error("Autoplay prevented:", error);
+        }
       }
     };
 
@@ -340,7 +397,7 @@ export default function Home({ products }) {
           .format("jpg")
           .fit("fill")
           .bg("FFFFFF")
-          .url()
+          .url(),
       ),
     };
     setSelectedProduct(modalProduct);
@@ -352,15 +409,15 @@ export default function Home({ products }) {
 
   return (
     <main className="min-h-screen">
-      <section className="relative h-[60vh] lg:h-[90vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 w-full h-full">
+      <section className="relative w-full aspect-[4/5] md:aspect-video lg:h-[70vh] lg:aspect-auto flex items-center justify-center overflow-hidden bg-primary-900 border-white/10">
+        <div className="relative w-full h-full flex items-center justify-center lg:overflow-hidden lg:shadow-2xl">
           <video
             ref={videoRef}
             autoPlay
             muted={isMuted}
             loop
             playsInline
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover lg:object-contain bg-black"
             preload="auto"
             poster="/fallback.jpg"
           >
@@ -372,20 +429,20 @@ export default function Home({ products }) {
               src="/fallback.jpg"
               alt="Kavan The Brand"
               fill
-              className="object-cover"
+              className="object-cover lg:object-contain bg-black"
               priority
             />
           )}
 
-          <div className="absolute left-2 bottom-2 inset-0 flex items-end justify-start text-white z-20 pb-8 pl-6 lg:pl-12">
-            <div className="">
-              <h1 className="text-lg md:text-xl lg:text-2xl uppercase font-playfair">
+          <div className="absolute left-2 bottom-2 inset-0 flex items-end justify-start text-white z-20 pb-8 pl-6 lg:pl-12 lg:pb-12 pointer-events-none">
+            <div className="pointer-events-auto">
+              <h1 className="text-lg md:text-xl lg:text-2xl uppercase font-playfair drop-shadow-md">
                 THE REBIRTH
               </h1>
 
               <Link
                 href="/shop"
-                className="py-2 flex items-center gap-2 text-white hover:text-primary-200 transition-colors"
+                className="py-2 flex items-center gap-2 text-white hover:text-primary-200 transition-colors drop-shadow-md"
               >
                 <span className="border-b border-white hover:border-primary-200 transition-colors font-poppins">
                   Order Now
@@ -397,7 +454,7 @@ export default function Home({ products }) {
 
           <button
             onClick={toggleMute}
-            className="absolute bottom-4 right-4 z-30 bg-primary/50 text-white p-3 rounded-full hover:bg-primary/70 transition-all duration-300 backdrop-blur-sm"
+            className="absolute bottom-4 right-4 lg:bottom-12 lg:right-12 z-30 bg-primary/50 text-white p-3 rounded-full hover:bg-primary/70 transition-all duration-300 backdrop-blur-sm"
             aria-label={isMuted ? "Unmute video" : "Mute video"}
           >
             {isMuted ? (
@@ -417,8 +474,8 @@ export default function Home({ products }) {
       {/* FEATURED COLLECTIONS - Static Second Images */}
       <section className="py-10 bg-white">
         <div className="container mx-auto px-4 max-w-7xl">
-          {/* 2 items per row on mobile, 3 on larger screens */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+          {/* 2 items per row on mobile, 3 on md, 4 on lg, 5 on xl */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-8">
             {products.map((product) => {
               // Use the second image if available, otherwise fall back to first image
               const displayImageIndex = product.image.length > 1 ? 1 : 0;
@@ -466,7 +523,7 @@ export default function Home({ products }) {
 
       <section className="py-16 bg-gradient-to-br from-primary-50 to-white overflow-hidden">
         <div className="container mx-auto px-4 max-w-7xl">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Left Column - Bestsellers (Single Card) */}
             <div className="space-y-4">
               {bestsellerProduct && (
@@ -490,7 +547,7 @@ export default function Home({ products }) {
             </div>
 
             {/* Right Column - Co-ords (Single Card) - Positioned Lower */}
-            <div className="space-y-4 mt-8">
+            <div className="space-y-4 mt-8 lg:mt-0">
               {coordProduct && (
                 <div className="relative group">
                   <StaticProductCard product={coordProduct} />
@@ -535,7 +592,7 @@ export default function Home({ products }) {
           </div>
 
           {/* Bottom Two Cards with Carousel - No Links */}
-          <div className="grid grid-cols-2 gap-4 mt-8">
+          <div className="grid grid-cols-2 gap-4 mt-8 lg:max-w-2xl xl:max-w-3xl lg:mx-auto">
             {/* First Bottom Card with Carousel - Starts from index 0 */}
             <div className="relative group">
               <div className="aspect-square relative rounded-2xl overflow-hidden shadow-luxury group">

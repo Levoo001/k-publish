@@ -8,20 +8,20 @@ import { productQuery } from "@/sanity/lib/queries";
 import { client } from "@/sanity/lib/client";
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
-import { Playfair_Display, Poppins } from 'next/font/google'
+import { Playfair_Display, Poppins } from "next/font/google";
 
 const playfair = Playfair_Display({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-playfair',
-})
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-playfair",
+});
 
 const poppins = Poppins({
-  weight: ['300', '400', '500', '600', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-poppins',
-})
+  weight: ["300", "400", "500", "600", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-poppins",
+});
 
 export const metadata = {
   title: "Kavan The Brand - Luxury Fashion Brand",
@@ -61,16 +61,18 @@ export default async function RootLayout({ children }) {
       <head>
         <link rel="preconnect" href="https://cdn.sanity.io" />
       </head>
-      <body className="antialiased">
-        <SearchProvider products={products}>
-          <ClientLayout>
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
-            <CartDrawer />
-            <SearchDrawer />
-          </ClientLayout>
-        </SearchProvider>
+      <body className="antialiased bg-gray-200">
+        <div className="mx-auto w-full max-w-[1440px] bg-white min-h-screen relative overflow-x-hidden shadow-2xl flex flex-col">
+          <SearchProvider products={products}>
+            <ClientLayout>
+              <Navbar />
+              <main>{children}</main>
+              <Footer />
+              <CartDrawer />
+              <SearchDrawer />
+            </ClientLayout>
+          </SearchProvider>
+        </div>
 
         <script src="https://js.paystack.co/v1/inline.js" async></script>
       </body>

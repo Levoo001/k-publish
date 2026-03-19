@@ -4,27 +4,18 @@
 @tailwind utilities;
 
 :root {
-  --primary: #3A0303;
+  --primary: #3a0303;
   --primary-light: #fdf2f2;
   --primary-dark: #2a0202;
 }
 
 body {
-  width: 100dvw;
   overflow-x: hidden;
   height: 100%;
   border-color: #3b3b3b;
   user-select: none;
   color: var(--foreground);
   font-family: var(--font-poppins);
-}
-
-video {
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
 }
 
 /* Primary-themed scrollbar */
@@ -41,6 +32,7 @@ video {
 .embla__container {
   display: flex;
   height: 100%;
+  touch-action: pan-y pinch-zoom;
 }
 
 .embla__slide {
@@ -50,7 +42,6 @@ video {
 }
 
 @layer base {
-
   h1,
   h2,
   h3,
@@ -76,15 +67,15 @@ video {
   }
 
   .bg-primary {
-    background-color: #3A0303;
+    background-color: #3a0303;
   }
 
   .text-primary {
-    color: #3A0303;
+    color: #3a0303;
   }
 
   .border-primary {
-    border-color: #3A0303;
+    border-color: #3a0303;
   }
 }
 
