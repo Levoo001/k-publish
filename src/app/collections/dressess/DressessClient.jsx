@@ -17,7 +17,7 @@ export default function DressessClient({ products }) {
         product.name === "The Chisom Dress" ||
         product.name === "The Zahra Dress" ||
         product.name === "Udara mini dress" ||
-        product.name === "Udara dress"
+        product.name === "Udara dress",
     ) || [];
 
   const handleProductClick = (product) => {
@@ -31,7 +31,7 @@ export default function DressessClient({ products }) {
           .format("jpg")
           .fit("fill")
           .bg("FFFFFF")
-          .url()
+          .url(),
       ),
     };
     setSelectedProduct(modalProduct);
