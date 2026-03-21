@@ -259,7 +259,7 @@ const ProductModal = ({ product, onClose }) => {
                         <button
                           key={index}
                           onClick={() => handleColorSelect(color)}
-                          className={`flex items-center space-x-2 px-4 py-1 rounded-lg border-2 transition-all duration-200 font-poppins ${
+                          className={`flex items-center space-x-2 px-4 py-1 rounded-lg border-2 transition-all duration-200 font-poppins text-xs ${
                             selectedColor === color
                               ? "border-primary bg-primary-50 text-primary"
                               : "border-gray-300 hover:border-primary hover:bg-primary-25 text-gray-700"
