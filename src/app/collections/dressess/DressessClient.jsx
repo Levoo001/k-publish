@@ -15,7 +15,9 @@ export default function DressessClient({ products }) {
       (product) =>
         product.name === "The Adanna Dress" ||
         product.name === "The Chisom Dress" ||
-        product.name === "The Zahra Dress"
+        product.name === "The Zahra Dress" ||
+        product.name === "Udara mini dress" ||
+        product.name === "Udara dress"
     ) || [];
 
   const handleProductClick = (product) => {

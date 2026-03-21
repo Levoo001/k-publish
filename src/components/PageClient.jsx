@@ -52,8 +52,9 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
     emblaApi.on("select", onSelect);
   }, [emblaApi, onInit, onSelect]);
 
-  // Calculate how many slides we need based on products (2 products per slide)
-  const totalSlides = Math.ceil(products.length / 2);
+  // Limit to last 5 products and calculate slides (2 products per slide)
+  const displayProducts = products.slice(-5);
+  const totalSlides = Math.ceil(displayProducts.length / 2);
 
   return (
     <section className="bg-white">
@@ -69,7 +70,7 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
                   style={{ flex: "0 0 100%" }}
                 >
                   <div className="grid grid-cols-2 gap-4 md:gap-8 px-2">
-                    {products
+                    {displayProducts
                       .slice(slideIndex * 2, slideIndex * 2 + 2)
                       .map((product) => {
                         const displayImage = product.image[0]
@@ -147,7 +148,7 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
 
         {/* Desktop: Static Grid (lg+) */}
         <div className="hidden lg:grid lg:grid-cols-4 xl:grid-cols-5 gap-6 px-2 py-4">
-          {products.map((product) => {
+          {displayProducts.map((product) => {
             const displayImage = product.image[0]
               ? urlFor(product.image[0])
                   .width(600)
