@@ -10,13 +10,35 @@ import { addToCart } from "@/store/CartSlice";
 import { urlFor } from "@/sanity/lib/image";
 
 const ProductModal = ({ product, onClose }) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(1);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const modalImageRef = useRef(null);
+  const touchStartX = useRef(null);
+  const touchStartY = useRef(null);
 
   const dispatch = useDispatch();
   const { openCart } = useCart();
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e, totalImages) => {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    const dy = e.changedTouches[0].clientY - touchStartY.current;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+      if (dx < 0) {
+        setCurrentImageIndex((prev) => (prev + 1) % totalImages);
+      } else {
+        setCurrentImageIndex((prev) => (prev - 1 + totalImages) % totalImages);
+      }
+    }
+    touchStartX.current = null;
+    touchStartY.current = null;
+  };
 
   if (!product) return null;
 
@@ -29,6 +51,7 @@ const ProductModal = ({ product, onClose }) => {
 
   const handleColorSelect = (color) => {
     setSelectedColor(color);
+    setCurrentImageIndex(0); // reset to first image of the new color
   };
 
   const handleSizeSelect = (size) => {
@@ -47,10 +70,10 @@ const ProductModal = ({ product, onClose }) => {
       id: product._id || product.id,
       name: product.name,
       price: product.price,
-      // Use the first image for cart thumbnail
+      // Use image[1] (second image) for cart thumbnail, same as product cards
       image: product.processedImages
         ? product.processedImages[0]
-        : urlFor(product.image[0])
+        : urlFor(product.image[1] || product.image[0])
             .width(400)
             .height(533)
             .quality(80)
@@ -74,6 +97,27 @@ const ProductModal = ({ product, onClose }) => {
   };
 
   const getImages = () => {
+    // If a color is selected and colorVariants exist, show that variant's images
+    if (selectedColor && product.colorVariants?.length) {
+      const variant = product.colorVariants.find(
+        (v) => v.color === selectedColor,
+      );
+      if (variant?.images?.length) {
+        return variant.images.map((img) =>
+          typeof img === "string"
+            ? img
+            : urlFor(img)
+                .width(1200)
+                .height(1600)
+                .quality(95)
+                .format("jpg")
+                .fit("fill")
+                .bg("FFFFFF")
+                .url(),
+        );
+      }
+    }
+    // Fall back to main images
     if (product.processedImages) {
       return product.processedImages;
     }
@@ -91,7 +135,7 @@ const ProductModal = ({ product, onClose }) => {
               .format("jpg")
               .fit("fill")
               .bg("FFFFFF")
-              .url()
+              .url(),
       );
     }
     return [];
@@ -133,9 +177,13 @@ const ProductModal = ({ product, onClose }) => {
           </button>
 
           <div className="grid lg:grid-cols-2 h-full">
-            {/* Image Gallery Section - Keep as is */}
+            {/* Image Gallery Section */}
             <div className="relative bg-white">
-              <div className="relative aspect-[3/4] w-full h-full">
+              <div
+                className="relative aspect-[3/4] w-full h-full"
+                onTouchStart={handleTouchStart}
+                onTouchEnd={(e) => handleTouchEnd(e, images.length)}
+              >
                 {mainImage && (
                   <Image
                     ref={modalImageRef}
@@ -164,8 +212,8 @@ const ProductModal = ({ product, onClose }) => {
 
               {/* Thumbnail Gallery */}
               {images.length > 1 && (
-                <div className="absolute bottom-2 left-2">
-                  <div className="flex gap-2 justify-center overflow-x-auto">
+                <div className="absolute bottom-2 left-2 right-2">
+                  <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
                     {images.map((img, index) => (
                       <button
                         key={index}
@@ -177,14 +225,7 @@ const ProductModal = ({ product, onClose }) => {
                         }`}
                       >
                         <Image
-                          src={urlFor(product.image?.[index] || img)
-                            .width(120)
-                            .height(120)
-                            .quality(80)
-                            .format("jpg")
-                            .fit("fill")
-                            .bg("FFFFFF")
-                            .url()}
+                          src={img}
                           alt={`${product.name} view ${index + 1}`}
                           fill
                           className="object-cover"
@@ -259,7 +300,7 @@ const ProductModal = ({ product, onClose }) => {
                         <button
                           key={index}
                           onClick={() => handleColorSelect(color)}
-                          className={`flex items-center space-x-2 px-4 py-1 rounded-lg border-2 transition-all duration-200 font-poppins text-xs ${
+                          className={`flex items-center gap-2 px-3 py-1 rounded-lg border-2 transition-all duration-200 font-poppins text-xs ${
                             selectedColor === color
                               ? "border-primary bg-primary-50 text-primary"
                               : "border-gray-300 hover:border-primary hover:bg-primary-25 text-gray-700"

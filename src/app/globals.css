@@ -35,6 +35,14 @@ body {
   touch-action: pan-y pinch-zoom;
 }
 
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 .embla__slide {
   flex: 0 0 100%;
   min-width: 0;

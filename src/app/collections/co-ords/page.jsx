@@ -5,7 +5,11 @@ import { client } from "@/sanity/lib/client";
 import CoOrdsClient from "./CoOrdsClient";
 
 export default async function CoOrdsPage() {
-    const products = await client.fetch(productQuery);
+  const products = await client.fetch(
+    productQuery,
+    {},
+    { next: { revalidate: 60 } },
+  );
 
-    return <CoOrdsClient products={products} />;
+  return <CoOrdsClient products={products} />;
 }

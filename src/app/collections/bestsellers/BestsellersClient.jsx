@@ -14,22 +14,29 @@ export default function BestsellersClient({ products }) {
     products?.filter(
       (product) =>
         product.name === "The Chisom Dress" ||
-        product.name === "The Amarachi Set"
+        product.name === "The Amarachi Set" ||
+        product.name === "Urenna Mini-skirt Set" ||
+        product.name === "Urenna Midi-Set" ||
+        product.name === "Urenna Pant-Set" ||
+        product.name === "Grace Midi-skirt Set" ||
+        product.name === "Grace Mini-skirt Set",
     ) || [];
 
   const handleProductClick = (product) => {
     const modalProduct = {
       ...product,
-      processedImages: product.image.map((img) =>
-        urlFor(img)
-          .width(1200)
-          .height(1600)
-          .quality(95)
-          .format("jpg")
-          .fit("fill")
-          .bg("FFFFFF")
-          .url()
-      ),
+      processedImages: product.image
+        .slice(1)
+        .map((img) =>
+          urlFor(img)
+            .width(1200)
+            .height(1600)
+            .quality(95)
+            .format("jpg")
+            .fit("fill")
+            .bg("FFFFFF")
+            .url(),
+        ),
     };
     setSelectedProduct(modalProduct);
   };
@@ -53,16 +60,17 @@ export default function BestsellersClient({ products }) {
         {/* Products Grid - No Carousel */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
           {bestsellers.map((product) => {
-            const displayImage = product.image[0]
-              ? urlFor(product.image[0])
-                  .width(600)
-                  .height(800)
-                  .quality(90)
-                  .format("jpg")
-                  .fit("fill")
-                  .bg("FFFFFF")
-                  .url()
-              : "/fallback.jpg";
+            const displayImage =
+              product.image[1] || product.image[0]
+                ? urlFor(product.image[1] || product.image[0])
+                    .width(600)
+                    .height(800)
+                    .quality(90)
+                    .format("jpg")
+                    .fit("fill")
+                    .bg("FFFFFF")
+                    .url()
+                : "/fallback.jpg";
 
             return (
               <div

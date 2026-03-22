@@ -52,8 +52,8 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
     emblaApi.on("select", onSelect);
   }, [emblaApi, onInit, onSelect]);
 
-  // Limit to last 5 products and calculate slides (2 products per slide)
-  const displayProducts = products.slice(-5);
+  // Show all products
+  const displayProducts = products;
   const totalSlides = Math.ceil(displayProducts.length / 2);
 
   return (
@@ -255,13 +255,13 @@ const StaticProductCard = ({ product }) => {
   return (
     <div className="aspect-[3/3.9] relative rounded-2xl overflow-hidden shadow-luxury group">
       <Image
-        src={urlFor(product.image[1])
+        src={urlFor(product.image[1] || product.image[0])
           .width(800)
           .height(1040)
-          .quality(90) // Change from 85 to 90
+          .quality(90)
           .format("jpg")
-          .fit("fill") // ADD THIS
-          .bg("FFFFFF") // ADD THIS
+          .fit("fill")
+          .bg("FFFFFF")
           .url()}
         alt={product.name}
         fill
@@ -390,16 +390,19 @@ export default function Home({ products }) {
   const handleProductClick = (product) => {
     const modalProduct = {
       ...product,
-      processedImages: product.image.map((img) =>
-        urlFor(img)
-          .width(1200)
-          .height(1600)
-          .quality(95)
-          .format("jpg")
-          .fit("fill")
-          .bg("FFFFFF")
-          .url(),
-      ),
+      // Strip the first image — modal shows from image[1] onward
+      processedImages: product.image
+        .slice(1)
+        .map((img) =>
+          urlFor(img)
+            .width(1200)
+            .height(1600)
+            .quality(95)
+            .format("jpg")
+            .fit("fill")
+            .bg("FFFFFF")
+            .url(),
+        ),
     };
     setSelectedProduct(modalProduct);
   };
@@ -422,7 +425,7 @@ export default function Home({ products }) {
             preload="auto"
             poster="/fallback.jpg"
           >
-            <source src="https://ck7vajewsn9hvwtw.public.blob.vercel-storage.com/vid.mp4" type="video/mp4" />
+            <source src="/vid.mp4" type="video/mp4" />
           </video>
 
           {videoError && (
@@ -435,10 +438,10 @@ export default function Home({ products }) {
             />
           )}
 
-          <div className="absolute left-2 bottom-2 inset-0 flex items-end justify-start text-white z-20 pb-8 pl-6 lg:pl-12 lg:pb-12 pointer-events-none">
+          <div className="absolute left-4 bottom-4 inset-0 flex items-end justify-start text-white z-20 lg:pl-12 lg:pb-12 pointer-events-none">
             <div className="pointer-events-auto">
               <h1 className="text-lg md:text-xl lg:text-2xl uppercase font-playfair drop-shadow-md">
-                THE REBIRTH
+                THE BLOOM
               </h1>
 
               <Link
@@ -455,7 +458,7 @@ export default function Home({ products }) {
 
           <button
             onClick={toggleMute}
-            className="absolute bottom-4 right-4 lg:bottom-12 lg:right-12 z-30 bg-primary/50 text-white p-3 rounded-full hover:bg-primary/70 transition-all duration-300 backdrop-blur-sm"
+            className="absolute bottom-4 right-4 lg:bottom-12 lg:right-12 z-30 bg-black/20 text-white p-3 rounded-full hover:bg-primary/70 transition-all duration-300 backdrop-blur-sm"
             aria-label={isMuted ? "Unmute video" : "Mute video"}
           >
             {isMuted ? (
@@ -472,24 +475,47 @@ export default function Home({ products }) {
         onProductClick={handleProductClick}
       />
 
+      {/* SECONDARY VIDEO SECTION */}
+      <section className="relative w-full h-[42vh] lg:h-[70vh] overflow-hidden bg-primary-900 my-10">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full h-full object-cover lg:object-contain bg-black"
+          preload="auto"
+          poster="/fallback2.jpg"
+          onError={(e) => {
+            e.currentTarget.style.display = "none";
+          }}
+        >
+          <source src="/vid2.mp4" type="video/mp4" />
+        </video>
+        <Image
+          src="/fallback2.jpg"
+          alt="Kavan The Brand"
+          fill
+          className="object-cover -z-10"
+        />
+      </section>
+
       {/* FEATURED COLLECTIONS - Static Second Images */}
       <section className="py-10 bg-white">
         <div className="container mx-auto px-4 max-w-7xl">
           {/* 2 items per row on mobile, 3 on md, 4 on lg, 5 on xl */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-8">
             {products.map((product) => {
-              // Use the second image if available, otherwise fall back to first image
-              const displayImageIndex = product.image.length > 1 ? 1 : 0;
-              const displayImage = product.image[displayImageIndex]
-                ? urlFor(product.image[displayImageIndex])
-                    .width(800)
-                    .height(1000)
-                    .quality(90) // Change from 85 to 90
-                    .format("jpg")
-                    .fit("fill") // ADD THIS
-                    .bg("FFFFFF") // ADD THIS
-                    .url()
-                : "/fallback.jpg";
+              const displayImage =
+                product.image[1] || product.image[0]
+                  ? urlFor(product.image[1] || product.image[0])
+                      .width(800)
+                      .height(1000)
+                      .quality(90)
+                      .format("jpg")
+                      .fit("fill")
+                      .bg("FFFFFF")
+                      .url()
+                  : "/fallback.jpg";
 
               return (
                 <div
@@ -779,7 +805,11 @@ export default function Home({ products }) {
 
       <QuoteCarousel />
 
-      <ProductModal product={selectedProduct} onClose={handleCloseModal} />
+      <ProductModal
+        key={selectedProduct?._id}
+        product={selectedProduct}
+        onClose={handleCloseModal}
+      />
 
       <NewsletterPopup />
 

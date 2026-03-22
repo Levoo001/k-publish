@@ -5,7 +5,11 @@ import { client } from "@/sanity/lib/client";
 import ShopClient from "./ShopClient";
 
 export default async function ShopPage() {
-  const products = await client.fetch(productQuery);
+  const products = await client.fetch(
+    productQuery,
+    {},
+    { next: { revalidate: 60 } },
+  );
 
   return <ShopClient products={products} />;
 }

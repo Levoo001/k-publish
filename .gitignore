@@ -39,7 +39,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# large media files (serve via CDN instead)
-public/vid.mp4
-public/fallback.jpg

@@ -5,7 +5,11 @@ import { client } from "@/sanity/lib/client";
 import DressessClient from "./DressessClient";
 
 export default async function DressessPage() {
-    const products = await client.fetch(productQuery);
+  const products = await client.fetch(
+    productQuery,
+    {},
+    { next: { revalidate: 60 } },
+  );
 
-    return <DressessClient products={products} />;
+  return <DressessClient products={products} />;
 }

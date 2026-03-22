@@ -19,16 +19,18 @@ export default function ShopClient({ products }) {
   const handleProductClick = (product) => {
     const modalProduct = {
       ...product,
-      processedImages: product.image.map((img) =>
-        urlFor(img)
-          .width(1200) // Increased for modal
-          .height(1600)
-          .quality(95) // Highest quality for modal
-          .format("jpg")
-          .fit("fill")
-          .bg("FFFFFF")
-          .url()
-      ),
+      processedImages: product.image
+        .slice(1)
+        .map((img) =>
+          urlFor(img)
+            .width(1200)
+            .height(1600)
+            .quality(95)
+            .format("jpg")
+            .fit("fill")
+            .bg("FFFFFF")
+            .url(),
+        ),
     };
     setSelectedProduct(modalProduct);
   };

@@ -2,12 +2,17 @@
 import { defineQuery } from "next-sanity";
 
 export const productQuery =
-  defineQuery(`*[_type == "product"] | order(_createdAt desc) {
+  defineQuery(`*[_type == "product"] | order(displayOrder asc, _createdAt desc) {
   _id,
   name,
   price,
   description,
   image,
   colors,
+  displayOrder,
+  colorVariants[] {
+    color,
+    images
+  },
   createdAt
 }`);
