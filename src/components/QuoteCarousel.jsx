@@ -9,15 +9,15 @@ const QuoteCarousel = () => {
   const quotes = [
     {
       id: 1,
-      text: "We create timeless, sophisticated pieces that honor both strength and softness, legacy and individuality.",
+      text: "Kavan is for the woman who is learning to choose herself again.",
     },
     {
       id: 2,
-      text: "Kavan is a love letter to women who carry more than they are given~ women who lead, nurture and hold it all together.",
+      text: "We create intentional pieces that allow a woman to feel present, soft, and powerful at her own pace.",
     },
     {
       id: 3,
-      text: "Kavan is a brand for everywoman who embodies quiet power and chooses softness without apology.",
+      text: "Kavan is for the woman who refuses to disappear.",
     },
   ];
 

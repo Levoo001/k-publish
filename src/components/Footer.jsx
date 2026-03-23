@@ -14,8 +14,9 @@ const Footer = () => {
           <img src="/logo-2.jpeg" alt="Kavanthebrand" className="h-18" />
 
           <p className="font-poppins leading-relaxed text-[0.88rem]">
-            Where strength meets softness in contemporary fashion.
-            Handcrafted pieces that celebrate the beautiful duality of womanhood.
+            For the woman whose presence lingers.
+            <br />
+            Handcrafted pieces for her return to self.
           </p>
 
           <div className="flex gap-4 !mt-6">
@@ -41,19 +42,34 @@ const Footer = () => {
 
         {/* Quick Links */}
         <div className="flex flex-wrap justify-center text-center gap-2 text-[0.86rem]">
-          <Link href="/contact-us" className="block hover:text-white font-poppins underline">
+          <Link
+            href="/contact-us"
+            className="block hover:text-white font-poppins underline"
+          >
             Contact Us
           </Link>
-          <Link href="/about-us" className="block hover:text-white font-poppins underline">
+          <Link
+            href="/about-us"
+            className="block hover:text-white font-poppins underline"
+          >
             About Us
           </Link>
-          <Link href="/SizeGuide" className="block hover:text-white font-poppins underline">
+          <Link
+            href="/SizeGuide"
+            className="block hover:text-white font-poppins underline"
+          >
             Size Guide
           </Link>
-          <Link href="/delivery-policy" className="block hover:text-white font-poppins underline">
+          <Link
+            href="/delivery-policy"
+            className="block hover:text-white font-poppins underline"
+          >
             Delivery Policy
           </Link>
-          <Link href="/privacy-policy" className="block hover:text-white font-poppins underline">
+          <Link
+            href="/privacy-policy"
+            className="block hover:text-white font-poppins underline"
+          >
             Privacy Policy
           </Link>
           <Link
