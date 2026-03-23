@@ -16,6 +16,21 @@ export default function ShopClient({ products }) {
   const [subscriptionStatus, setSubscriptionStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Collection filtering
+  const rebirthProductNames = [
+    "the amarachi set",
+    "the chisom dress",
+    "the amara set",
+    "the zahra dress",
+    "the adanna dress",
+  ];
+  const bloomCollection = products.filter(
+    (p) => !rebirthProductNames.includes(p.name?.toLowerCase().trim()),
+  );
+  const rebirthCollection = products.filter((p) =>
+    rebirthProductNames.includes(p.name?.toLowerCase().trim()),
+  );
+
   const handleProductClick = (product) => {
     const modalProduct = {
       ...product,
@@ -82,34 +97,41 @@ export default function ShopClient({ products }) {
 
   return (
     <main className="min-h-screen bg-white">
-      {/* Shop Header */}
-      <section className="bg-gradient-to-r from-primary-50 to-white py-16">
+      {/* Bloom Collection Section */}
+      <section className="bg-gradient-to-r from-white to-primary-50 py-8">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="">
-            <h1 className="text-2xl md:text-6xl font-playfair mb-4 text-primary text-center">
-              The Rebirth Collection
+            <h1 className="text-3xl md:text-5xl font-playfair mb-3 text-primary text-center">
+              The Bloom Collection
             </h1>
-            <p className="text-[1.05rem] font-poppins text-primary max-w-2xl mx-auto text-center">
-              Softness. Strength.
-              <br />
-              <br />
-              Elegance. A celebration of the modern woman ~ grounded in grace,
-              defined by strength. Each piece is crafted to remind you that
-              power can be gentle, and softness can be bold. This collection
-              marks a return to self ~ to ease, intention, and timeless
-              femininity.
-              <br />
-              <br />
-              The Rebirth Collection ~ for women in their soft era.
-            </p>
+            <div className="space-y-2 text-slate-700 leading-snug font-poppins max-w-2xl mx-auto text-center text-sm md:text-base">
+              <p>
+                Bloom is about living in your presence fully and without
+                apology.
+              </p>
+              <p>
+                It is the quiet confidence that comes from no longer abandoning
+                yourself.
+              </p>
+              <p className="italic text-xs md:text-sm">
+                Not louder. Not harder. Just more you.
+              </p>
+              <p className="pt-1">
+                Because when you stop disappearing… you don't need to prove
+                anything.
+              </p>
+              <div className="bg-primary text-white p-3 italic mt-2 rounded text-xs md:text-sm">
+                <p>You simply exist and that is felt.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Products Grid */}
+      {/* Bloom Collection Products Grid */}
       <section className="container mx-auto px-2 max-w-7xl py-12">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-          {products.map((product) => (
+          {bloomCollection.map((product) => (
             <div
               key={product._id}
               className="group cursor-pointer transform hover:-translate-y-2 transition-all duration-300 shadow-lg rounded-xl group-hover:shadow-luxury"
@@ -120,10 +142,101 @@ export default function ShopClient({ products }) {
                   src={urlFor(product.image[1])
                     .width(600)
                     .height(800)
-                    .quality(90) // ADD THIS
-                    .format("jpg") // ADD THIS
-                    .fit("fill") // ADD THIS
-                    .bg("FFFFFF") // ADD THIS
+                    .quality(90)
+                    .format("jpg")
+                    .fit("fill")
+                    .bg("FFFFFF")
+                    .url()}
+                  alt={product.name}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                />
+              </div>
+
+              <div className="text-center p-2 space-y-2">
+                <h3 className="font-light text-base md:text-lg text-primary line-clamp-2 font-playfair">
+                  {product.name}
+                </h3>
+                <p className="text-lg font-bold text-primary font-poppins">
+                  ₦{product.price?.toLocaleString()}
+                </p>
+
+                <button
+                  className="md:hidden w-full bg-primary text-white py-2 rounded-lg text-sm font-medium mt-2 font-poppins"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleProductClick(product);
+                  }}
+                >
+                  View Details
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Rebirth Collection Section */}
+      <section className="bg-gradient-to-r from-primary-50 to-white py-8 mt-6 border-t border-slate-200">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="">
+            <h1 className="text-3xl md:text-5xl font-playfair mb-3 text-primary text-center">
+              The Rebirth Collection
+            </h1>
+            <div className="space-y-2 text-slate-700 leading-snug font-poppins max-w-2xl mx-auto text-center text-sm md:text-base">
+              <p>
+                Rebirth is where it begins. Not with certainty, not with
+                confidence—but with awareness.
+              </p>
+              <p>
+                The quiet realization that you began to disappear into
+                expectations, responsibilities, into being everything for
+                everyone else except yourself.
+              </p>
+              <p className="pt-1">
+                Rebirth is not about having answers. It is about no longer
+                ignoring the question.
+              </p>
+              <div className="bg-primary text-white p-3 italic rounded text-xs md:text-sm">
+                <p>Who am I when I am not performing for the world?</p>
+              </div>
+              <p>
+                This collection lives in that space—the in-between, the
+                becoming. Where you start to feel again, notice yourself again,
+                and begin gently to come back.
+              </p>
+              <p>Not all at once. Not perfectly. But intentionally.</p>
+              <p>
+                Because the moment you see yourself clearly, you cannot go back
+                to being unseen.
+              </p>
+              <div className="bg-primary text-white p-3 italic rounded text-xs md:text-sm">
+                <p>This is where you begin again.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Rebirth Collection Products Grid */}
+      <section className="container mx-auto px-2 max-w-7xl py-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+          {rebirthCollection.map((product) => (
+            <div
+              key={product._id}
+              className="group cursor-pointer transform hover:-translate-y-2 transition-all duration-300 shadow-lg rounded-xl group-hover:shadow-luxury"
+              onClick={() => handleProductClick(product)}
+            >
+              <div className="relative aspect-[3/4] overflow-hidden mb-4 rounded-t-xl transition-all duration-300">
+                <Image
+                  src={urlFor(product.image[1])
+                    .width(600)
+                    .height(800)
+                    .quality(90)
+                    .format("jpg")
+                    .fit("fill")
+                    .bg("FFFFFF")
                     .url()}
                   alt={product.name}
                   fill

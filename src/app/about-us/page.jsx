@@ -15,68 +15,178 @@ const AboutUs = () => {
         {/* Introduction */}
         <div className="bg-primary-50 p-6 md:p-8 mb-8 border-l-4 border-primary">
           <p className="text-slate-700 text-lg leading-relaxed font-poppins">
-            <strong className="text-primary">Kavan</strong> is a contemporary fashion brand for women in
-            their soft but powerful era. We create timeless, sophisticated
-            pieces that honor both strength and softness, legacy and
-            individuality.
+            <strong className="text-primary">Kavan</strong> is a contemporary
+            fashion brand for women in their soft but powerful era. We create
+            timeless, sophisticated pieces that honor both strength and
+            softness, legacy and individuality.
           </p>
         </div>
 
         {/* Founder's Story Section */}
         <section className="border-b border-slate-200 pb-8 mb-8">
           <div className="flex items-start mb-6">
-            <span className="text-2xl font-light text-primary mr-4 font-playfair">01</span>
-            <h2 className="text-2xl font-light text-slate-900 font-playfair tracking-wide">Founder's Story</h2>
+            <span className="text-2xl font-light text-primary mr-4 font-playfair">
+              01
+            </span>
+            <h2 className="text-2xl font-light text-slate-900 font-playfair tracking-wide">
+              Founder's Story
+            </h2>
           </div>
 
           <div className="space-y-6 text-slate-700 leading-relaxed font-poppins ml-10">
-            <div className="bg-primary text-white p-6 mb-4">
-              <p className="text-lg leading-relaxed italic font-poppins">
-                "I never planned to be in fashion. I planned to be strong. But sometimes, the most powerful strength is found in embracing our softness."
-              </p>
+            <p>I didn't start Kavan because I had everything figured out.</p>
+
+            <p>I started it because I felt like I was disappearing.</p>
+
+            <div className="space-y-2 italic">
+              <p>Into responsibilities.</p>
+              <p>Into motherhood.</p>
+              <p>Into being everything for everyone else.</p>
             </div>
 
             <p>
-              For most of my life, I was the first daughter who carried the weight of responsibility with ease—always strong, always moving, always making money. Caring for everyone else came naturally; caring for myself rarely crossed my mind.
+              From the outside, everything looked fine. But within myself, I
+              felt distant… like I had slowly lost connection with who I was.
             </p>
 
-            <p>
-              Everything shifted after I gave birth to my son in March 2024. Six months later, hormonal changes meant the clothes I owned no longer felt like me. They didn't celebrate my femininity or the softer woman I was becoming.
-            </p>
+            <p>And I realized something:</p>
 
-            <p>
-              I began creating pieces that made me feel elegant, radiant, and effortlessly feminine—clothing that let me care for myself without trying too hard. What started as a personal journey to honor my own softness became a dream worth sharing.
-            </p>
-
-            <div className="border-l-2 border-primary pl-4 mt-4">
-              <p className="text-slate-700 font-poppins">
-                That dream grew into <strong className="text-primary">Kavan</strong>: a brand for women who, like me, have spent years being strong for everyone else and are ready to celebrate themselves—soft, powerful, and beautifully feminine.
+            <div className="border-l-2 border-primary pl-4">
+              <p>
+                So many women are living this way. Showing up. Giving. Holding
+                everything together. But quietly feeling unseen even by
+                themselves.
               </p>
+            </div>
+
+            <p>Kavan began as a way back.</p>
+
+            <p>
+              Not just for me but for any woman who has ever felt that quiet
+              disconnection.
+            </p>
+
+            <p>
+              Every piece I create is rooted in that journey. The desire to feel
+              again. To be present again. To exist fully without needing to
+              become someone else.
+            </p>
+
+            <div className="bg-primary text-white p-6 italic">
+              <p>
+                If you've ever felt like you were disappearing… this brand was
+                made with you in mind.
+              </p>
+              <p className="mt-3">This is your return.</p>
             </div>
           </div>
         </section>
 
         {/* Main Content */}
         <div className="space-y-8">
-          {/* Section 2: Our Philosophy */}
+          {/* Section 2: Brand Story */}
+          <section className="border-b border-slate-200 pb-8 mb-8">
+            <div className="flex items-start mb-6">
+              <span className="text-2xl font-light text-primary mr-4 font-playfair">
+                02
+              </span>
+              <h2 className="text-2xl font-light text-slate-900 font-playfair tracking-wide">
+                Brand Story
+              </h2>
+            </div>
+
+            <div className="space-y-4 text-slate-700 leading-relaxed font-poppins ml-10">
+              <p>
+                Kavan is for the woman who has spent so much time being
+                everything for everyone else… that she slowly began to disappear
+                from herself.
+              </p>
+
+              <div className="space-y-2 italic">
+                <p>Not all at once.</p>
+                <p>Not in a way anyone could easily see.</p>
+                <p>But in the quiet ways,</p>
+                <p>in how she shows up,</p>
+                <p>in how she chooses,</p>
+                <p>in how she forgets what she needs.</p>
+              </div>
+
+              <p>Kavan exists as a return.</p>
+
+              <p>
+                Each piece is designed to bring her back to herself gently,
+                intentionally, without pressure.
+              </p>
+
+              <p>
+                Through soft structure, breathable fabrics, and thoughtful
+                detail, these are clothes that do not demand… but allow.
+              </p>
+
+              <div className="border-l-2 border-primary pl-4 space-y-2">
+                <p>Allow her to feel.</p>
+                <p>Allow her to breathe.</p>
+                <p>Allow her to take up space softly.</p>
+              </div>
+
+              <div className="bg-primary-50 p-6 italic border-l-4 border-primary">
+                <p>This is not just clothing.</p>
+                <p className="mt-2">This is presence.</p>
+                <p className="mt-2">Quiet. Intentional. Unforgettable.</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Section 3: Our Philosophy */}
           <section className="border-b border-slate-200 pb-8">
             <div className="flex items-start mb-6">
-              <span className="text-2xl font-light text-primary mr-4 font-playfair">02</span>
+              <span className="text-2xl font-light text-primary mr-4 font-playfair">
+                03
+              </span>
               <h2 className="text-2xl font-light text-slate-900 font-playfair tracking-wide">
                 Our Philosophy
               </h2>
             </div>
 
             <div className="space-y-4 text-slate-700 leading-relaxed font-poppins ml-10">
+              <p>At Kavan, we believe clothing should not overwhelm you.</p>
+
+              <p>It should meet you where you are.</p>
+
               <p>
-                Our designs balance structure and fluidity, echoing the
-                dualities women navigate daily: resilience and rest, elegance
-                and ease, tradition and modernity.
+                In a world that constantly asks women to do more, be more, and
+                give more, we create pieces that ask nothing from you… except
+                that you return to yourself.
               </p>
-              <div className="border-l-2 border-primary pl-4 mt-4">
-                <p className="text-slate-700 font-poppins">
-                  Each piece is intentionally crafted to whisper: You are seen.
-                  You are powerful. You are allowed to be soft.
+
+              <p>
+                Our garments are made slowly and intentionally, using breathable
+                fabrics like linen that move with your body, not against it.
+              </p>
+
+              <div className="border-l-2 border-primary pl-4">
+                <p>
+                  Because what you wear should not feel like pressure. It should
+                  feel like ease. Like space. Like coming home to yourself.
+                </p>
+              </div>
+
+              <p className="font-semibold text-slate-800 mt-6">
+                Every piece carries a feeling:
+              </p>
+
+              <div className="space-y-2 italic bg-primary-50 p-4 rounded">
+                <p>Presence.</p>
+                <p>Soft strength.</p>
+                <p>Freedom.</p>
+                <p>Expression.</p>
+                <p>Ease.</p>
+              </div>
+
+              <div className="bg-primary text-white p-6 italic mt-6">
+                <p>You are allowed to choose yourself again and again.</p>
+                <p className="mt-3">
+                  And what you wear can be part of that choice.
                 </p>
               </div>
             </div>
@@ -85,7 +195,9 @@ const AboutUs = () => {
           {/* Section 3: Mission & Vision */}
           <section className="border-b border-slate-200 pb-8">
             <div className="flex items-start mb-6">
-              <span className="text-2xl font-light text-primary mr-4 font-playfair">03</span>
+              <span className="text-2xl font-light text-primary mr-4 font-playfair">
+                04
+              </span>
               <h2 className="text-2xl font-light text-slate-900 font-playfair tracking-wide">
                 Mission & Vision
               </h2>
@@ -119,15 +231,21 @@ const AboutUs = () => {
           {/* Section 4: Our Values */}
           <section className="border-b border-slate-200 pb-8">
             <div className="flex items-start mb-6">
-              <span className="text-2xl font-light text-primary mr-4 font-playfair">04</span>
-              <h2 className="text-2xl font-light text-slate-900 font-playfair tracking-wide">Our Values</h2>
+              <span className="text-2xl font-light text-primary mr-4 font-playfair">
+                05
+              </span>
+              <h2 className="text-2xl font-light text-slate-900 font-playfair tracking-wide">
+                Our Values
+              </h2>
             </div>
 
             <div className="space-y-4 ml-10">
               <div className="flex items-start group hover:bg-primary-50 p-3 rounded-lg transition-colors">
                 <div className="w-2 h-2 bg-primary rounded-full mt-2 mr-4 flex-shrink-0"></div>
                 <div>
-                  <h3 className="font-semibold text-slate-900 mb-1 font-playfair group-hover:text-primary">Legacy</h3>
+                  <h3 className="font-semibold text-slate-900 mb-1 font-playfair group-hover:text-primary">
+                    Legacy
+                  </h3>
                   <p className="text-slate-700 font-poppins">
                     Honoring women's stories, the journeys they walk, and the
                     weight they carry
@@ -138,7 +256,9 @@ const AboutUs = () => {
               <div className="flex items-start group hover:bg-primary-50 p-3 rounded-lg transition-colors">
                 <div className="w-2 h-2 bg-primary rounded-full mt-2 mr-4 flex-shrink-0"></div>
                 <div>
-                  <h3 className="font-semibold text-slate-900 mb-1 font-playfair group-hover:text-primary">Elegance</h3>
+                  <h3 className="font-semibold text-slate-900 mb-1 font-playfair group-hover:text-primary">
+                    Elegance
+                  </h3>
                   <p className="text-slate-700 font-poppins">
                     Designing pieces that are timeless, sophisticated, and
                     versatile
@@ -175,7 +295,9 @@ const AboutUs = () => {
           {/* Section 5: The Kavan Woman */}
           <section className="pb-8">
             <div className="flex items-start mb-6">
-              <span className="text-2xl font-light text-primary mr-4 font-playfair">05</span>
+              <span className="text-2xl font-light text-primary mr-4 font-playfair">
+                05
+              </span>
               <h2 className="text-2xl font-light text-slate-900 font-playfair tracking-wide">
                 The Kavan Woman
               </h2>
@@ -196,15 +318,17 @@ const AboutUs = () => {
               <p>
                 Whether she is the first-born daughter carrying legacy, or any
                 woman navigating her own era of strength and softness — she
-                wears <strong className="text-primary">Kavan</strong> not just as fashion, but as a declaration of her
-                presence in the world.
+                wears <strong className="text-primary">Kavan</strong> not just
+                as fashion, but as a declaration of her presence in the world.
               </p>
             </div>
           </section>
 
           {/* Join Our Community */}
           <div className="bg-primary text-white p-8 text-center mt-12 rounded-lg">
-            <h3 className="text-xl font-light mb-3 font-playfair tracking-wide">Join the Kavan Community</h3>
+            <h3 className="text-xl font-light mb-3 font-playfair tracking-wide">
+              Join the Kavan Community
+            </h3>
             <p className="mb-6 opacity-90 font-poppins">
               Become part of a movement that celebrates the beautiful duality of
               womanhood

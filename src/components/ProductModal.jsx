@@ -186,6 +186,7 @@ const ProductModal = ({ product, onClose }) => {
               >
                 {mainImage && (
                   <Image
+                    key={currentImageIndex}
                     ref={modalImageRef}
                     src={mainImage}
                     alt={product.name}
@@ -193,12 +194,6 @@ const ProductModal = ({ product, onClose }) => {
                     className="object-cover"
                     priority
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    onLoad={() => {
-                      if (modalImageRef.current) {
-                        modalImageRef.current.style.opacity = "1";
-                      }
-                    }}
-                    style={{ transition: "opacity 0.2s ease-in-out" }}
                   />
                 )}
 
