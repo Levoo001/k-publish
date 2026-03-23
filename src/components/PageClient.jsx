@@ -292,8 +292,11 @@ export default function Home({ products }) {
   const coordProduct = products.find(
     (product) => product.name === "The Amara Set",
   );
-  const dressessProduct = products.find(
-    (product) => product.name === "The Chisom Dress",
+  const dressessProduct = products.find((product) =>
+    product.name?.toLowerCase().includes("dress"),
+  );
+  const blouseProduct = products.find((product) =>
+    product.name?.toLowerCase().includes("blouse"),
   );
 
   // Video loading
@@ -476,7 +479,7 @@ export default function Home({ products }) {
       />
 
       {/* SECONDARY VIDEO SECTION */}
-      <section className="relative w-full h-[42vh] lg:h-[70vh] overflow-hidden bg-primary-900 my-10">
+      <section className="relative w-full aspect-[4/5] lg:h-[70vh] lg:aspect-auto overflow-hidden bg-black my-10">
         <video
           autoPlay
           muted
@@ -553,7 +556,7 @@ export default function Home({ products }) {
 
       <section className="py-16 bg-gradient-to-br from-primary-50 to-white overflow-hidden">
         <div className="container mx-auto px-4 max-w-7xl">
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Left Column - Bestsellers (Single Card) */}
             <div className="space-y-4">
               {bestsellerProduct && (
@@ -600,7 +603,7 @@ export default function Home({ products }) {
 
             {/* Bottom Left Column - Dressess (Single Card) - Positioned Lower */}
             <div className="space-y-4">
-              {coordProduct && (
+              {dressessProduct && (
                 <div className="relative group">
                   <StaticProductCard product={dressessProduct} />
                   <Link
@@ -610,6 +613,28 @@ export default function Home({ products }) {
                     <div className="space-y-1">
                       <div className="text-left text-white text-sm font-semibold font-poppins">
                         Dressess
+                      </div>
+                      <button className="text-white font-semibold text-xs w-fit border-b border-white hover:border-primary-200 transition-colors font-poppins">
+                        Shop Now
+                      </button>
+                    </div>
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Blouse Column */}
+            <div className="space-y-4 mt-8 lg:mt-0">
+              {blouseProduct && (
+                <div className="relative group">
+                  <StaticProductCard product={blouseProduct} />
+                  <Link
+                    href="/collections/blouse"
+                    className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
+                  >
+                    <div className="space-y-1">
+                      <div className="text-left text-white text-sm font-semibold font-poppins">
+                        Blouse
                       </div>
                       <button className="text-white font-semibold text-xs w-fit border-b border-white hover:border-primary-200 transition-colors font-poppins">
                         Shop Now
