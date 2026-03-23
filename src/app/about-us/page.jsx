@@ -8,18 +8,38 @@ const AboutUs = () => {
             About <span className="text-primary">Kavan</span>
           </h1>
           <p className="text-slate-600 text-lg font-poppins">
-            Where strength meets softness in contemporary fashion
+            For the woman whose presence lingers.
+            <br />
+            Made for her return to herself.
           </p>
         </div>
 
         {/* Introduction */}
         <div className="bg-primary-50 p-6 md:p-8 mb-8 border-l-4 border-primary">
-          <p className="text-slate-700 text-lg leading-relaxed font-poppins">
-            <strong className="text-primary">Kavan</strong> is a contemporary
-            fashion brand for women in their soft but powerful era. We create
-            timeless, sophisticated pieces that honor both strength and
-            softness, legacy and individuality.
-          </p>
+          <div className="space-y-4 text-slate-700 leading-relaxed font-poppins">
+            <p>
+              <strong className="text-primary">Kavan</strong> is a contemporary
+              fashion brand for women in a season of becoming.
+            </p>
+            <p>
+              For the woman who has spent years showing up for everyone else and
+              is now learning to choose herself again.
+            </p>
+            <p>
+              We design timeless, sophisticated pieces that honor both strength
+              and softness, individuality and legacy.
+            </p>
+            <p>
+              Every garment is made intentionally, using breathable fabrics that
+              move with the body, not against it so that getting dressed feels
+              less like performance, and more like presence.
+            </p>
+            <p>
+              Because when a woman stops disappearing, she doesn't need to be
+              louder.
+            </p>
+            <p className="italic">She is simply… unforgettable.</p>
+          </div>
         </div>
 
         {/* Founder's Story Section */}
