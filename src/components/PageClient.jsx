@@ -489,7 +489,10 @@ export default function Home({ products }) {
             e.currentTarget.style.display = "none";
           }}
         >
-          <source src="/vid2.mp4" type="video/mp4" />
+          <source
+            src="https://ck7vajewsn9hvwtw.public.blob.vercel-storage.com/vid2.mp4"
+            type="video/mp4"
+          />
         </video>
         <Image
           src="/fallback2.jpg"
