@@ -63,10 +63,10 @@ const Page = () => {
     setErrors({});
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
+      const response = await fetch("/api/contact", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
@@ -76,42 +76,45 @@ const Page = () => {
       if (response.ok) {
         setIsSubmitting(false);
         setIsSubmitted(true);
-        setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "",
+          message: "",
+        });
       } else {
-        throw new Error(result.error || 'Failed to send message');
+        throw new Error(result.error || "Failed to send message");
       }
-
     } catch (error) {
       setIsSubmitting(false);
-      console.error('Submission error:', error);
+      console.error("Submission error:", error);
       setErrors({
-        submit: error.message || 'Unable to send message. Please try again later.'
+        submit:
+          error.message || "Unable to send message. Please try again later.",
       });
     }
   };
 
   const contactMethods = [
     {
-      icon: "💬",
       title: "WhatsApp / Call",
       value: "+234 703 621 0107",
       link: "https://wa.me/2347036210107",
-      description: "Quick responses"
+      description: "Quick responses",
     },
     {
-      icon: "📧",
       title: "Email",
       value: "admin@kavanthebrand.com",
       link: "mailto:admin@kavanthebrand.com",
-      description: "Detailed enquiries"
+      description: "Detailed enquiries",
     },
     {
-      icon: "📱",
       title: "Instagram",
       value: "@kavanthebrand_",
       link: "https://instagram.com/kavanthebrand_",
-      description: "Latest updates"
-    }
+      description: "Latest updates",
+    },
   ];
 
   return (
@@ -120,16 +123,14 @@ const Page = () => {
         {/* Header */}
 
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-50 rounded-full shadow-lg mb-4 border border-primary-100">
-            <span className="text-3xl text-primary">💌</span>
-          </div>
           <h1 className="text-4xl md:text-5xl font-bold text-primary-900 mb-4 font-playfair">
             Get In <span className="text-primary">Touch</span>
           </h1>
           <p className="text-lg text-primary-600 max-w-2xl mx-auto leading-relaxed font-poppins">
-            We're here to help you embrace your strength and softness. Reach out with any questions about our collections, sizing, or custom orders.
+            We're here to help you embrace your strength and softness. Reach out
+            with any questions about our collections, sizing, or custom orders.
           </p>
-          <div className="flex flex-wrap justify-center gap-4 mt-6">
+          <div className="flex flex-wrap justify-start gap-4 mt-6">
             <div className="flex items-center text-sm text-primary-600 font-poppins">
               <span className="w-2 h-2 bg-primary rounded-full mr-2"></span>
               Response within 24 hours
@@ -148,17 +149,14 @@ const Page = () => {
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Contact Form */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-sm border border-primary-100 p-6">
-              <div className="flex items-center mb-6">
-                <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mr-4">
-                  <span className="text-xl text-primary">✍️</span>
-                </div>
-                <div>
-                  <h2 className="text-2xl font-bold text-primary-900 font-playfair">
-                    Send Us a Message
-                  </h2>
-                  <p className="text-primary-600 font-poppins">All fields marked * are required</p>
-                </div>
+            <div className="bg-white rounded-xl shadow-sm border border-primary-100 p-4">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-primary-900 font-playfair">
+                  Send Us a Message
+                </h2>
+                <p className="text-primary-600 font-poppins">
+                  All fields marked * are required
+                </p>
               </div>
 
               {isSubmitted ? (
@@ -170,7 +168,8 @@ const Page = () => {
                     Message Sent Successfully!
                   </h3>
                   <p className="text-primary-600 mb-6 max-w-md mx-auto leading-relaxed font-poppins">
-                    Thank you for reaching out! We've received your message and will get back to you within 24 hours.
+                    Thank you for reaching out! We've received your message and
+                    will get back to you within 24 hours.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3 justify-center">
                     <button
@@ -210,14 +209,17 @@ const Page = () => {
                         value={formData.name}
                         onChange={handleInputChange}
                         required
-                        className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-1 transition-all font-poppins ${errors.name
+                        className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-1 transition-all font-poppins ${
+                          errors.name
                             ? "border-red-300 focus:ring-red-200"
                             : "border-primary-200 focus:border-primary focus:ring-primary-100"
-                          }`}
+                        }`}
                         placeholder="Enter your full name"
                       />
                       {errors.name && (
-                        <p className="mt-2 text-sm text-red-600 font-poppins">{errors.name}</p>
+                        <p className="mt-2 text-sm text-red-600 font-poppins">
+                          {errors.name}
+                        </p>
                       )}
                     </div>
 
@@ -235,14 +237,17 @@ const Page = () => {
                         value={formData.email}
                         onChange={handleInputChange}
                         required
-                        className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-1 transition-all font-poppins ${errors.email
+                        className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-1 transition-all font-poppins ${
+                          errors.email
                             ? "border-red-300 focus:ring-red-200"
                             : "border-primary-200 focus:border-primary focus:ring-primary-100"
-                          }`}
+                        }`}
                         placeholder="your@email.com"
                       />
                       {errors.email && (
-                        <p className="mt-2 text-sm text-red-600 font-poppins">{errors.email}</p>
+                        <p className="mt-2 text-sm text-red-600 font-poppins">
+                          {errors.email}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -305,24 +310,28 @@ const Page = () => {
                       onChange={handleInputChange}
                       required
                       rows={5}
-                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-1 transition-all resize-vertical font-poppins ${errors.message
+                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-1 transition-all resize-vertical font-poppins ${
+                        errors.message
                           ? "border-red-300 focus:ring-red-200"
                           : "border-primary-200 focus:border-primary focus:ring-primary-100"
-                        }`}
+                      }`}
                       placeholder="Tell us about your inquiry, custom order request, or how we can help you embrace your Kavan style..."
                     />
                     {errors.message && (
-                      <p className="mt-2 text-sm text-red-600 font-poppins">{errors.message}</p>
+                      <p className="mt-2 text-sm text-red-600 font-poppins">
+                        {errors.message}
+                      </p>
                     )}
                   </div>
 
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`w-full py-3 px-6 rounded-lg font-semibold text-base transition-all duration-300 font-poppins ${isSubmitting
+                    className={`w-full py-3 px-6 rounded-lg font-semibold text-base transition-all duration-300 font-poppins ${
+                      isSubmitting
                         ? "bg-primary-300 cursor-not-allowed"
                         : "bg-primary text-white hover:bg-primary-700"
-                      }`}
+                    }`}
                   >
                     {isSubmitting ? (
                       <span className="flex items-center justify-center">
@@ -350,7 +359,6 @@ const Page = () => {
                       </span>
                     ) : (
                       <span className="flex items-center justify-center">
-                        <span className="mr-2">📧</span>
                         Send Message
                       </span>
                     )}
@@ -363,9 +371,8 @@ const Page = () => {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Contact Methods */}
-            <div className="bg-white rounded-xl shadow-sm border border-primary-100 p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-primary-100 p-4">
               <h3 className="text-lg font-bold text-primary-900 mb-4 flex items-center font-playfair">
-                <span className="w-2 h-2 bg-primary rounded-full mr-2"></span>
                 Connect With Us
               </h3>
 
@@ -374,16 +381,21 @@ const Page = () => {
                   <div
                     key={index}
                     className="p-3 bg-primary-50 rounded-lg border border-primary-100 hover:bg-primary-100 transition-all duration-300 cursor-pointer"
-                    onClick={() => method.link && window.open(method.link, '_blank')}
+                    onClick={() =>
+                      method.link && window.open(method.link, "_blank")
+                    }
                   >
                     <div className="flex items-start">
-                      <div className="w-10 h-10 rounded-lg flex items-center justify-center mr-3 flex-shrink-0 bg-primary-100">
-                        <span className="text-lg text-primary">{method.icon}</span>
-                      </div>
                       <div className="flex-1">
-                        <h4 className="font-semibold mb-1 font-playfair text-primary-900 text-sm">{method.title}</h4>
-                        <p className="text-primary-700 text-sm mb-1 font-poppins">{method.value}</p>
-                        <p className="text-primary-600 text-xs font-poppins">{method.description}</p>
+                        <h4 className="font-semibold mb-1 font-playfair text-primary-900 text-sm">
+                          {method.title}
+                        </h4>
+                        <p className="text-primary-700 text-sm mb-1 font-poppins">
+                          {method.value}
+                        </p>
+                        <p className="text-primary-600 text-xs font-poppins">
+                          {method.description}
+                        </p>
                       </div>
                       {method.link && (
                         <span className="text-primary text-sm transform group-hover:translate-x-0.5 transition-transform">
@@ -397,23 +409,40 @@ const Page = () => {
             </div>
 
             {/* Business Hours */}
-            <div className="bg-primary rounded-xl p-6">
+            <div className="bg-primary rounded-xl p-4">
               <h3 className="text-lg font-bold mb-4 flex items-center font-playfair text-white">
-                <span className="w-2 h-2 bg-white rounded-full mr-2"></span>
                 Business Hours
               </h3>
               <div className="space-y-2">
                 {[
-                  { days: "Monday - Friday", hours: "9:00 AM – 6:00 PM", status: "open" },
-                  { days: "Saturday", hours: "10:00 AM – 4:00 PM", status: "open" },
+                  {
+                    days: "Monday - Friday",
+                    hours: "9:00 AM – 6:00 PM",
+                    status: "open",
+                  },
+                  {
+                    days: "Saturday",
+                    hours: "10:00 AM – 4:00 PM",
+                    status: "open",
+                  },
                   { days: "Sunday", hours: "Closed", status: "closed" },
                 ].map((schedule, index) => (
-                  <div key={index} className="flex justify-between items-center py-1">
-                    <span className={`text-sm ${schedule.status === 'closed' ? 'text-primary-300' : 'text-primary-100'} font-poppins`}>
+                  <div
+                    key={index}
+                    className="flex justify-between items-center py-1"
+                  >
+                    <span
+                      className={`text-sm ${schedule.status === "closed" ? "text-primary-300" : "text-primary-100"} font-poppins`}
+                    >
                       {schedule.days}
                     </span>
-                    <span className={`font-medium text-sm ${schedule.status === 'closed' ? 'text-primary-400' : 'text-white'
-                      } font-poppins`}>
+                    <span
+                      className={`font-medium text-sm ${
+                        schedule.status === "closed"
+                          ? "text-primary-400"
+                          : "text-white"
+                      } font-poppins`}
+                    >
                       {schedule.hours}
                     </span>
                   </div>
@@ -421,7 +450,9 @@ const Page = () => {
               </div>
               <div className="mt-4 pt-3 border-t border-primary-600">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-primary-300 font-poppins">Current Status</span>
+                  <span className="text-primary-300 font-poppins">
+                    Current Status
+                  </span>
                   <span className="flex items-center text-primary-200 font-poppins">
                     <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
                     Online • WAT
