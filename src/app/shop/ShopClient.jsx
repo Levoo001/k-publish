@@ -18,7 +18,6 @@ export default function ShopClient({ products }) {
 
   // Collection filtering
   const rebirthProductNames = [
-    "the amarachi set",
     "the chisom dress",
     "the amara set",
     "the zahra dress",

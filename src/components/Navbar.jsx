@@ -25,8 +25,8 @@ const Navbar = () => {
     (state) =>
       state.cart?.cartItems?.reduce(
         (total, cartItem) => total + cartItem.quantity,
-        0
-      ) || 0
+        0,
+      ) || 0,
   );
 
   const toggleMobileMenu = () => {
@@ -42,19 +42,34 @@ const Navbar = () => {
         <div className="hidden md:flex items-center justify-between px-6 py-1">
           {/* Left Links */}
           <div className="flex items-center space-x-8">
-            <Link href="/shop" className="text-sm font-medium text-primary-700 hover:text-primary transition-colors font-poppins">
+            <Link
+              href="/"
+              className="text-sm font-medium text-primary-700 hover:text-primary transition-colors font-poppins"
+            >
+              HOME
+            </Link>
+            <Link
+              href="/shop"
+              className="text-sm font-medium text-primary-700 hover:text-primary transition-colors font-poppins"
+            >
               SHOP
             </Link>
-            <Link href="/about-us" className="text-sm font-medium text-primary-700 hover:text-primary transition-colors font-poppins">
+            <Link
+              href="/about-us"
+              className="text-sm font-medium text-primary-700 hover:text-primary transition-colors font-poppins"
+            >
               ABOUT US
             </Link>
-            <Link href="/SizeGuide" className="text-sm font-medium text-primary-700 hover:text-primary transition-colors font-poppins">
+            <Link
+              href="/SizeGuide"
+              className="text-sm font-medium text-primary-700 hover:text-primary transition-colors font-poppins"
+            >
               SIZE GUIDE
             </Link>
           </div>
 
           {/* Center Logo */}
-          <Link href="/">
+          <Link href="/" className="-ml-48">
             <img src="logo.jpeg" alt="kavanthebrand" className="h-18" />
           </Link>
 
@@ -139,13 +154,23 @@ const Navbar = () => {
               {/* Header */}
               <div className="flex justify-end">
                 <span onClick={toggleMobileMenu}>
-                  <IoCloseOutline size={30} className="text-primary-500 hover:text-primary transition-colors" />
+                  <IoCloseOutline
+                    size={30}
+                    className="text-primary-500 hover:text-primary transition-colors"
+                  />
                 </span>
               </div>
 
               {/* Menu Items */}
               <div className="flex-1 mt-3">
                 <nav className="py-2 space-y-3 text-sm text-primary-900">
+                  <Link
+                    href="/"
+                    className="block w-full text-left py-3 hover:bg-primary-50 transition-colors border-b border-primary-100 font-poppins"
+                    onClick={toggleMobileMenu}
+                  >
+                    HOME
+                  </Link>
                   <Link
                     href="/shop"
                     className="block w-full text-left py-3 hover:bg-primary-50 transition-colors border-b border-primary-100 font-poppins"

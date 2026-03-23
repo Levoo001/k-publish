@@ -6,9 +6,6 @@ const SizeGuide = () => {
       <div className="container-custom max-w-6xl mx-auto px-4">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-50 rounded-full shadow-lg mb-4 border border-primary-100">
-            <span className="text-3xl text-primary">📏</span>
-          </div>
           <h1 className="text-4xl md:text-5xl font-bold text-primary-900 mb-4 font-playfair">
             Size <span className="text-primary">Guide</span>
           </h1>
@@ -32,16 +29,11 @@ const SizeGuide = () => {
 
         {/* Size Guide Section */}
         <section className="bg-white rounded-xl shadow-lg mb-12">
-          <div className="flex items-center mb-6">
-            <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
-              <span className="text-xl text-primary">👗</span>
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-primary-900 mb-2 font-playfair">
-                Clothing Size Guide
-              </h2>
-              <div className="w-12 h-1 bg-primary rounded-full"></div>
-            </div>
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-primary-900 mb-2 font-playfair">
+              Clothing Size Guide
+            </h2>
+            <div className="w-12 h-1 bg-primary rounded-full"></div>
           </div>
 
           <div className="overflow-x-auto border border-primary-300">
@@ -108,16 +100,11 @@ const SizeGuide = () => {
 
         {/* Length Guide Section */}
         <section className="bg-white rounded-xl shadow-sm mb-8">
-          <div className="flex items-center mb-6">
-            <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
-              <span className="text-xl text-primary">📐</span>
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-primary-900 mb-2 font-playfair">
-                Length Guide
-              </h2>
-              <div className="w-12 h-1 bg-primary rounded-full"></div>
-            </div>
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-primary-900 mb-2 font-playfair">
+              Length Guide
+            </h2>
+            <div className="w-12 h-1 bg-primary rounded-full"></div>
           </div>
 
           <div className="overflow-x-auto">
@@ -226,7 +213,6 @@ const SizeGuide = () => {
         {/* How to Measure Section */}
         <section className="bg-primary-50 rounded-xl border border-primary-200 p-6 mb-8">
           <div className="text-center mb-6">
-            <div className="text-4xl mb-3">🎯</div>
             <h2 className="text-2xl font-bold mb-3 font-playfair text-primary-900">
               How to Measure
             </h2>
@@ -235,7 +221,6 @@ const SizeGuide = () => {
 
           <div className="grid md:grid-cols-3 gap-4">
             <div className="bg-white p-4 rounded-lg border border-primary-100 hover:shadow-md transition-all duration-300">
-              <div className="text-2xl mb-3 text-center text-primary">📏</div>
               <h3 className="font-semibold text-lg mb-2 text-center font-playfair text-primary-900">
                 Bust
               </h3>
@@ -246,7 +231,6 @@ const SizeGuide = () => {
             </div>
 
             <div className="bg-white p-4 rounded-lg border border-primary-100 hover:shadow-md transition-all duration-300">
-              <div className="text-2xl mb-3 text-center text-primary">⏳</div>
               <h3 className="font-semibold text-lg mb-2 text-center font-playfair text-primary-900">
                 Waist
               </h3>
@@ -257,7 +241,6 @@ const SizeGuide = () => {
             </div>
 
             <div className="bg-white p-4 rounded-lg border border-primary-100 hover:shadow-md transition-all duration-300">
-              <div className="text-2xl mb-3 text-center text-primary">🍐</div>
               <h3 className="font-semibold text-lg mb-2 text-center font-playfair text-primary-900">
                 Hips
               </h3>
