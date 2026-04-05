@@ -4,10 +4,10 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { IoVolumeHighSharp, IoVolumeMute } from "react-icons/io5";
 import { urlFor } from "@/sanity/lib/image";
 import useEmblaCarousel from "embla-carousel-react";
-import ProductModal from "./ProductModal";
 import Link from "next/link";
 import { subscribeToNewsletter } from "../services/newsletterService";
 import { HiOutlineArrowLongRight } from "react-icons/hi2";
@@ -274,8 +274,7 @@ const StaticProductCard = ({ product }) => {
 };
 
 export default function Home({ products }) {
-  const [selectedProduct, setSelectedProduct] = useState(null);
-
+  const router = useRouter();
   const [isMuted, setIsMuted] = useState(true);
   const [videoError, setVideoError] = useState(false);
   const videoRef = useRef(null);
@@ -391,23 +390,7 @@ export default function Home({ products }) {
   };
 
   const handleProductClick = (product) => {
-    const modalProduct = {
-      ...product,
-      // Strip the first image — modal shows from image[1] onward
-      processedImages: product.image
-        .slice(1)
-        .map((img) =>
-          urlFor(img)
-            .width(1200)
-            .height(1600)
-            .quality(95)
-            .format("jpg")
-            .fit("fill")
-            .bg("FFFFFF")
-            .url(),
-        ),
-    };
-    setSelectedProduct(modalProduct);
+    router.push(`/products/${encodeURIComponent(product.name)}`);
   };
 
   const handleCloseModal = () => {
@@ -832,12 +815,6 @@ export default function Home({ products }) {
       </section>
 
       <QuoteCarousel />
-
-      <ProductModal
-        key={selectedProduct?._id}
-        product={selectedProduct}
-        onClose={handleCloseModal}
-      />
 
       <NewsletterPopup />
 

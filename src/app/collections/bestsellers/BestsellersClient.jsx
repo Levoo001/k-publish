@@ -2,13 +2,12 @@
 
 "use client";
 
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { urlFor } from "@/sanity/lib/image";
-import ProductModal from "@/components/ProductModal";
 import Image from "next/image";
 
 export default function BestsellersClient({ products }) {
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const router = useRouter();
 
   const bestsellers =
     products?.filter(
@@ -23,26 +22,7 @@ export default function BestsellersClient({ products }) {
     ) || [];
 
   const handleProductClick = (product) => {
-    const modalProduct = {
-      ...product,
-      processedImages: product.image
-        .slice(1)
-        .map((img) =>
-          urlFor(img)
-            .width(1200)
-            .height(1600)
-            .quality(95)
-            .format("jpg")
-            .fit("fill")
-            .bg("FFFFFF")
-            .url(),
-        ),
-    };
-    setSelectedProduct(modalProduct);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedProduct(null);
+    router.push(`/products/${encodeURIComponent(product.name)}`);
   };
 
   return (
@@ -101,8 +81,6 @@ export default function BestsellersClient({ products }) {
           })}
         </div>
       </div>
-
-      <ProductModal product={selectedProduct} onClose={handleCloseModal} />
     </main>
   );
 }

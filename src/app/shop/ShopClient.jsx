@@ -4,12 +4,12 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { urlFor } from "@/sanity/lib/image";
-import ProductModal from "@/components/ProductModal";
 import { subscribeToNewsletter } from "@/services/newsletterService";
 
 export default function ShopClient({ products }) {
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const router = useRouter();
 
   // Newsletter state
   const [email, setEmail] = useState("");
@@ -18,6 +18,7 @@ export default function ShopClient({ products }) {
 
   // Collection filtering
   const rebirthProductNames = [
+    "the amarachi set",
     "the chisom dress",
     "the amara set",
     "the zahra dress",
@@ -31,26 +32,7 @@ export default function ShopClient({ products }) {
   );
 
   const handleProductClick = (product) => {
-    const modalProduct = {
-      ...product,
-      processedImages: product.image
-        .slice(1)
-        .map((img) =>
-          urlFor(img)
-            .width(1200)
-            .height(1600)
-            .quality(95)
-            .format("jpg")
-            .fit("fill")
-            .bg("FFFFFF")
-            .url(),
-        ),
-    };
-    setSelectedProduct(modalProduct);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedProduct(null);
+    router.push(`/products/${encodeURIComponent(product.name)}`);
   };
 
   // Newsletter subscription handler with timeout management
@@ -434,9 +416,6 @@ export default function ShopClient({ products }) {
         <div className="absolute top-0 left-0 w-32 h-32 bg-white/5 rounded-full -translate-x-16 -translate-y-16"></div>
         <div className="absolute bottom-0 right-0 w-48 h-48 bg-white/5 rounded-full translate-x-24 translate-y-24"></div>
       </section>
-
-      {/* Product Modal */}
-      <ProductModal product={selectedProduct} onClose={handleCloseModal} />
     </main>
   );
 }
