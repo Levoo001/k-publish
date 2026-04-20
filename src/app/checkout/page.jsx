@@ -14,6 +14,7 @@ import {
 } from "@/lib/shippingCalculator";
 import PayStackPayment from "@/components/PayStackPayment";
 import { clearCart } from "@/store/CartSlice";
+import { trackFacebookEvent } from "@/lib/facebookPixel";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -47,6 +48,7 @@ export default function CheckoutPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const countryDropdownRef = useRef(null);
   const stateDropdownRef = useRef(null);
+  const hasTrackedCheckoutRef = useRef(false);
 
   const subtotal = cartItems.reduce(
     (total, item) => total + (item?.price || 0) * (item?.quantity || 0),
@@ -90,6 +92,18 @@ export default function CheckoutPage() {
       setSelectedShipping(null);
     }
   }, [formData.country, formData.state, cartItems]);
+
+  useEffect(() => {
+    if (hasTrackedCheckoutRef.current || cartItems.length === 0) return;
+
+    hasTrackedCheckoutRef.current = true;
+    trackFacebookEvent("InitiateCheckout", {
+      currency: "NGN",
+      value: Number(subtotal) || 0,
+      num_items: cartItems.reduce((total, item) => total + item.quantity, 0),
+      content_ids: cartItems.map((item) => item.id || item._id || item.name),
+    });
+  }, [cartItems, subtotal]);
 
   const calculateShipping = async () => {
     setIsCalculating(true);
@@ -225,6 +239,15 @@ export default function CheckoutPage() {
   };
 
   const handlePaymentSuccess = (response, orderDetails) => {
+    trackFacebookEvent("Purchase", {
+      currency: "NGN",
+      value: Number(totalAmount) || 0,
+      content_type: "product",
+      content_ids: cartItems.map((item) => item.id || item._id || item.name),
+      num_items: cartItems.reduce((total, item) => total + item.quantity, 0),
+      order_id: orderDetails?.orderId || response?.reference,
+    });
+
     setOrderData(orderDetails);
     setShowSuccessModal(true);
     setIsProcessing(false);

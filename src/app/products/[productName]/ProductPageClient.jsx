@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { useCart } from "@/components/CartProvider";
 import { addToCart } from "@/store/CartSlice";
 import { urlFor } from "@/sanity/lib/image";
+import { trackFacebookEvent } from "@/lib/facebookPixel";
 
 export default function ProductPageClient({ product }) {
   const router = useRouter();
@@ -130,6 +131,18 @@ export default function ProductPageClient({ product }) {
         .url(),
     );
 
+  useEffect(() => {
+    if (!product) return;
+
+    trackFacebookEvent("ViewContent", {
+      content_name: product.name,
+      content_type: "product",
+      content_ids: [product._id || product.id || product.name],
+      currency: "NGN",
+      value: Number(product.price) || 0,
+    });
+  }, [product]);
+
   const handleAddToCart = () => {
     if (!selectedSize) {
       alert("Please select a size before adding to cart");
@@ -155,6 +168,13 @@ export default function ProductPageClient({ product }) {
     };
 
     dispatch(addToCart(cartProduct));
+    trackFacebookEvent("AddToCart", {
+      content_name: product.name,
+      content_type: "product",
+      content_ids: [product._id || product.id || product.name],
+      currency: "NGN",
+      value: Number(product.price) || 0,
+    });
     openCart();
     setSelectedColor(null);
     setSelectedSize(null);

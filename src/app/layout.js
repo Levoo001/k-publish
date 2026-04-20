@@ -9,6 +9,8 @@ import { client } from "@/sanity/lib/client";
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
 import { Playfair_Display, Poppins } from "next/font/google";
+import Script from "next/script";
+import { FACEBOOK_PIXEL_ID } from "@/lib/facebookPixel";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -64,8 +66,29 @@ export default async function RootLayout({ children }) {
     <html lang="en" className={`${playfair.variable} ${poppins.variable}`}>
       <head>
         <link rel="preconnect" href="https://cdn.sanity.io" />
+        <Script id="facebook-pixel" strategy="afterInteractive">
+          {`!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '${FACEBOOK_PIXEL_ID}');
+fbq('track', 'PageView');`}
+        </Script>
       </head>
       <body className="antialiased bg-gray-200">
+        <noscript>
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            src={`https://www.facebook.com/tr?id=${FACEBOOK_PIXEL_ID}&ev=PageView&noscript=1`}
+            alt=""
+          />
+        </noscript>
         <div className="mx-auto w-full max-w-[1440px] bg-white min-h-screen relative overflow-x-hidden shadow-2xl flex flex-col">
           <SearchProvider products={products}>
             <ClientLayout>
