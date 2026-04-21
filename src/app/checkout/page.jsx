@@ -52,14 +52,14 @@ export default function CheckoutPage() {
 
   const subtotal = cartItems.reduce(
     (total, item) => total + (item?.price || 0) * (item?.quantity || 0),
-    0
+    0,
   );
 
   const totalAmount = subtotal + (selectedShipping?.cost || 0);
 
   const nigerianStates = getNigerianStates();
   const filteredCountries = COUNTRIES.filter((country) =>
-    country.toLowerCase().includes(searchQuery.toLowerCase())
+    country.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   // Close dropdowns when clicking outside
@@ -112,7 +112,7 @@ export default function CheckoutPage() {
       const rates = calculateShippingRates(
         formData.country,
         formData.state,
-        cartItems
+        cartItems,
       );
       setShippingRates(rates);
 
@@ -217,7 +217,7 @@ export default function CheckoutPage() {
       setTimeout(() => {
         try {
           const paystackButton = document.querySelector(
-            "[data-paystack-button]"
+            "[data-paystack-button]",
           );
           if (paystackButton) {
             paystackButton.click();
@@ -226,7 +226,7 @@ export default function CheckoutPage() {
             setIsProcessing(false);
             setShowPaystack(false);
             alert(
-              "Payment system error. Please refresh the page and try again."
+              "Payment system error. Please refresh the page and try again.",
             );
           }
         } catch (error) {
@@ -475,7 +475,7 @@ export default function CheckoutPage() {
                             (state) =>
                               state
                                 .toLowerCase()
-                                .includes(searchQuery.toLowerCase())
+                                .includes(searchQuery.toLowerCase()),
                           );
 
                           return filteredStates.length > 0 ? (
