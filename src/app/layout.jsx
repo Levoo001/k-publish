@@ -1,16 +1,15 @@
-// src/app/layout.js
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import CartDrawer from "@/components/CartDrawer";
 import SearchDrawer from "@/components/SearchDrawer";
 import { SearchProvider } from "@/components/SearchContext";
-import { productQuery } from "@/sanity/lib/queries";
-import { client } from "@/sanity/lib/client";
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
 import { Playfair_Display, Poppins } from "next/font/google";
 import Script from "next/script";
 import { FACEBOOK_PIXEL_ID } from "@/lib/facebookPixel";
+import { client } from "@/sanity/lib/client";
+import { productQuery } from "@/sanity/lib/queries";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -26,24 +25,44 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  title: "Kavan The Brand - Luxury Fashion Brand",
+  metadataBase: new URL("https://www.kavanthebrand.com"),
+  title: {
+    default: "Kavan The Brand — Luxury Fashion",
+    template: "%s | Kavan The Brand",
+  },
   description:
-    "Discover exquisite luxury dresses and fashion. Handcrafted elegance with Ottoman-inspired designs.",
+    "Handcrafted luxury dresses and fashion pieces for the woman whose presence lingers. Discover new collections from Kavan The Brand.",
   keywords: [
     "Kavan The Brand",
-    "luxury fashion",
+    "luxury fashion Nigeria",
     "luxury dresses",
-    "Ottoman designs",
     "handcrafted clothing",
-    "boutique fashion",
+    "boutique fashion Lagos",
+    "womenswear Nigeria",
   ].join(", "),
   openGraph: {
-    title: "Kavan The Brand - Luxury Fashion Brand",
-    description: "Exquisite luxury dresses and fashion collections",
+    title: "Kavan The Brand — Luxury Fashion",
+    description:
+      "Handcrafted luxury dresses and fashion pieces. For the woman whose presence lingers.",
     url: "https://www.kavanthebrand.com",
     siteName: "Kavan The Brand",
-    locale: "en_US",
+    locale: "en_NG",
     type: "website",
+    images: [
+      {
+        url: "/logo.jpeg",
+        width: 800,
+        height: 600,
+        alt: "Kavan The Brand",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kavan The Brand — Luxury Fashion",
+    description:
+      "Handcrafted luxury dresses and fashion pieces. For the woman whose presence lingers.",
+    images: ["/logo.jpeg"],
   },
   icons: {
     icon: "/favicon.ico",
@@ -52,15 +71,15 @@ export const metadata = {
   alternates: {
     canonical: "https://www.kavanthebrand.com",
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
 };
 
 export default async function RootLayout({ children }) {
-  // Fetch products for search functionality
-  const products = await client.fetch(
-    productQuery,
-    {},
-    { next: { revalidate: 60 } },
-  );
+  const products = await client.fetch(productQuery, {}, { next: { revalidate: 3600 } });
 
   return (
     <html lang="en" className={`${playfair.variable} ${poppins.variable}`}>

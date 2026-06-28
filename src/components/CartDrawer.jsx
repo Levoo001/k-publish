@@ -1,256 +1,197 @@
-// src/components/CartDrawer.jsx - FIXED VERSION
-
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  incrementQuantity,
-  decrementQuantity,
-  removeFromCart,
-} from "@/store/CartSlice";
-import { HiOutlineShoppingCart } from "react-icons/hi2";
-import { IoMdClose } from "react-icons/io";
 import { useCart } from "./CartProvider";
+import { useCartStore } from "@/store/cart";
 
 const CartDrawer = () => {
   const { isCartOpen, closeCart } = useCart();
-  const dispatch = useDispatch();
-  const cartItems = useSelector((state) => state.cart?.cartItems || []);
+  const items = useCartStore((s) => s.items);
+  const incrementItem = useCartStore((s) => s.incrementItem);
+  const decrementItem = useCartStore((s) => s.decrementItem);
+  const removeItem = useCartStore((s) => s.removeItem);
 
-  const subtotal = cartItems.reduce(
-    (total, item) => total + (item?.price || 0) * (item?.quantity || 0),
-    0
+  const subtotal = items.reduce(
+    (sum, item) => sum + (item?.price || 0) * (item?.quantity || 0),
+    0,
   );
+  const totalQty = items.reduce((sum, i) => sum + (i?.quantity || 0), 0);
 
-  const handleIncrement = (item) => {
-    const identifier = item.cartItemId || item.id;
-    dispatch(incrementQuantity(identifier));
-  };
+  const fmt = (price) =>
+    new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN" }).format(price);
 
-  const handleDecrement = (item) => {
-    const identifier = item.cartItemId || item.id;
-    dispatch(decrementQuantity(identifier));
-  };
-
-  const handleRemove = (item) => {
-    const identifier = item.cartItemId || item.id;
-    dispatch(removeFromCart(identifier));
-  };
-
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat("en-NG", {
-      style: "currency",
-      currency: "NGN",
-    }).format(price);
-  };
-
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
-      closeCart();
-    }
-  };
-
-  if (!isCartOpen) {
-    return null;
-  }
+  if (!isCartOpen) return null;
 
   return (
     <>
-      {/* Overlay */}
-      <div
-        className="fixed inset-0 z-50 bg-black/50"
-        onClick={handleOverlayClick}
-      />
+      {/* Backdrop */}
+      <div className="fixed inset-0 z-50 bg-black/40" onClick={closeCart} />
 
       {/* Drawer */}
-      <div className="fixed right-0 top-0 z-50 h-full w-full max-w-md bg-white shadow-xl">
-        <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b">
-            <h2 className="text-xl font-semibold text-primary font-playfair">
-              Your Cart ({cartItems.length})
-            </h2>
-            <button
-              onClick={closeCart}
-              className="p-2 hover:bg-primary-50 rounded-lg transition-colors text-primary"
-            >
-              <IoMdClose size={20} />
-            </button>
-          </div>
+      <div className="fixed right-0 top-0 z-50 h-full w-full max-w-sm bg-white shadow-2xl flex flex-col">
 
-          {/* Main Content - Scrollable */}
-          <div className="flex-1 overflow-y-auto">
-            {cartItems.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-                <div className="w-20 h-20 bg-primary-50 rounded-full flex items-center justify-center mb-4">
-                  <HiOutlineShoppingCart size={32} className="text-primary" />
-                </div>
-                <h3 className="text-lg font-medium mb-2 font-playfair">
-                  Your cart is empty
-                </h3>
-                <p className="text-slate-600 mb-6 font-poppins">
-                  Add some items to get started
-                </p>
-                <button
-                  onClick={closeCart}
-                  className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors font-poppins"
-                >
-                  <Link href="/shop">Continue Shopping</Link>
-                </button>
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+          <div className="flex items-center gap-2.5">
+            <h2 className="text-lg font-light font-playfair text-slate-900 tracking-wide">
+              Your Cart
+            </h2>
+            {totalQty > 0 && (
+              <span className="bg-primary text-white text-[11px] font-semibold font-poppins w-5 h-5 rounded-full flex items-center justify-center">
+                {totalQty}
+              </span>
+            )}
+          </div>
+          <button
+            onClick={closeCart}
+            aria-label="Close cart"
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors text-lg leading-none"
+          >
+            ×
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto">
+          {items.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full px-8 text-center">
+              <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mb-5">
+                <svg className="w-7 h-7 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
               </div>
-            ) : (
-              <div className="p-4 space-y-4">
-                {/* Cart Items */}
-                {cartItems.map((item, index) => (
-                  <div
-                    key={item.cartItemId || item.id || `cart-item-${index}`}
-                    className="flex gap-3 p-3 bg-primary-50 rounded-lg border border-primary-100"
-                  >
-                    <div className="w-20 h-22 relative flex-shrink-0">
+              <p className="font-playfair text-slate-800 text-lg font-light mb-1">Nothing here yet</p>
+              <p className="text-slate-400 text-sm font-poppins mb-7">Browse the shop and add something you love.</p>
+              <Link
+                href="/shop"
+                onClick={closeCart}
+                className="bg-primary text-white px-7 py-3 rounded-xl text-sm font-medium font-poppins hover:bg-primary/90 transition-colors"
+              >
+                Shop Now
+              </Link>
+            </div>
+          ) : (
+            <ul className="divide-y divide-slate-50 px-5 py-3">
+              {items.map((item, index) => (
+                <li key={item.cartItemId || item.id || index} className="py-4 flex gap-4">
+                  {/* Image */}
+                  <div className="relative w-20 h-28 flex-shrink-0 rounded-xl overflow-hidden bg-slate-50">
+                    {item.image ? (
                       <Image
                         src={item.image}
                         alt={item.name}
                         fill
-                        className="object-cover rounded"
-                        sizes="64px"
+                        className="object-cover"
+                        sizes="80px"
                       />
-                    </div>
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-slate-300">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
 
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-sm line-clamp-2 mb-1 font-poppins">
-                        {item.name}
-                      </h3>
-
-                      {/* Display selected size if available */}
-                      {item.selectedSize && (
-                        <div className="mb-1">
-                          <p className="text-xs text-primary-600 font-poppins">
-                            Size:{" "}
-                            <span className="font-semibold">
-                              {item.selectedSize}
+                  {/* Details */}
+                  <div className="flex-1 min-w-0 flex flex-col justify-between">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-slate-900 font-poppins leading-snug truncate">
+                          {item.name}
+                        </p>
+                        <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                          {item.selectedSize && (
+                            <span className="text-[11px] bg-slate-100 text-slate-600 font-poppins px-2 py-0.5 rounded">
+                              Size {item.selectedSize}
                             </span>
-                          </p>
-                        </div>
-                      )}
-
-                      {/* Display selected color if available */}
-                      {item.selectedColor && (
-                        <div className="mb-2">
-                          <p className="text-xs text-primary-600 font-poppins">
-                            Color:{" "}
-                            <span className="font-semibold">
+                          )}
+                          {item.selectedColor && (
+                            <span className="text-[11px] bg-slate-100 text-slate-600 font-poppins px-2 py-0.5 rounded capitalize">
                               {item.selectedColor}
                             </span>
-                          </p>
+                          )}
                         </div>
-                      )}
+                      </div>
+                      <button
+                        onClick={() => removeItem(item.cartItemId || item.id)}
+                        aria-label="Remove item"
+                        className="flex-shrink-0 text-slate-300 hover:text-red-400 transition-colors mt-0.5"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
 
-                      <p className="font-semibold text-sm mb-2 text-primary font-poppins">
-                        {formatPrice(item.price)}
-                      </p>
-
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center border border-primary-200 rounded">
-                          <button
-                            onClick={() => handleDecrement(item)}
-                            className="w-8 h-8 flex items-center justify-center hover:bg-primary-50 disabled:opacity-30 text-primary"
-                            disabled={item.quantity <= 1}
-                          >
-                            <span className="text-lg">−</span>
-                          </button>
-                          <span className="w-8 h-8 flex items-center justify-center text-sm border-x border-primary-200 text-primary">
-                            {item.quantity}
-                          </span>
-                          <button
-                            onClick={() => handleIncrement(item)}
-                            className="w-8 h-8 flex items-center justify-center hover:bg-primary-50 text-primary"
-                          >
-                            <span className="text-lg">+</span>
-                          </button>
-                        </div>
-
+                    <div className="flex items-center justify-between mt-3">
+                      {/* Quantity stepper */}
+                      <div className="flex items-center bg-slate-100 rounded-lg overflow-hidden">
                         <button
-                          onClick={() => handleRemove(item)}
-                          className="text-primary-400 hover:text-red-500 p-1 transition-colors"
+                          onClick={() => decrementItem(item.cartItemId || item.id)}
+                          disabled={item.quantity <= 1}
+                          className="w-8 h-8 flex items-center justify-center text-slate-600 hover:bg-slate-200 disabled:opacity-30 transition-colors text-base font-light"
                         >
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            />
-                          </svg>
+                          −
+                        </button>
+                        <span className="w-8 h-8 flex items-center justify-center text-sm font-semibold font-poppins text-slate-800">
+                          {item.quantity}
+                        </span>
+                        <button
+                          onClick={() => incrementItem(item.cartItemId || item.id)}
+                          className="w-8 h-8 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors text-base font-light"
+                        >
+                          +
                         </button>
                       </div>
+
+                      <p className="text-sm font-bold text-primary font-poppins">
+                        {fmt(item.price * item.quantity)}
+                      </p>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Checkout Section - Fixed at bottom */}
-          {cartItems.length > 0 && (
-            <div className="border-t border-primary-100 bg-white p-4">
-              {/* Order Summary */}
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between text-sm">
-                  <span className="text-primary-600 font-poppins">
-                    Subtotal
-                  </span>
-                  <span className="font-medium font-poppins">
-                    {formatPrice(subtotal)}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-primary-600 font-poppins">Items</span>
-                  <span className="font-medium font-poppins">
-                    {cartItems.reduce(
-                      (total, item) => total + item.quantity,
-                      0
-                    )}
-                  </span>
-                </div>
-                <div className="border-t border-primary-100 pt-2">
-                  <div className="flex justify-between font-semibold text-lg">
-                    <span className="text-primary-900 font-playfair">
-                      Total
-                    </span>
-                    <span className="text-primary font-playfair">
-                      {formatPrice(subtotal)}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="space-y-3">
-                <Link
-                  href="/checkout"
-                  onClick={closeCart}
-                  className="w-full block bg-primary text-white py-3 px-6 rounded-lg text-center font-medium hover:bg-primary-700 transition-colors font-poppins"
-                >
-                  Proceed to Checkout
-                </Link>
-
-                <button
-                  onClick={closeCart}
-                  className="w-full border border-primary-200 text-primary-700 py-3 px-6 rounded-lg font-medium hover:bg-primary-50 transition-colors font-poppins"
-                >
-                  <Link href="/shop">Continue Shopping</Link>
-                </button>
-              </div>
-            </div>
+                </li>
+              ))}
+            </ul>
           )}
         </div>
+
+        {/* Footer */}
+        {items.length > 0 && (
+          <div className="border-t border-slate-100 px-5 py-4 space-y-4">
+            {/* Totals */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs text-slate-400 font-poppins">
+                <span>{totalQty} item{totalQty !== 1 ? "s" : ""}</span>
+                <span>{fmt(subtotal)}</span>
+              </div>
+              <div className="flex justify-between items-baseline">
+                <span className="text-sm font-poppins text-slate-700">Total</span>
+                <span className="text-xl font-bold font-playfair text-primary">{fmt(subtotal)}</span>
+              </div>
+            </div>
+
+            <p className="text-[11px] text-slate-400 font-poppins text-center -mt-1">
+              Shipping calculated at checkout
+            </p>
+
+            {/* CTAs */}
+            <Link
+              href="/checkout"
+              onClick={closeCart}
+              className="w-full block bg-primary text-white py-3.5 rounded-xl text-sm font-semibold font-poppins text-center hover:bg-primary/90 transition-colors"
+            >
+              Checkout
+            </Link>
+            <button
+              onClick={closeCart}
+              className="w-full text-xs text-slate-400 font-poppins hover:text-slate-600 transition-colors py-1"
+            >
+              Continue shopping
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

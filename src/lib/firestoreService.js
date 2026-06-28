@@ -1,8 +1,13 @@
-import { collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  setDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 import { db } from "./firebase";
 
 // Save order details - UPDATED WITH NEW ADDRESS FIELDS
-export const saveOrder = async (orderData) => {
+export const saveOrder = async (orderData, retryCount = 0) => {
   try {
     const orderRef = doc(collection(db, "orders"));
     const orderId = orderRef.id;
@@ -42,7 +47,7 @@ export const saveOrder = async (orderData) => {
       shippingFullAddress: shippingAddress,
 
       shippingProvider: orderData.shippingProvider || "Standard Shipping",
-      shippingType: orderData.shippingType || "domestic",
+      shippingType: orderData.shipping_type || orderData.shippingType || "domestic",
       shippingFee: Number(orderData.shippingFee) || 0,
 
       // Order Information
@@ -70,7 +75,7 @@ export const saveOrder = async (orderData) => {
       // Additional Fields
       notes: orderData.notes || "Payment completed successfully",
       deliveryStatus: "pending",
-      estimatedDelivery: getEstimatedDeliveryDate(orderData.shippingType),
+      estimatedDelivery: getEstimatedDeliveryDate(orderData.shipping_type || orderData.shippingType),
       trackingNumber: null,
       carrier: orderData.shippingProvider || "Standard Shipping",
     };
@@ -80,12 +85,7 @@ export const saveOrder = async (orderData) => {
     return orderId;
   } catch (error) {
     console.error("❌ Error saving order to Firestore:", error);
-    console.error("Error details:", {
-      message: error.message,
-      code: error.code,
-      stack: error.stack,
-    });
-    throw new Error(`Failed to save order: ${error.message}`);
+    throw error;
   }
 };
 

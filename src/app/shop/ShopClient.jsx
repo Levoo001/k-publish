@@ -16,23 +16,23 @@ export default function ShopClient({ products }) {
   const [subscriptionStatus, setSubscriptionStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Collection filtering
-  const rebirthProductNames = [
+  // Collection filtering — uses `collection` field if set, falls back to name matching
+  const REBIRTH_NAMES = [
     "the amarachi set",
     "the chisom dress",
     "the amara set",
     "the zahra dress",
     "the adanna dress",
   ];
-  const bloomCollection = products.filter(
-    (p) => !rebirthProductNames.includes(p.name?.toLowerCase().trim()),
-  );
-  const rebirthCollection = products.filter((p) =>
-    rebirthProductNames.includes(p.name?.toLowerCase().trim()),
-  );
+  const isRebirth = (p) =>
+    p.collection === "rebirth" ||
+    (!p.collection && REBIRTH_NAMES.includes(p.name?.toLowerCase().trim()));
+  const bloomCollection = products.filter((p) => !isRebirth(p));
+  const rebirthCollection = products.filter(isRebirth);
 
   const handleProductClick = (product) => {
-    router.push(`/products/${encodeURIComponent(product.name)}`);
+    const slug = product.slug?.current || encodeURIComponent(product.name);
+    router.push(`/products/${slug}`);
   };
 
   // Newsletter subscription handler with timeout management
@@ -120,14 +120,18 @@ export default function ShopClient({ products }) {
             >
               <div className="relative aspect-[3/4] overflow-hidden mb-4 rounded-t-xl transition-all duration-300">
                 <Image
-                  src={urlFor(product.image[1])
-                    .width(600)
-                    .height(800)
-                    .quality(90)
-                    .format("jpg")
-                    .fit("fill")
-                    .bg("FFFFFF")
-                    .url()}
+                  src={
+                    product.image?.[1] || product.image?.[0]
+                      ? urlFor(product.image?.[1] || product.image?.[0])
+                          .width(600)
+                          .height(800)
+                          .quality(90)
+                          .format("jpg")
+                          .fit("fill")
+                          .bg("FFFFFF")
+                          .url()
+                      : "/fallback.jpg"
+                  }
                   alt={product.name}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -211,14 +215,18 @@ export default function ShopClient({ products }) {
             >
               <div className="relative aspect-[3/4] overflow-hidden mb-4 rounded-t-xl transition-all duration-300">
                 <Image
-                  src={urlFor(product.image[1])
-                    .width(600)
-                    .height(800)
-                    .quality(90)
-                    .format("jpg")
-                    .fit("fill")
-                    .bg("FFFFFF")
-                    .url()}
+                  src={
+                    product.image?.[1] || product.image?.[0]
+                      ? urlFor(product.image?.[1] || product.image?.[0])
+                          .width(600)
+                          .height(800)
+                          .quality(90)
+                          .format("jpg")
+                          .fit("fill")
+                          .bg("FFFFFF")
+                          .url()
+                      : "/fallback.jpg"
+                  }
                   alt={product.name}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"

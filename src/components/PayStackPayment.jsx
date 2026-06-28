@@ -5,12 +5,10 @@ import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import Link from "next/link";
-import { useDispatch } from "react-redux";
-import { clearCart } from "../store/CartSlice";
-import { saveOrder } from "@/lib/firestoreService";
+import { useCartStore } from "@/store/cart";
 
 const PayStackPayment = ({ email, amount, metadata, onSuccess, onClose }) => {
-  const dispatch = useDispatch();
+  const clearCart = useCartStore((s) => s.clearCart);
 
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("");
@@ -43,123 +41,24 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, onClose }) => {
   // Define the callback function with useCallback to preserve reference
   const paymentCallback = useCallback(
     async (response) => {
-      try {
-        // BETTER PAYMENT METHOD DETECTION
-        let paymentMethod = "Card Payment";
-        if (response.channel === "bank") {
-          paymentMethod = "Bank Transfer";
-        } else if (response.channel === "ussd") {
-          paymentMethod = "USSD";
-        } else if (response.channel === "mobile_money") {
-          paymentMethod = "Mobile Money";
-        } else if (response.channel === "qr") {
-          paymentMethod = "QR Code";
-        }
+      let paymentMethod = "Card Payment";
+      if (response.channel === "bank") paymentMethod = "Bank Transfer";
+      else if (response.channel === "ussd") paymentMethod = "USSD";
+      else if (response.channel === "mobile_money") paymentMethod = "Mobile Money";
+      else if (response.channel === "qr") paymentMethod = "QR Code";
 
-        const orderData = {
-          // Customer Information
-          customerEmail: email,
-          customerName: metadata?.customer_name,
-          customerPhone: metadata?.customer_phone,
+      clearCart();
+      setPaymentSuccess(true);
+      setPaymentMethod(paymentMethod);
+      setDateTime(new Date().toLocaleString());
+      setPaymentReference(response.reference);
+      setIsProcessing(false);
 
-          // Shipping Information - UPDATED WITH ALL NEW FIELDS
-          shippingLocation: metadata?.shipping_location,
-          shippingProvider: metadata?.shipping_provider,
-          shippingType: metadata?.shipping_type,
-          shippingFee: metadata?.shipping_fee,
-
-          // Individual address components for proper construction
-          shipping_country: metadata?.shipping_country,
-          shipping_state: metadata?.shipping_state,
-          shipping_city: metadata?.shipping_city,
-          shipping_address: metadata?.shipping_address,
-          shipping_apartment: metadata?.shipping_apartment,
-          shipping_postal_code: metadata?.shipping_postal_code,
-
-          // Order Information
-          items: metadata?.items,
-          itemCount: metadata?.item_count,
-          subtotal: metadata?.subtotal,
-          totalAmount: metadata?.total,
-
-          // Payment Information - USE THE DETECTED METHOD
-          paymentMethod: paymentMethod,
-          paymentReference: response.reference,
-          paymentChannel: response.channel,
-          paymentStatus: "completed",
-
-          // Order Status
-          orderStatus: "confirmed",
-
-          // Store Information
-          storeContact: metadata?.store_contact,
-          storeEmail: metadata?.store_email,
-          storeAddress: metadata?.store_address,
-
-          notes: `Payment via ${response.channel}. Guest checkout.`,
-        };
-
-        // Save order to Firebase
-        const orderId = await saveOrder(orderData);
-
-        // Send order confirmation email
-        try {
-          const emailResponse = await fetch("/api/emails/order-confirmation", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              ...orderData,
-              orderId,
-            }),
-          });
-
-          if (!emailResponse.ok) {
-            throw new Error("Email sending failed");
-          }
-        } catch (emailError) {
-          console.error("❌ Order confirmation email failed:", emailError);
-        }
-
-        // CLEAR CART HERE TOO FOR REDUNDANCY
-        dispatch(clearCart());
-
-        // Update UI state
-        setPaymentSuccess(true);
-        setPaymentMethod(paymentMethod); // Use the detected method
-        setDateTime(new Date().toLocaleString());
-        setPaymentReference(response.reference);
-
-        // Call onSuccess callback with order data
-        if (onSuccess) {
-          onSuccess(response, {
-            ...orderData,
-            orderId,
-          });
-        }
-      } catch (error) {
-        console.error("❌ Error in payment callback:", error);
-        // Still show success to user but log the error
-        setPaymentSuccess(true);
-        setPaymentMethod(
-          response?.channel === "bank" ? "Bank Transfer" : "Card Payment"
-        );
-        setDateTime(new Date().toLocaleString());
-        setPaymentReference(response.reference);
-
-        if (onSuccess) {
-          onSuccess(response, {
-            orderId: "unknown",
-            paymentMethod:
-              response?.channel === "bank" ? "Bank Transfer" : "Card Payment",
-          });
-        }
-      } finally {
-        setIsProcessing(false);
+      if (onSuccess) {
+        onSuccess(response, { paymentMethod });
       }
     },
-    [email, metadata, onSuccess, dispatch]
+    [email, metadata, onSuccess, clearCart],
   );
 
   // Define the onClose function with useCallback
@@ -178,7 +77,7 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, onClose }) => {
 
     if (!paystackLoaded) {
       alert(
-        "Payment system is still loading. Please wait a moment and try again."
+        "Payment system is still loading. Please wait a moment and try again.",
       );
       return;
     }
@@ -211,6 +110,10 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, onClose }) => {
         amount: amount,
         currency: "NGN",
         metadata: {
+          items: metadata?.items || [],
+          subtotal: metadata?.subtotal || 0,
+          total: metadata?.total || 0,
+          item_count: metadata?.item_count || 0,
           custom_fields: [
             {
               display_name: "Customer Name",
@@ -344,12 +247,12 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, onClose }) => {
         alert("Error generating PDF receipt. Please try again.");
       });
 
-    dispatch(clearCart());
+    clearCart();
     setPaymentSuccess(false);
   };
 
   const handleCloseSuccessModal = () => {
-    dispatch(clearCart());
+    clearCart();
     setPaymentSuccess(false);
   };
 

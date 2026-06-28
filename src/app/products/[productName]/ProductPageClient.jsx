@@ -2,67 +2,47 @@
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
 import { useCart } from "@/components/CartProvider";
-import { addToCart } from "@/store/CartSlice";
+import { useCartStore } from "@/store/cart";
 import { urlFor } from "@/sanity/lib/image";
 import { trackFacebookEvent } from "@/lib/facebookPixel";
 
+const DEFAULT_SIZES = ["6", "8", "10", "12", "14", "16", "18", "20", "22"];
+
 export default function ProductPageClient({ product }) {
   const router = useRouter();
-  const dispatch = useDispatch();
   const { openCart } = useCart();
+  const addItem = useCartStore((s) => s.addItem);
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
+  const [validationModal, setValidationModal] = useState(null); // "size" | "color" | null
 
   const touchStartX = useRef(null);
   const touchStartY = useRef(null);
 
-  const availableSizes = [6, 8, 10, 12, 14, 16, 18, 20, 22];
+  const availableSizes = product.sizes?.length ? product.sizes : DEFAULT_SIZES;
+  const hasColors = product.colors?.length > 0;
 
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
-  };
-
-  const handleTouchEnd = (e, totalImages) => {
-    if (touchStartX.current === null) return;
-    const dx = e.changedTouches[0].clientX - touchStartX.current;
-    const dy = e.changedTouches[0].clientY - touchStartY.current;
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
-      if (dx < 0) {
-        setCurrentImageIndex((prev) => (prev + 1) % totalImages);
-      } else {
-        setCurrentImageIndex((prev) => (prev - 1 + totalImages) % totalImages);
-      }
-    }
-    touchStartX.current = null;
-    touchStartY.current = null;
-  };
-
-  const handleThumbnailClick = (index) => {
-    setCurrentImageIndex(index);
-  };
-
-  const handleColorSelect = (color) => {
-    setSelectedColor(color);
-    setCurrentImageIndex(0);
-  };
-
-  const handleSizeSelect = (size) => {
-    setSelectedSize(size);
-  };
+  useEffect(() => {
+    if (!product) return;
+    trackFacebookEvent("ViewContent", {
+      content_name: product.name,
+      content_type: "product",
+      content_ids: [product._id],
+      currency: "NGN",
+      value: Number(product.price) || 0,
+    });
+  }, [product]);
 
   if (!product) {
     return (
       <main className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-3xl font-playfair text-primary mb-4">
-            Product not found
-          </h1>
+          <h1 className="text-3xl font-playfair text-primary mb-4">Product not found</h1>
           <button
             onClick={() => router.push("/shop")}
             className="bg-primary text-white px-6 py-3 rounded-lg font-poppins hover:bg-primary/90 transition-colors"
@@ -76,105 +56,74 @@ export default function ProductPageClient({ product }) {
 
   const getImages = () => {
     if (selectedColor && product.colorVariants?.length) {
-      const variant = product.colorVariants.find(
-        (v) => v.color === selectedColor,
-      );
-      // Color variant images are not sliced — they have no cover thumbnail to skip
+      const variant = product.colorVariants.find((v) => v.color === selectedColor);
       if (variant?.images?.length) {
         return variant.images.map((img) =>
           typeof img === "string"
             ? img
-            : urlFor(img)
-                .width(1200)
-                .height(1600)
-                .quality(95)
-                .format("jpg")
-                .fit("fill")
-                .bg("FFFFFF")
-                .url(),
+            : urlFor(img).width(1200).height(1600).quality(95).format("jpg").fit("fill").bg("FFFFFF").url(),
         );
       }
     }
-    // Skip index 0 from product.image — that's the cover/thumbnail image
-    if (product.image?.length) {
-      return product.image
-        .slice(1)
-        .map((img) =>
-          typeof img === "string"
-            ? img
-            : urlFor(img)
-                .width(1200)
-                .height(1600)
-                .quality(95)
-                .format("jpg")
-                .fit("fill")
-                .bg("FFFFFF")
-                .url(),
-        );
-    }
-    return [];
+    return (product.image?.slice(1) || []).map((img) =>
+      typeof img === "string"
+        ? img
+        : urlFor(img).width(1200).height(1600).quality(95).format("jpg").fit("fill").bg("FFFFFF").url(),
+    );
   };
 
   const images = getImages();
   const mainImage = images[currentImageIndex];
-  const hasColors = product.colors && product.colors.length > 0;
-  const processedImages = product.image
-    ?.slice(1)
-    .map((img) =>
-      urlFor(img)
-        .width(1200)
-        .height(1600)
-        .quality(95)
-        .format("jpg")
-        .fit("fill")
-        .bg("FFFFFF")
-        .url(),
-    );
 
-  useEffect(() => {
-    if (!product) return;
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
 
-    trackFacebookEvent("ViewContent", {
-      content_name: product.name,
-      content_type: "product",
-      content_ids: [product._id || product.id || product.name],
-      currency: "NGN",
-      value: Number(product.price) || 0,
-    });
-  }, [product]);
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    const dy = e.changedTouches[0].clientY - touchStartY.current;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+      if (dx < 0) setCurrentImageIndex((p) => (p + 1) % images.length);
+      else setCurrentImageIndex((p) => (p - 1 + images.length) % images.length);
+    }
+    touchStartX.current = null;
+    touchStartY.current = null;
+  };
 
   const handleAddToCart = () => {
+    if (hasColors && !selectedColor) {
+      setValidationModal("color");
+      return;
+    }
     if (!selectedSize) {
-      alert("Please select a size before adding to cart");
+      setValidationModal("size");
       return;
     }
 
-    const cartProduct = {
-      id: product._id || product.id,
+    const cartImageUrl =
+      images[0] ||
+      urlFor(product.image?.[1] || product.image?.[0]).width(400).height(533).quality(80).format("jpg").url();
+
+    addItem({
+      id: product._id,
       name: product.name,
       price: product.price,
-      image: processedImages
-        ? processedImages[0]
-        : urlFor(product.image[1] || product.image[0])
-            .width(400)
-            .height(533)
-            .quality(80)
-            .format("jpg")
-            .url(),
-      selectedColor: selectedColor,
-      selectedSize: selectedSize,
-      _id: product._id,
-      originalImages: product.image,
-    };
+      image: cartImageUrl,
+      selectedColor,
+      selectedSize,
+      slug: product.slug?.current,
+    });
 
-    dispatch(addToCart(cartProduct));
     trackFacebookEvent("AddToCart", {
       content_name: product.name,
       content_type: "product",
-      content_ids: [product._id || product.id || product.name],
+      content_ids: [product._id],
       currency: "NGN",
       value: Number(product.price) || 0,
     });
+
     openCart();
     setSelectedColor(null);
     setSelectedSize(null);
@@ -182,25 +131,51 @@ export default function ProductPageClient({ product }) {
 
   return (
     <main className="min-h-screen bg-white">
+      {/* Validation modal */}
+      {validationModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+          onClick={() => setValidationModal(null)}
+        >
+          <div
+            className="bg-white rounded-xl p-6 max-w-sm w-full shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-lg font-light font-playfair text-slate-900 mb-2">
+              {validationModal === "color" ? "Select a colour" : "Select a size"}
+            </h3>
+            <p className="text-slate-500 text-sm font-poppins mb-5">
+              {validationModal === "color"
+                ? "Please choose a colour option before adding this item to your cart."
+                : "Please choose a size before adding this item to your cart."}
+            </p>
+            {validationModal === "size" && (
+              <Link
+                href="/SizeGuide"
+                className="block text-xs text-primary underline underline-offset-2 font-poppins mb-5"
+                onClick={() => setValidationModal(null)}
+              >
+                Not sure of your size? View size guide →
+              </Link>
+            )}
+            <button
+              onClick={() => setValidationModal(null)}
+              className="w-full bg-primary text-white py-2.5 rounded-lg text-sm font-poppins hover:bg-primary/90 transition-colors"
+            >
+              OK, got it
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
-        {/* Back Button */}
         <div className="py-3 sm:py-4 md:py-6">
           <button
             onClick={() => router.back()}
             className="flex items-center text-primary hover:text-primary/80 transition-colors mb-4 font-poppins text-sm"
           >
-            <svg
-              className="w-4 h-4 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Back
           </button>
@@ -212,7 +187,7 @@ export default function ProductPageClient({ product }) {
             <div
               className="relative aspect-[3/4] w-full"
               onTouchStart={handleTouchStart}
-              onTouchEnd={(e) => handleTouchEnd(e, images.length)}
+              onTouchEnd={handleTouchEnd}
             >
               {mainImage && (
                 <Image
@@ -225,35 +200,27 @@ export default function ProductPageClient({ product }) {
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
               )}
-
               {images.length > 1 && (
-                <div className="absolute top-3 left-3 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium font-poppins">
+                <div className="absolute top-3 left-3 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-poppins">
                   {currentImageIndex + 1} / {images.length}
                 </div>
               )}
             </div>
 
-            {/* Thumbnail Gallery */}
             {images.length > 1 && (
               <div className="mt-3 sm:mt-4 px-1 sm:px-2">
-                <div className="flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide pb-2">
+                <div className="flex gap-1 sm:gap-2 overflow-x-auto pb-2">
                   {images.map((img, index) => (
                     <button
                       key={index}
-                      onClick={() => handleThumbnailClick(index)}
-                      className={`relative w-12 h-16 sm:w-16 sm:h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 hover:scale-105 flex-shrink-0 ${
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`relative w-12 h-16 sm:w-16 sm:h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 flex-shrink-0 ${
                         index === currentImageIndex
                           ? "border-primary shadow-md"
                           : "border-slate-300 hover:border-slate-500"
                       }`}
                     >
-                      <Image
-                        src={img}
-                        alt={`View ${index + 1}`}
-                        fill
-                        className="object-cover"
-                        sizes="64px"
-                      />
+                      <Image src={img} alt={`View ${index + 1}`} fill className="object-cover" sizes="64px" />
                     </button>
                   ))}
                 </div>
@@ -268,9 +235,16 @@ export default function ProductPageClient({ product }) {
                 <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-primary font-playfair mb-1 sm:mb-2">
                   {product.name}
                 </h1>
-                <p className="text-xl sm:text-2xl md:text-3xl font-bold text-primary font-poppins">
-                  ₦{product.price?.toLocaleString()}
-                </p>
+                <div className="flex items-baseline gap-3">
+                  <p className="text-xl sm:text-2xl md:text-3xl font-bold text-primary font-poppins">
+                    ₦{product.price?.toLocaleString()}
+                  </p>
+                  {product.comparePrice && product.comparePrice > product.price && (
+                    <p className="text-base text-slate-400 line-through font-poppins">
+                      ₦{product.comparePrice.toLocaleString()}
+                    </p>
+                  )}
+                </div>
               </div>
 
               {product.description && (
@@ -282,20 +256,25 @@ export default function ProductPageClient({ product }) {
               )}
             </div>
 
-            {/* Selection Options */}
             <div className="space-y-4 sm:space-y-6 border-t border-slate-200 pt-4 sm:pt-6">
-              {/* Colors */}
+              {/* Color selection */}
               {hasColors && (
                 <div>
                   <h3 className="text-xs sm:text-sm font-semibold text-slate-900 mb-2 sm:mb-3 font-poppins uppercase tracking-wide">
-                    Color
+                    Colour{" "}
+                    {!selectedColor && (
+                      <span className="text-slate-400 normal-case font-normal tracking-normal">— select one</span>
+                    )}
                   </h3>
                   <div className="flex flex-wrap gap-2 sm:gap-3">
                     {product.colors.map((color) => (
                       <button
                         key={color}
-                        onClick={() => handleColorSelect(color)}
-                        className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border-2 transition-all duration-200 font-poppins text-xs sm:text-sm ${
+                        onClick={() => {
+                          setSelectedColor(color);
+                          setCurrentImageIndex(0);
+                        }}
+                        className={`px-4 sm:px-5 py-1.5 sm:py-2 rounded-lg border-2 transition-all duration-200 font-poppins text-xs sm:text-sm capitalize ${
                           selectedColor === color
                             ? "border-primary bg-primary/10 text-primary font-semibold"
                             : "border-slate-300 text-slate-700 hover:border-slate-500"
@@ -308,17 +287,20 @@ export default function ProductPageClient({ product }) {
                 </div>
               )}
 
-              {/* Sizes */}
+              {/* Size selection */}
               <div>
                 <h3 className="text-xs sm:text-sm font-semibold text-slate-900 mb-2 sm:mb-3 font-poppins uppercase tracking-wide">
-                  Size
+                  Size{" "}
+                  {!selectedSize && (
+                    <span className="text-slate-400 normal-case font-normal tracking-normal">— select one</span>
+                  )}
                 </h3>
-                <div className="grid grid-cols-4 sm:grid-cols-6 gap-1.5 sm:gap-2">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
                   {availableSizes.map((size) => (
                     <button
                       key={size}
-                      onClick={() => handleSizeSelect(size)}
-                      className={`py-1.5 sm:py-2 rounded-lg border-2 transition-all duration-200 font-poppins text-xs sm:text-sm ${
+                      onClick={() => setSelectedSize(size)}
+                      className={`min-w-[2.75rem] py-1.5 sm:py-2 px-4 sm:px-5 rounded-lg border-2 transition-all duration-200 font-poppins text-xs sm:text-sm ${
                         selectedSize === size
                           ? "border-primary bg-primary text-white font-semibold"
                           : "border-slate-300 text-slate-700 hover:border-slate-500"
@@ -328,13 +310,18 @@ export default function ProductPageClient({ product }) {
                     </button>
                   ))}
                 </div>
+                <Link
+                  href="/SizeGuide"
+                  className="inline-block mt-2 text-xs text-primary/70 hover:text-primary underline underline-offset-2 font-poppins transition-colors"
+                >
+                  Not sure of your size? View size guide
+                </Link>
               </div>
             </div>
 
-            {/* Add to Cart Button */}
             <button
               onClick={handleAddToCart}
-              className="w-full bg-primary text-white py-3 sm:py-4 rounded-xl font-semibold hover:bg-primary/90 transition-all duration-300 transform hover:scale-105 active:scale-95 font-poppins uppercase tracking-wider text-xs sm:text-sm"
+              className="w-full bg-primary text-white py-3 sm:py-4 rounded-xl font-semibold hover:bg-primary/90 transition-colors font-poppins uppercase tracking-wider text-xs sm:text-sm"
             >
               Add to Cart
             </button>

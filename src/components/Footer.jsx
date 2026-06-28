@@ -1,6 +1,7 @@
 // src/components/Footer.jsx
 
 import Link from "next/link";
+import Image from "next/image";
 import { FaInstagram } from "react-icons/fa";
 import { BsTiktok, BsWhatsapp } from "react-icons/bs";
 
@@ -11,7 +12,13 @@ const Footer = () => {
     <footer className="py-4 container mx-auto max-w-7xl bg-primary text-white">
       <div className="grid md:grid-cols-3 gap-8 mb-8 px-4">
         <div className="space-y-2">
-          <img src="/logo-2.jpeg" alt="Kavanthebrand" className="h-18" />
+          <Image
+            src="/logo-2.jpeg"
+            alt="Kavan The Brand"
+            width={120}
+            height={60}
+            className="h-18 w-auto"
+          />
 
           <p className="font-poppins leading-relaxed text-[0.88rem]">
             For the woman whose presence lingers.
@@ -21,7 +28,7 @@ const Footer = () => {
 
           <div className="flex gap-4 !mt-6">
             <Link
-              href="https://www.instagram.com/kavanthebrand_"
+              href="https://www.instagram.com/kavan.thebrand"
               target="_blank"
             >
               <FaInstagram size={24} className="hover:text-white" />

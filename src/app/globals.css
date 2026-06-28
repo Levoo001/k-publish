@@ -18,7 +18,7 @@ body {
   font-family: var(--font-poppins);
 }
 
-/* Primary-themed scrollbar */
+/* Hide scrollbars globally — use .scrollbar-visible to opt in */
 ::-webkit-scrollbar {
   display: none;
 }
@@ -41,6 +41,26 @@ body {
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* Visible scrollbar — add this class to opt in */
+.scrollbar-visible {
+  -ms-overflow-style: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(58, 3, 3, 0.4) #f1f5f9;
+}
+.scrollbar-visible::-webkit-scrollbar {
+  display: block;
+  height: 6px;
+  width: 6px;
+}
+.scrollbar-visible::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 9999px;
+}
+.scrollbar-visible::-webkit-scrollbar-thumb {
+  background-color: rgba(58, 3, 3, 0.4);
+  border-radius: 9999px;
 }
 
 .embla__slide {

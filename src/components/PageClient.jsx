@@ -390,7 +390,8 @@ export default function Home({ products }) {
   };
 
   const handleProductClick = (product) => {
-    router.push(`/products/${encodeURIComponent(product.name)}`);
+    const slug = product.slug?.current || encodeURIComponent(product.name);
+    router.push(`/products/${slug}`);
   };
 
   const handleCloseModal = () => {
