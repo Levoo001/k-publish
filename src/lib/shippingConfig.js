@@ -387,34 +387,34 @@ export const NIGERIAN_STATES = {
 export const SHIPPING_RATES = {
   domestic: {
     "GIG Logistics": {
-      north: 4600,
-      "south-main": 6500,
-      "south-onforwarding": 6500,
-      "special-cities": 6500,
+      north: 100,
+      "south-main": 100,
+      "south-onforwarding": 100,
+      "special-cities": 100,
     },
     "GUO Logistics": {
-      "western-states": 5000, // YOUR REQUIREMENT: ₦5,000 base rate
-      "western-states-high-value": 6000, // YOUR REQUIREMENT: ₦6,000 for orders > 100k
+      "western-states": 100,
+      "western-states-high-value": 100,
     },
     "DHL Nigeria": {
-      "zone-a": 5500,
-      "zone-a-remote": 7500,
-      "zone-b-lagos": 5500,
-      "zone-b-lagos-remote": 7500,
-      "zone-b-south": 12000,
-      "zone-b-south-remote": 14000,
+      "zone-a": 100,
+      "zone-a-remote": 100,
+      "zone-b-lagos": 100,
+      "zone-b-lagos-remote": 100,
+      "zone-b-south": 100,
+      "zone-b-south-remote": 100,
     },
   },
   international: {
     "DHL International": {
-      zone1: 65000,
-      zone2: 72000,
-      zone3: 79000,
-      zone4: 87000,
-      zone5: 93000,
-      zone6: 96000,
-      zone7: 104000,
-      zone8: 108000,
+      zone1: 100,
+      zone2: 100,
+      zone3: 100,
+      zone4: 100,
+      zone5: 100,
+      zone6: 100,
+      zone7: 100,
+      zone8: 100,
     },
   },
 };

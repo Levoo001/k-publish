@@ -230,109 +230,103 @@ function generateOrderConfirmationEmail(orderData) {
 }
 
 function generateAdminNotificationEmail(orderData) {
-  const orderDate = new Date().toLocaleString("en-NG");
+  const completeAddress = formatCompleteAddress(orderData);
 
-  return `<!DOCTYPE html>
+  return `
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <style>
-    body { margin: 0; padding: 0; background: #f2f2f2; font-family: Arial, sans-serif; }
-    .wrap { max-width: 540px; margin: 28px auto; background: #ffffff; }
-    .header { background: #3A0303; padding: 20px 32px; }
-    .header-title { color: #fff; font-family: Georgia, serif; font-size: 15px; font-weight: normal; margin: 0; }
-    .header-sub { color: rgba(255,255,255,0.55); font-size: 12px; margin: 3px 0 0; }
-    .body { padding: 28px 32px; }
-    .section-title { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #aaa; display: block; margin-bottom: 14px; }
-    .divider { border: none; border-top: 1px solid #ebebeb; margin: 20px 0; }
-    .kv-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 4px; }
-    .kv-table td { padding: 6px 0; vertical-align: top; }
-    .kv-table td:first-child { color: #aaa; width: 38%; }
-    .kv-table td:last-child { color: #1a1a1a; font-weight: 500; }
-    .items-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .items-table th { text-align: left; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #aaa; padding: 0 0 10px; font-weight: normal; border-bottom: 1px solid #ebebeb; }
-    .items-table td { padding: 11px 0; border-bottom: 1px solid #f3f3f3; color: #333; vertical-align: top; }
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+    body { font-family: 'Poppins', sans-serif; color: #3A0303; background: #fdf2f2; padding: 20px; margin: 0; }
+    .container { max-width: 700px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(58, 3, 3, 0.1); }
+    .header { background: #3A0303; color: white; padding: 30px; text-align: center; }
+    .header h1 { margin: 0 0 10px 0; font-size: 28px; }
+    .content { padding: 30px; }
+    .alert { background: #FFFBEB; border: 2px solid #F59E0B; padding: 20px; border-radius: 8px; margin: 0 0 30px 0; text-align: center; font-weight: 500; }
+    .section { margin-bottom: 30px; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; }
+    .section-header { background: #f8f8f8; padding: 15px 20px; border-bottom: 1px solid #e5e5e5; font-weight: 600; color: #3A0303; }
+    .section-content { padding: 20px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .info-item { margin-bottom: 10px; }
+    .info-label { font-weight: 500; color: #666; font-size: 14px; display: block; margin-bottom: 3px; }
+    .info-value { font-weight: 400; color: #3A0303; font-size: 15px; }
+    .address-box { background: #f8f8f8; padding: 15px; border-radius: 6px; margin-top: 10px; border: 1px solid #e5e5e5; font-size: 14px; line-height: 1.5; }
+    .items-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    .items-table th { background: #3A0303; color: white; padding: 12px 15px; text-align: left; font-weight: 500; font-size: 14px; }
+    .items-table td { padding: 12px 15px; border-bottom: 1px solid #e5e5e5; font-size: 14px; }
     .items-table tr:last-child td { border-bottom: none; }
-    .totals-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .totals-table td { padding: 5px 0; color: #666; }
-    .totals-table td:last-child { text-align: right; }
-    .total-final td { font-size: 14px; font-weight: bold; color: #111; border-top: 1px solid #ebebeb; padding-top: 12px; }
-    .btn { display: inline-block; background: #3A0303; color: #ffffff; text-decoration: none; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 12px 24px; margin-top: 24px; }
-    .footer { padding: 20px 32px; border-top: 1px solid #ebebeb; font-size: 12px; color: #bbb; text-align: center; }
+    .total-section { background: #3A0303; color: white; padding: 20px; border-radius: 8px; margin: 25px 0; }
+    .total-row { display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.2); }
+    .total-row:last-child { border-bottom: none; font-size: 18px; font-weight: 600; margin-top: 10px; padding-top: 10px; border-top: 2px solid rgba(255,255,255,0.2); }
+    .button { display: inline-block; background: #3A0303; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: 500; border: 2px solid #3A0303; }
   </style>
 </head>
 <body>
-  <div class="wrap">
+  <div class="container">
     <div class="header">
-      <p class="header-title">New order received</p>
-      <p class="header-sub">&#8358;${(orderData.totalAmount || 0).toLocaleString()} &mdash; ${orderDate}</p>
+      <h1>🛒 New Order Received!</h1>
+      <p>Order #${orderData.orderId} - ₦${orderData.totalAmount?.toLocaleString() || "0"}</p>
     </div>
-    <div class="body">
+    <div class="content">
+      <div class="alert">
+        ⚡ <strong>Action Required:</strong> New order needs to be processed and shipped.
+      </div>
 
-      <span class="section-title">Customer</span>
-      <table class="kv-table">
-        <tr><td>Name</td><td>${orderData.customerName || "—"}</td></tr>
-        <tr><td>Email</td><td>${orderData.customerEmail}</td></tr>
-        <tr><td>Phone</td><td>${orderData.customerPhone || "—"}</td></tr>
-      </table>
+      <div class="section">
+        <div class="section-header">👤 Customer Information</div>
+        <div class="section-content grid-2">
+          <div>
+            <div class="info-item"><span class="info-label">Name</span><span class="info-value">${orderData.customerName || "Not provided"}</span></div>
+            <div class="info-item"><span class="info-label">Email</span><span class="info-value">${orderData.customerEmail}</span></div>
+            <div class="info-item"><span class="info-label">Phone</span><span class="info-value">${orderData.customerPhone || "Not provided"}</span></div>
+          </div>
+          <div>
+            <div class="info-item"><span class="info-label">Order ID</span><span class="info-value">${orderData.orderId}</span></div>
+            <div class="info-item"><span class="info-label">Payment Ref</span><span class="info-value">${orderData.paymentReference || "N/A"}</span></div>
+            <div class="info-item"><span class="info-label">Payment</span><span class="info-value">${orderData.paymentMethod || "Card Payment"}</span></div>
+          </div>
+        </div>
+      </div>
 
-      <hr class="divider">
-      <span class="section-title">Order</span>
-      <table class="kv-table">
-        <tr><td>Order ID</td><td>#${orderData.orderId}</td></tr>
-        <tr><td>Reference</td><td>${orderData.paymentReference || "—"}</td></tr>
-        <tr><td>Payment</td><td>${orderData.paymentMethod || "Card Payment"}</td></tr>
-      </table>
+      <div class="section">
+        <div class="section-header">📍 Ship To</div>
+        <div class="section-content">
+          <div class="address-box">${completeAddress}</div>
+        </div>
+      </div>
 
-      <hr class="divider">
-      <span class="section-title">Items</span>
-      <table class="items-table">
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th style="text-align:center;">Qty</th>
-            <th style="text-align:right;">Price</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${(orderData.items || []).map((item) => `
-          <tr>
-            <td>
-              <div style="font-weight:600;color:#111;margin-bottom:2px;">${item.name}</div>
-              ${item.selectedSize && item.selectedSize !== "N/A" ? `<span style="color:#aaa;font-size:11px;">Size: ${item.selectedSize}</span>` : ""}
-              ${item.color && item.color !== "N/A" ? `<span style="color:#aaa;font-size:11px;">${item.selectedSize && item.selectedSize !== "N/A" ? " &nbsp;·&nbsp; " : ""}Colour: ${item.color}</span>` : ""}
-            </td>
-            <td style="text-align:center;color:#888;">${item.quantity}</td>
-            <td style="text-align:right;">&#8358;${(item.price || 0).toLocaleString()}</td>
-          </tr>`).join("")}
-        </tbody>
-      </table>
+      <div class="section">
+        <div class="section-header">📋 Order Items</div>
+        <div class="section-content">
+          <table class="items-table">
+            <thead>
+              <tr><th>Product</th><th>Size</th><th>Colour</th><th>Qty</th><th>Price</th></tr>
+            </thead>
+            <tbody>
+              ${(orderData.items || []).map((item) => `
+              <tr>
+                <td>${item.name}</td>
+                <td>${item.selectedSize || "—"}</td>
+                <td>${item.color || "—"}</td>
+                <td>${item.quantity}</td>
+                <td>₦${(item.price || 0).toLocaleString()}</td>
+              </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-      <hr class="divider">
-      <table class="totals-table">
-        <tr><td>Subtotal</td><td>&#8358;${(orderData.subtotal || 0).toLocaleString()}</td></tr>
-        <tr><td>Shipping</td><td>&#8358;${(orderData.shippingFee || 0).toLocaleString()}</td></tr>
-        <tr class="total-final"><td>Total</td><td>&#8358;${(orderData.totalAmount || 0).toLocaleString()}</td></tr>
-      </table>
+      <div class="total-section">
+        <div class="total-row"><span>Subtotal</span><span>₦${(orderData.subtotal || 0).toLocaleString()}</span></div>
+        <div class="total-row"><span>Shipping</span><span>₦${(orderData.shippingFee || 0).toLocaleString()}</span></div>
+        <div class="total-row"><span>Total</span><span>₦${(orderData.totalAmount || 0).toLocaleString()}</span></div>
+      </div>
 
-      <hr class="divider">
-      <span class="section-title">Ship to</span>
-      <p style="font-size:13px;color:#444;line-height:1.9;margin:0;">
-        ${[
-          orderData.customerName,
-          orderData.shipping_address || orderData.shippingStreetAddress,
-          orderData.shipping_apartment || orderData.shippingApartment,
-          orderData.shipping_city || orderData.shippingCity,
-          orderData.shipping_state || orderData.shippingState,
-          orderData.shipping_country || orderData.shippingCountry,
-        ].filter((v) => v && v !== "Not provided").join("<br>")}
-      </p>
-
-      <a href="https://www.kavanthebrand.com/admin/orders" class="btn">View in admin</a>
-    </div>
-    <div class="footer">
-      Thank you for choosing Kavan The Brand.<br>
-      &copy; ${new Date().getFullYear()} Kavan The Brand. All rights reserved.
+      <div style="text-align:center;margin-top:20px;">
+        <a href="https://www.kavanthebrand.com/admin/orders" class="button">View Order in Admin</a>
+      </div>
     </div>
   </div>
 </body>
