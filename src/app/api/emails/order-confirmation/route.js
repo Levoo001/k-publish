@@ -27,7 +27,6 @@ export async function POST(request) {
     try {
       await sendAdminNotification(orderData);
     } catch (adminError) {
-      console.error("Admin notification failed (non-critical):", adminError);
     }
 
     return NextResponse.json({
@@ -36,7 +35,6 @@ export async function POST(request) {
       message: "Order confirmation sent successfully",
     });
   } catch (error) {
-    console.error("Email API route error:", error);
     return NextResponse.json(
       { error: "Failed to process email request" },
       { status: 500 }

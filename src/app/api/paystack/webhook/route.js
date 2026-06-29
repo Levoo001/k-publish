@@ -78,12 +78,10 @@ export async function POST(request) {
         body: JSON.stringify({ ...orderData, orderId }),
       });
     } catch (emailError) {
-      console.error("Webhook: order confirmation email failed:", emailError);
     }
 
     return new Response("OK", { status: 200 });
   } catch (error) {
-    console.error("Webhook: failed to save order:", error);
     return new Response("Error", { status: 500 });
   }
 }

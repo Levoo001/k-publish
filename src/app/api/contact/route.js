@@ -76,7 +76,6 @@ export async function POST(request) {
     });
 
     if (error) {
-      console.error('Error sending contact form email:', error);
       return NextResponse.json({ error: 'Failed to send message' }, { status: 500 });
     }
 
@@ -93,7 +92,6 @@ export async function POST(request) {
     );
 
   } catch (error) {
-    console.error('Contact form error:', error);
     return NextResponse.json(
       { error: 'Failed to process your message. Please try again.' },
       { status: 500 }

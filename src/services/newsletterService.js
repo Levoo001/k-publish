@@ -49,7 +49,6 @@ export const subscribeToNewsletter = async (email, name = '', birthday = '') => 
       if (birthdayRegex.test(birthday.trim())) {
         subscriberData.birthday = birthday.trim();
       } else {
-        console.warn('Invalid birthday format provided:', birthday);
         // Still subscribe but without birthday
       }
     }
@@ -64,7 +63,6 @@ export const subscribeToNewsletter = async (email, name = '', birthday = '') => 
       data: subscriberData
     };
   } catch (error) {
-    console.error('Error subscribing to newsletter:', error);
     
     // Handle specific Firebase errors
     if (error.code === 'permission-denied') {
@@ -92,7 +90,6 @@ export const getSubscriberCount = async () => {
     const querySnapshot = await getDocs(subscribersRef);
     return querySnapshot.size;
   } catch (error) {
-    console.error('Error getting subscriber count:', error);
     return 0;
   }
 };

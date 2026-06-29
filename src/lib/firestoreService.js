@@ -84,7 +84,6 @@ export const saveOrder = async (orderData, retryCount = 0) => {
 
     return orderId;
   } catch (error) {
-    console.error("❌ Error saving order to Firestore:", error);
     throw error;
   }
 };

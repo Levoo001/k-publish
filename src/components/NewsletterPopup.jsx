@@ -71,7 +71,6 @@ const NewsletterPopup = () => {
         }, 3000);
       }
     } catch (error) {
-      console.error("Subscription error:", error);
       setSubscriptionStatus(error.message);
       setTimeout(() => setSubscriptionStatus(""), 5000);
     } finally {
@@ -123,11 +122,10 @@ const NewsletterPopup = () => {
         <div className="bg-primary text-white p-6 rounded-t-xl">
           <div className="text-center">
             <h2 className="text-xl font-bold font-playfair mb-2">
-              Join The Kavan Inner Circle with 10% off
+              Join The Kavan Inner Circle
             </h2>
-            <p className="text-gray-300 text-sm leading-relaxed font-poppins">
-              Get exclusive offers, behind-the-scenes access, and inspiring
-              stories behind our unique designs
+            <p className="text-white/70 text-sm leading-relaxed font-poppins">
+              Be the first to know about new collections, restocks, and exclusive offers.
             </p>
           </div>
         </div>
@@ -195,8 +193,7 @@ const NewsletterPopup = () => {
             {subscriptionStatus === "success" && (
               <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                 <p className="text-green-700 text-sm font-poppins text-center">
-                  🎉 Welcome to Kavanthebrand! Check your email for your 10%
-                  discount code.
+                  You're in! Welcome to the Kavan inner circle.
                 </p>
               </div>
             )}

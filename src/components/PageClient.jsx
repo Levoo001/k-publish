@@ -308,7 +308,6 @@ export default function Home({ products }) {
     };
 
     const handleError = (e) => {
-      console.error("Video failed to load:", e);
       setVideoError(true);
     };
 
@@ -325,13 +324,11 @@ export default function Home({ products }) {
               error.name !== "AbortError" &&
               error.name !== "NotAllowedError"
             ) {
-              console.error("Autoplay prevented:", error);
             }
           });
         }
       } catch (error) {
         if (error.name !== "AbortError" && error.name !== "NotAllowedError") {
-          console.error("Autoplay prevented:", error);
         }
       }
     };
@@ -380,7 +377,6 @@ export default function Home({ products }) {
         setTimeout(() => setSubscriptionStatus(""), 5000);
       }
     } catch (error) {
-      console.error("Subscription error:", error);
       setEmail("");
       setSubscriptionStatus(error.message);
       setTimeout(() => setSubscriptionStatus(""), 5000);

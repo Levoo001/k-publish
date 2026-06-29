@@ -67,7 +67,6 @@ export default function ShopClient({ products }) {
         setTimeout(() => setSubscriptionStatus(""), 5000);
       }
     } catch (error) {
-      console.error("Subscription error:", error);
       setSubscriptionStatus(error.message);
       // Auto-clear error message after 5 seconds
       setTimeout(() => setSubscriptionStatus(""), 5000);

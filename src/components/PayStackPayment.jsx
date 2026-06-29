@@ -25,7 +25,6 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, onClose }) => {
       if (window.PaystackPop) {
         setPaystackLoaded(true);
       } else {
-        console.warn("PayStack script not yet loaded");
       }
     };
 
@@ -184,7 +183,6 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, onClose }) => {
 
       handler.openIframe();
     } catch (error) {
-      console.error("Error setting up PayStack:", error);
       alert("Error initializing payment. Please try again.");
       setIsProcessing(false);
     }
@@ -216,7 +214,6 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, onClose }) => {
   const generatePDF = () => {
     const receiptElement = document.getElementById("receipt");
     if (!receiptElement) {
-      console.error("Receipt element not found");
       return;
     }
 
@@ -243,7 +240,6 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, onClose }) => {
         pdf.save(`receipt-${paymentReference}.pdf`);
       })
       .catch((error) => {
-        console.error("Error generating PDF:", error);
         alert("Error generating PDF receipt. Please try again.");
       });
 

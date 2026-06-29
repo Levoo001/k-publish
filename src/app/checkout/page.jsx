@@ -5,13 +5,16 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { COUNTRIES } from "@/lib/shippingConfig";
-import { calculateShippingRates, getNigerianStates } from "@/lib/shippingCalculator";
+import {
+  calculateShippingRates,
+  getNigerianStates,
+} from "@/lib/shippingCalculator";
 import PayStackPayment from "@/components/PayStackPayment";
 import { useCartStore } from "@/store/cart";
 import { trackFacebookEvent } from "@/lib/facebookPixel";
 
 const inputClass =
-  "w-full px-4 py-3 text-sm font-poppins border border-slate-200 rounded-xl outline-none focus:border-primary/60 placeholder:text-slate-300 transition-colors bg-white";
+  "w-full px-4 py-3 text-[11px] font-poppins border border-slate-200 rounded-xl outline-none focus:border-primary/60 placeholder:text-sm placeholder:text-slate-300 transition-colors bg-white";
 
 const labelClass =
   "block text-[11px] uppercase tracking-widest text-slate-400 font-poppins mb-1.5";
@@ -58,13 +61,22 @@ export default function CheckoutPage() {
   );
 
   const fmt = (price) =>
-    new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN" }).format(price);
+    new Intl.NumberFormat("en-NG", {
+      style: "currency",
+      currency: "NGN",
+    }).format(price);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (countryDropdownRef.current && !countryDropdownRef.current.contains(e.target))
+      if (
+        countryDropdownRef.current &&
+        !countryDropdownRef.current.contains(e.target)
+      )
         setIsCountryOpen(false);
-      if (stateDropdownRef.current && !stateDropdownRef.current.contains(e.target))
+      if (
+        stateDropdownRef.current &&
+        !stateDropdownRef.current.contains(e.target)
+      )
         setIsStateOpen(false);
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -94,7 +106,11 @@ export default function CheckoutPage() {
   const calculateShipping = async () => {
     setIsCalculating(true);
     try {
-      const rates = calculateShippingRates(formData.country, formData.state, cartItems);
+      const rates = calculateShippingRates(
+        formData.country,
+        formData.state,
+        cartItems,
+      );
       setShippingRates(rates);
       if (rates.length > 0) setSelectedShipping(rates[0]);
     } catch {
@@ -226,9 +242,16 @@ export default function CheckoutPage() {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="text-center">
-          <p className="font-playfair text-2xl text-slate-800 font-light mb-2">Your cart is empty</p>
-          <p className="text-slate-400 text-sm font-poppins mb-6">Add something you love first.</p>
-          <Link href="/shop" className="bg-primary text-white px-7 py-3 rounded-xl text-sm font-poppins font-medium hover:bg-primary/90 transition-colors">
+          <p className="font-playfair text-2xl text-slate-800 font-light mb-2">
+            Your cart is empty
+          </p>
+          <p className="text-slate-400 text-sm font-poppins mb-6">
+            Add something you love first.
+          </p>
+          <Link
+            href="/shop"
+            className="bg-primary text-white px-7 py-3 rounded-xl text-sm font-poppins font-medium hover:bg-primary/90 transition-colors"
+          >
             Shop Now
           </Link>
         </div>
@@ -240,7 +263,10 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-white">
       {/* Top bar */}
       <div className="border-b border-slate-100 px-4 py-4 flex items-center justify-between max-w-6xl mx-auto">
-        <Link href="/" className="font-playfair text-primary text-lg tracking-widest font-light">
+        <Link
+          href="/"
+          className="font-playfair text-primary text-lg tracking-widest font-light"
+        >
           KAVAN
         </Link>
         <div className="flex items-center gap-2 text-xs font-poppins text-slate-400">
@@ -254,10 +280,8 @@ export default function CheckoutPage() {
 
       <div className="max-w-6xl mx-auto px-4 py-8 lg:py-12">
         <div className="grid lg:grid-cols-[1fr_400px] gap-12 lg:gap-16 items-start">
-
           {/* ── Left: Form ── */}
           <div className="space-y-8">
-
             {/* Contact */}
             <section>
               <p className="text-[11px] uppercase tracking-widest text-slate-400 font-poppins font-semibold mb-4">
@@ -272,7 +296,6 @@ export default function CheckoutPage() {
                     onChange={(e) => handleInputChange("name", e.target.value)}
                     placeholder="Your full name"
                     className={inputClass}
-                    style={{ fontSize: "16px" }}
                   />
                 </div>
                 <div className="grid sm:grid-cols-2 gap-3">
@@ -281,10 +304,11 @@ export default function CheckoutPage() {
                     <input
                       type="email"
                       value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("email", e.target.value)
+                      }
                       placeholder="you@email.com"
                       className={inputClass}
-                      style={{ fontSize: "16px" }}
                     />
                   </div>
                   <div>
@@ -292,10 +316,11 @@ export default function CheckoutPage() {
                     <input
                       type="tel"
                       value={formData.phone}
-                      onChange={(e) => handleInputChange("phone", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("phone", e.target.value)
+                      }
                       placeholder="+234 800 000 0000"
                       className={inputClass}
-                      style={{ fontSize: "16px" }}
                     />
                   </div>
                 </div>
@@ -310,7 +335,6 @@ export default function CheckoutPage() {
                 Shipping address
               </p>
               <div className="space-y-3">
-
                 {/* Country */}
                 <div ref={countryDropdownRef} className="relative">
                   <label className={labelClass}>Country *</label>
@@ -318,24 +342,44 @@ export default function CheckoutPage() {
                     <input
                       type="text"
                       value={isCountryOpen ? searchQuery : formData.country}
-                      onChange={(e) => { setSearchQuery(e.target.value); setIsCountryOpen(true); }}
+                      onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        setIsCountryOpen(true);
+                      }}
                       onFocus={() => setIsCountryOpen(true)}
                       placeholder="Search country…"
                       className={inputClass}
                     />
-                    <svg className={`absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 transition-transform ${isCountryOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    <svg
+                      className={`absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 transition-transform ${isCountryOpen ? "rotate-180" : ""}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
                     </svg>
                   </div>
                   {isCountryOpen && (
                     <div className="absolute z-20 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg max-h-52 overflow-y-auto">
-                      {filteredCountries.length > 0 ? filteredCountries.map((c) => (
-                        <button key={c} onClick={() => handleCountrySelect(c)}
-                          className={`w-full text-left px-4 py-2.5 text-sm font-poppins transition-colors hover:bg-slate-50 ${formData.country === c ? "text-primary font-semibold" : "text-slate-700"}`}>
-                          {c}
-                        </button>
-                      )) : (
-                        <p className="px-4 py-3 text-sm text-slate-400 font-poppins">No countries found</p>
+                      {filteredCountries.length > 0 ? (
+                        filteredCountries.map((c) => (
+                          <button
+                            key={c}
+                            onClick={() => handleCountrySelect(c)}
+                            className={`w-full text-left px-4 py-2.5 text-sm font-poppins transition-colors hover:bg-slate-50 ${formData.country === c ? "text-primary font-semibold" : "text-slate-700"}`}
+                          >
+                            {c}
+                          </button>
+                        ))
+                      ) : (
+                        <p className="px-4 py-3 text-sm text-slate-400 font-poppins">
+                          No countries found
+                        </p>
                       )}
                     </div>
                   )}
@@ -349,37 +393,71 @@ export default function CheckoutPage() {
                       <input
                         type="text"
                         value={isStateOpen ? searchQuery : formData.state}
-                        onChange={(e) => { setSearchQuery(e.target.value); setIsStateOpen(true); }}
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
+                          setIsStateOpen(true);
+                        }}
                         onFocus={() => setIsStateOpen(true)}
                         placeholder="Search state…"
                         className={inputClass}
                       />
-                      <svg className={`absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 transition-transform ${isStateOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      <svg
+                        className={`absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 transition-transform ${isStateOpen ? "rotate-180" : ""}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
                       </svg>
                     </div>
                     {isStateOpen && (
                       <div className="absolute z-20 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg max-h-52 overflow-y-auto">
-                        {nigerianStates.filter((s) => s.toLowerCase().includes(searchQuery.toLowerCase())).map((s) => (
-                          <button key={s} onClick={() => handleStateSelect(s)}
-                            className={`w-full text-left px-4 py-2.5 text-sm font-poppins transition-colors hover:bg-slate-50 ${formData.state === s ? "text-primary font-semibold" : "text-slate-700"}`}>
-                            {s}
-                          </button>
-                        ))}
+                        {nigerianStates
+                          .filter((s) =>
+                            s.toLowerCase().includes(searchQuery.toLowerCase()),
+                          )
+                          .map((s) => (
+                            <button
+                              key={s}
+                              onClick={() => handleStateSelect(s)}
+                              className={`w-full text-left px-4 py-2.5 text-sm font-poppins transition-colors hover:bg-slate-50 ${formData.state === s ? "text-primary font-semibold" : "text-slate-700"}`}
+                            >
+                              {s}
+                            </button>
+                          ))}
                       </div>
                     )}
                   </div>
                 ) : (
                   <div>
                     <label className={labelClass}>State / Province *</label>
-                    <input type="text" value={formData.state} onChange={(e) => handleInputChange("state", e.target.value)} placeholder="State or province" className={inputClass} />
+                    <input
+                      type="text"
+                      value={formData.state}
+                      onChange={(e) =>
+                        handleInputChange("state", e.target.value)
+                      }
+                      placeholder="State or province"
+                      className={inputClass}
+                    />
                   </div>
                 )}
 
                 {/* City + Street on same row on larger screens */}
                 <div>
                   <label className={labelClass}>City *</label>
-                  <input type="text" value={formData.city} onChange={(e) => handleInputChange("city", e.target.value)} placeholder="City" className={inputClass} />
+                  <input
+                    type="text"
+                    value={formData.city}
+                    onChange={(e) => handleInputChange("city", e.target.value)}
+                    placeholder="City"
+                    className={inputClass}
+                  />
                 </div>
 
                 <div>
@@ -387,21 +465,48 @@ export default function CheckoutPage() {
                   <input
                     type="text"
                     value={formData.address}
-                    onChange={(e) => handleInputChange("address", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("address", e.target.value)
+                    }
                     placeholder="Street name and building number"
                     className={inputClass}
-                    style={{ fontSize: "16px" }}
                   />
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-3">
                   <div>
-                    <label className={labelClass}>Apartment / Suite <span className="normal-case tracking-normal text-slate-300">(optional)</span></label>
-                    <input type="text" value={formData.apartment} onChange={(e) => handleInputChange("apartment", e.target.value)} placeholder="Apt, suite, floor…" className={inputClass} />
+                    <label className={labelClass}>
+                      Apartment / Suite{" "}
+                      <span className="normal-case tracking-normal text-slate-300">
+                        (optional)
+                      </span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.apartment}
+                      onChange={(e) =>
+                        handleInputChange("apartment", e.target.value)
+                      }
+                      placeholder="Apt, suite, floor…"
+                      className={inputClass}
+                    />
                   </div>
                   <div>
-                    <label className={labelClass}>Postal code <span className="normal-case tracking-normal text-slate-300">(optional)</span></label>
-                    <input type="text" value={formData.postalCode} onChange={(e) => handleInputChange("postalCode", e.target.value)} placeholder="Postal code" className={inputClass} />
+                    <label className={labelClass}>
+                      Postal code{" "}
+                      <span className="normal-case tracking-normal text-slate-300">
+                        (optional)
+                      </span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.postalCode}
+                      onChange={(e) =>
+                        handleInputChange("postalCode", e.target.value)
+                      }
+                      placeholder="Postal code"
+                      className={inputClass}
+                    />
                   </div>
                 </div>
               </div>
@@ -416,7 +521,9 @@ export default function CheckoutPage() {
               </p>
 
               {!formData.state ? (
-                <p className="text-sm text-slate-400 font-poppins">Enter your state above to see shipping options.</p>
+                <p className="text-sm text-slate-400 font-poppins">
+                  Enter your state above to see shipping options.
+                </p>
               ) : isCalculating ? (
                 <div className="flex items-center gap-3 text-sm text-slate-400 font-poppins py-2">
                   <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -439,15 +546,26 @@ export default function CheckoutPage() {
                         }`}
                       >
                         <div className="flex items-center gap-3">
-                          <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 ${active ? "border-primary bg-primary" : "border-slate-300"}`}>
-                            {active && <div className="w-full h-full rounded-full scale-[0.4] bg-white" />}
+                          <div
+                            className={`w-4 h-4 rounded-full border-2 flex-shrink-0 ${active ? "border-primary bg-primary" : "border-slate-300"}`}
+                          >
+                            {active && (
+                              <div className="w-full h-full rounded-full scale-[0.4] bg-white" />
+                            )}
                           </div>
                           <div>
-                            <p className="text-sm font-semibold font-poppins text-slate-800">{rate.provider}</p>
-                            <p className="text-xs text-slate-400 font-poppins">{rate.service} · {rate.estimatedDelivery.min}–{rate.estimatedDelivery.max}</p>
+                            <p className="text-sm font-semibold font-poppins text-slate-800">
+                              {rate.provider}
+                            </p>
+                            <p className="text-xs text-slate-400 font-poppins">
+                              {rate.service} · {rate.estimatedDelivery.min}–
+                              {rate.estimatedDelivery.max}
+                            </p>
                           </div>
                         </div>
-                        <p className={`text-sm font-bold font-poppins ${active ? "text-primary" : "text-slate-700"}`}>
+                        <p
+                          className={`text-sm font-bold font-poppins ${active ? "text-primary" : "text-slate-700"}`}
+                        >
                           {fmt(rate.cost)}
                         </p>
                       </button>
@@ -455,7 +573,9 @@ export default function CheckoutPage() {
                   })}
                 </div>
               ) : (
-                <p className="text-sm text-slate-400 font-poppins">No shipping options available for this location.</p>
+                <p className="text-sm text-slate-400 font-poppins">
+                  No shipping options available for this location.
+                </p>
               )}
             </section>
 
@@ -470,32 +590,50 @@ export default function CheckoutPage() {
                   onChange={(e) => setAgreeToPolicy(e.target.checked)}
                   className="sr-only"
                 />
-                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${agreeToPolicy ? "bg-primary border-primary" : "border-slate-300"}`}>
+                <div
+                  className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${agreeToPolicy ? "bg-primary border-primary" : "border-slate-300"}`}
+                >
                   {agreeToPolicy && (
-                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    <svg
+                      className="w-3 h-3 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={3}
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                   )}
                 </div>
               </div>
               <span className="text-sm text-slate-600 font-poppins leading-relaxed">
                 I agree to the{" "}
-                <Link href="/delivery-policy" className="text-primary underline underline-offset-2" onClick={(e) => e.stopPropagation()}>
+                <Link
+                  href="/delivery-policy"
+                  className="text-primary underline underline-offset-2"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   delivery policy
                 </Link>{" "}
                 and{" "}
-                <Link href="/refund-and-exchange-policy" className="text-primary underline underline-offset-2" onClick={(e) => e.stopPropagation()}>
+                <Link
+                  href="/refund-and-exchange-policy"
+                  className="text-primary underline underline-offset-2"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   return & exchange policy
                 </Link>
               </span>
             </label>
-
           </div>
 
           {/* ── Right: Order summary ── */}
           <div className="lg:sticky lg:top-8 space-y-4">
             <div className="border border-slate-100 rounded-2xl overflow-hidden">
-
               {/* Items */}
               <div className="px-5 py-4 space-y-4">
                 <p className="text-[11px] uppercase tracking-widest text-slate-400 font-poppins font-semibold">
@@ -503,11 +641,23 @@ export default function CheckoutPage() {
                 </p>
                 <ul className="divide-y divide-slate-50">
                   {cartItems.map((item, i) => (
-                    <li key={item.cartItemId || item.id || i} className="py-3 flex gap-3">
-                      <div className="relative flex-shrink-0" style={{ width: 56, height: 72 }}>
+                    <li
+                      key={item.cartItemId || item.id || i}
+                      className="py-3 flex gap-3"
+                    >
+                      <div
+                        className="relative flex-shrink-0"
+                        style={{ width: 56, height: 72 }}
+                      >
                         <div className="w-full h-full rounded-lg overflow-hidden bg-slate-50">
                           {item.image && (
-                            <Image src={item.image} alt={item.name} fill className="object-cover" sizes="56px" />
+                            <Image
+                              src={item.image}
+                              alt={item.name}
+                              fill
+                              className="object-cover"
+                              sizes="56px"
+                            />
                           )}
                         </div>
                         <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-primary text-white text-[10px] font-bold font-poppins rounded-full flex items-center justify-center shadow">
@@ -515,7 +665,9 @@ export default function CheckoutPage() {
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-slate-800 font-poppins leading-snug truncate">{item.name}</p>
+                        <p className="text-sm font-semibold text-slate-800 font-poppins leading-snug truncate">
+                          {item.name}
+                        </p>
                         <div className="flex gap-1.5 mt-1 flex-wrap">
                           {item.selectedSize && (
                             <span className="text-[11px] bg-slate-100 text-slate-500 font-poppins px-1.5 py-0.5 rounded">
@@ -529,7 +681,9 @@ export default function CheckoutPage() {
                           )}
                         </div>
                       </div>
-                      <p className="text-sm font-bold text-slate-800 font-poppins flex-shrink-0">{fmt(item.price * item.quantity)}</p>
+                      <p className="text-sm font-bold text-slate-800 font-poppins flex-shrink-0">
+                        {fmt(item.price * item.quantity)}
+                      </p>
                     </li>
                   ))}
                 </ul>
@@ -543,14 +697,24 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between text-sm font-poppins text-slate-500">
                   <span>Shipping</span>
-                  <span>{selectedShipping ? fmt(selectedShipping.cost) : "—"}</span>
+                  <span>
+                    {selectedShipping ? fmt(selectedShipping.cost) : "—"}
+                  </span>
                 </div>
                 {selectedShipping && (
-                  <p className="text-[11px] text-slate-400 font-poppins">{selectedShipping.provider} · {selectedShipping.estimatedDelivery.min}–{selectedShipping.estimatedDelivery.max}</p>
+                  <p className="text-[11px] text-slate-400 font-poppins">
+                    {selectedShipping.provider} ·{" "}
+                    {selectedShipping.estimatedDelivery.min}–
+                    {selectedShipping.estimatedDelivery.max}
+                  </p>
                 )}
                 <div className="flex justify-between items-baseline pt-2 border-t border-slate-200">
-                  <span className="text-sm font-poppins text-slate-700">Total</span>
-                  <span className="text-xl font-bold font-playfair text-primary">{fmt(totalAmount)}</span>
+                  <span className="text-sm font-poppins text-slate-700">
+                    Total
+                  </span>
+                  <span className="text-xl font-bold font-playfair text-primary">
+                    {fmt(totalAmount)}
+                  </span>
                 </div>
               </div>
             </div>
@@ -594,7 +758,10 @@ export default function CheckoutPage() {
                   amount={totalAmount * 100}
                   metadata={getOrderMetadata()}
                   onSuccess={handlePaymentSuccess}
-                  onClose={() => { setIsProcessing(false); setShowPaystack(false); }}
+                  onClose={() => {
+                    setIsProcessing(false);
+                    setShowPaystack(false);
+                  }}
                 />
               </div>
             )}
