@@ -97,7 +97,6 @@ export default function ProductPageClient({ product }) {
     const url = window.location.href;
     const shareData = {
       title: product.name,
-      text: `Check out ${product.name} on Kavan The Brand`,
       url,
     };
     if (navigator.share) {
