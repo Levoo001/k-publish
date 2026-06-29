@@ -10,7 +10,7 @@ import {
 import { db } from '@/lib/firebase';
 
 // Subscribe to newsletter - UPDATED to accept form data
-export const subscribeToNewsletter = async (email, name = '', birthday = '') => {
+export const subscribeToNewsletter = async (email, name = '') => {
   try {
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -33,8 +33,6 @@ export const subscribeToNewsletter = async (email, name = '', birthday = '') => 
     const subscriberData = {
       email: normalizedEmail,
       subscribedAt: serverTimestamp(),
-      status: 'active',
-      source: 'website_popup'
     };
 
     // Add name if provided
@@ -42,18 +40,7 @@ export const subscribeToNewsletter = async (email, name = '', birthday = '') => 
       subscriberData.name = name.trim();
     }
 
-    // Add birthday if provided and valid format
-    if (birthday && birthday.trim()) {
-      // Basic DD/MM format validation
-      const birthdayRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])$/;
-      if (birthdayRegex.test(birthday.trim())) {
-        subscriberData.birthday = birthday.trim();
-      } else {
-        // Still subscribe but without birthday
-      }
-    }
-
-    // Add new subscriber with all data
+    // Add new subscriber
     const docRef = await addDoc(subscribersRef, subscriberData);
 
     return {

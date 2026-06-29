@@ -280,7 +280,7 @@ export default function Home({ products }) {
   const videoRef = useRef(null);
 
   // Newsletter state
-  const [email, setEmail] = useState("");
+  const [formData, setFormData] = useState({ name: "", email: "" });
   const [subscriptionStatus, setSubscriptionStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -303,40 +303,14 @@ export default function Home({ products }) {
     const video = videoRef.current;
     if (!video) return;
 
-    const handleCanPlay = () => {
-      setVideoError(false);
-    };
+    video.muted = true;
 
-    const handleError = (e) => {
-      setVideoError(true);
-    };
-
-    video.addEventListener("canplay", handleCanPlay);
+    const handleError = () => setVideoError(true);
     video.addEventListener("error", handleError);
 
-    // Try to play the video
-    const playVideo = async () => {
-      try {
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-          playPromise.catch((error) => {
-            if (
-              error.name !== "AbortError" &&
-              error.name !== "NotAllowedError"
-            ) {
-            }
-          });
-        }
-      } catch (error) {
-        if (error.name !== "AbortError" && error.name !== "NotAllowedError") {
-        }
-      }
-    };
-
-    playVideo();
+    video.play().catch(() => {});
 
     return () => {
-      video.removeEventListener("canplay", handleCanPlay);
       video.removeEventListener("error", handleError);
     };
   }, []);
@@ -352,14 +326,14 @@ export default function Home({ products }) {
   const handleSubscribe = async (e) => {
     e.preventDefault();
 
-    if (!email) {
+    if (!formData.email) {
       setSubscriptionStatus("Please enter your email address");
       setTimeout(() => setSubscriptionStatus(""), 4000);
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(formData.email)) {
       setSubscriptionStatus("Please enter a valid email address");
       setTimeout(() => setSubscriptionStatus(""), 4000);
       return;
@@ -369,15 +343,15 @@ export default function Home({ products }) {
     setSubscriptionStatus("");
 
     try {
-      const result = await subscribeToNewsletter(email);
+      const result = await subscribeToNewsletter(formData.email, formData.name);
 
       if (result.success) {
         setSubscriptionStatus("success");
-        setEmail("");
+        setFormData({ name: "", email: "" });
         setTimeout(() => setSubscriptionStatus(""), 5000);
       }
     } catch (error) {
-      setEmail("");
+      setFormData({ name: "", email: "" });
       setSubscriptionStatus(error.message);
       setTimeout(() => setSubscriptionStatus(""), 5000);
     } finally {
@@ -473,7 +447,7 @@ export default function Home({ products }) {
           }}
         >
           <source
-            src="https://ck7vajewsn9hvwtw.public.blob.vercel-storage.com/vid2.mp4"
+            src="/vid2.mp4"
             type="video/mp4"
           />
         </video>
@@ -660,15 +634,23 @@ export default function Home({ products }) {
 
           <form
             onSubmit={handleSubscribe}
-            className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-4"
+            className="flex flex-col gap-3 max-w-md mx-auto mb-4"
           >
+            <input
+              type="text"
+              placeholder="Your full name"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              disabled={isSubmitting}
+              className="w-full px-4 py-3 border border-primary-700 rounded-xl focus:outline-none focus:border-white text-primary placeholder-primary-300 disabled:opacity-50 font-poppins backdrop-blur-sm bg-white/95"
+            />
             <input
               type="email"
               placeholder="Enter your email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               disabled={isSubmitting}
-              className="flex-1 px-4 py-3 border border-primary-700 rounded-xl focus:outline-none focus:border-white text-primary placeholder-primary-300 disabled:opacity-50 font-poppins backdrop-blur-sm bg-white/95"
+              className="w-full px-4 py-3 border border-primary-700 rounded-xl focus:outline-none focus:border-white text-primary placeholder-primary-300 disabled:opacity-50 font-poppins backdrop-blur-sm bg-white/95"
               required
             />
             <button

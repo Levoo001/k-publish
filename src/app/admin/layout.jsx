@@ -47,11 +47,6 @@ export default function AdminLayout({ children }) {
       <header className="bg-white border-b border-slate-100 sticky top-0 z-30">
         <div className="px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
 
-          {/* Brand */}
-          <p className="font-playfair text-primary text-base tracking-widest font-light flex-shrink-0">
-            KAVAN
-          </p>
-
           {/* Nav */}
           <nav className="flex items-center gap-1">
             {navLinks.map(({ href, label }) => {

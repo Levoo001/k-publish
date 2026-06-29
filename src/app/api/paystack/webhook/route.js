@@ -42,26 +42,17 @@ export async function POST(request) {
     shipping_address: getField("shipping_address"),
     shipping_apartment: getField("shipping_apartment"),
     shipping_postal_code: getField("shipping_postal_code"),
+
     shippingProvider: getField("shipping_provider"),
-    shipping_type: getField("shipping_type"),
     shippingFee: Number(getField("shipping_fee")) || 0,
 
     items: data.metadata?.items || [],
-    itemCount: Number(data.metadata?.item_count) || 0,
     subtotal: Number(data.metadata?.subtotal) || 0,
     totalAmount: Number(data.metadata?.total) || data.amount / 100,
 
     paymentMethod,
     paymentReference: data.reference,
-    paymentChannel: data.channel,
-    paymentStatus: "completed",
     orderStatus: "confirmed",
-
-    storeContact: "+234 703 621 0107",
-    storeEmail: "admin@kavanthebrand.com",
-    storeAddress: "Lagos, Nigeria",
-
-    notes: `Payment via ${data.channel}. Server-verified by Paystack webhook.`,
   };
 
   try {

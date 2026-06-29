@@ -9,7 +9,6 @@ const NewsletterPopup = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    birthday: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [subscriptionStatus, setSubscriptionStatus] = useState("");
@@ -54,15 +53,11 @@ const NewsletterPopup = () => {
 
     try {
       // CORRECTED: Pass all form data to the newsletter service
-      const result = await subscribeToNewsletter(
-        formData.email,
-        formData.name,
-        formData.birthday,
-      );
+      const result = await subscribeToNewsletter(formData.email, formData.name);
 
       if (result.success) {
         setSubscriptionStatus("success");
-        setFormData({ name: "", email: "", birthday: "" });
+        setFormData({ name: "", email: "" });
         localStorage.setItem("newsletterSubscribed", "true");
         setTimeout(() => {
           setIsVisible(false);
@@ -167,25 +162,6 @@ const NewsletterPopup = () => {
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-poppins text-sm"
                 placeholder="your.email@example.com"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="birthday"
-                className="block text-sm font-medium text-gray-700 mb-1 font-poppins"
-              >
-                Birthday (DD/MM)
-              </label>
-              <input
-                type="text"
-                id="birthday"
-                name="birthday"
-                value={formData.birthday}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-poppins text-sm"
-                placeholder="DD/MM"
-                maxLength="5"
               />
             </div>
 

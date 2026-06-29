@@ -33,7 +33,9 @@ export async function generateMetadata({ params }) {
     typeof product.description === "string"
       ? product.description.replace(/[#*_`[\]]/g, "").trim()
       : "";
-  const description = rawDescription.slice(0, 160) || `Shop ${product.name} at Kavan The Brand.`;
+  const description = rawDescription
+    ? rawDescription.length > 90 ? rawDescription.slice(0, 90) + "…" : rawDescription
+    : `Shop ${product.name} at Kavan The Brand.`;
 
   const ogImageUrl =
     product.image?.[0]

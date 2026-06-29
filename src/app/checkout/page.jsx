@@ -159,6 +159,7 @@ export default function CheckoutPage() {
         total: item.price * item.quantity,
         color: item.selectedColor || "Not specified",
         size: item.selectedSize || "Not specified",
+        image: item.image || null,
       })),
       subtotal,
       total: totalAmount,
@@ -262,13 +263,7 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Top bar */}
-      <div className="border-b border-slate-100 px-4 py-4 flex items-center justify-between max-w-6xl mx-auto">
-        <Link
-          href="/"
-          className="font-playfair text-primary text-lg tracking-widest font-light"
-        >
-          KAVAN
-        </Link>
+      <div className="border-b border-slate-100 px-4 py-4 flex items-center justify-center max-w-6xl mx-auto">
         <div className="flex items-center gap-2 text-xs font-poppins text-slate-400">
           <span className="text-primary font-medium">Cart</span>
           <span>›</span>

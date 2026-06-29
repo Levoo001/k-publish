@@ -94,10 +94,10 @@ export default function ProductPageClient({ product }) {
   };
 
   const handleShare = async () => {
-    const url = `https://www.kavanthebrand.com/products/${product.slug?.current || encodeURIComponent(product.name)}`;
+    const url = window.location.href;
     const shareData = {
       title: product.name,
-      text: `Check out ${product.name} on Kavan The Brand — ₦${product.price?.toLocaleString()}`,
+      text: `Check out ${product.name} on Kavan The Brand`,
       url,
     };
     if (navigator.share) {
@@ -187,16 +187,39 @@ export default function ProductPageClient({ product }) {
       )}
 
       <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
-        <div className="py-3 sm:py-4 md:py-6">
+        <div className="py-3 sm:py-4 md:py-6 flex items-center justify-between">
           <button
             onClick={() => router.back()}
-            className="flex items-center text-primary hover:text-primary/80 transition-colors mb-4 font-poppins text-sm"
+            className="flex items-center text-primary hover:text-primary/80 transition-colors font-poppins text-sm"
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Back
           </button>
+
+          <div className="relative">
+            <button
+              onClick={handleShare}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 text-slate-500 hover:text-primary hover:border-primary/40 transition-colors font-poppins text-sm"
+            >
+              {shareCopied ? (
+                <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                </svg>
+              )}
+              {shareCopied ? "Copied!" : "Share"}
+            </button>
+            {shareCopied && (
+              <span className="absolute -bottom-8 right-0 whitespace-nowrap text-[10px] font-poppins text-green-600 bg-white border border-green-200 px-2 py-0.5 rounded-full shadow-sm">
+                Link copied!
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 pb-8 sm:pb-12">
@@ -250,31 +273,9 @@ export default function ProductPageClient({ product }) {
           <div className="flex flex-col justify-between space-y-4 sm:space-y-6">
             <div className="space-y-3 sm:space-y-4">
               <div>
-                <div className="flex items-start justify-between gap-3 mb-1 sm:mb-2">
-                  <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-primary font-playfair leading-tight">
-                    {product.name}
-                  </h1>
-                  <button
-                    onClick={handleShare}
-                    title="Share this product"
-                    className="flex-shrink-0 mt-1 p-2 rounded-xl border border-slate-200 text-slate-400 hover:text-primary hover:border-primary/40 transition-colors relative"
-                  >
-                    {shareCopied ? (
-                      <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    ) : (
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                      </svg>
-                    )}
-                    {shareCopied && (
-                      <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-poppins text-green-600 bg-white border border-green-200 px-2 py-0.5 rounded-full shadow-sm">
-                        Link copied!
-                      </span>
-                    )}
-                  </button>
-                </div>
+                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-primary font-playfair leading-tight mb-1 sm:mb-2">
+                  {product.name}
+                </h1>
                 <div className="flex items-baseline gap-3">
                   <p className="text-xl sm:text-2xl md:text-3xl font-bold text-primary font-poppins">
                     ₦{product.price?.toLocaleString()}
