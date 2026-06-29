@@ -8,7 +8,7 @@ import { urlFor } from "@/sanity/lib/image";
 import { notFound } from "next/navigation";
 import ProductPageClient from "./ProductPageClient";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export async function generateStaticParams() {
   const products = await client.fetch(allProductSlugsQuery);

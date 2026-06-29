@@ -3,7 +3,7 @@ import { productQuery } from "@/sanity/lib/queries";
 import { notFound } from "next/navigation";
 import CollectionClient from "./CollectionClient";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 const CATEGORY_META = {
   bestsellers: {

@@ -79,7 +79,7 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const products = await client.fetch(productQuery, {}, { next: { revalidate: 3600 } });
+  const products = await client.fetch(productQuery, {}, { next: { revalidate: 60 } });
 
   return (
     <html lang="en" className={`${playfair.variable} ${poppins.variable}`}>
