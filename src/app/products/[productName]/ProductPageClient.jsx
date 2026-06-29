@@ -20,6 +20,7 @@ export default function ProductPageClient({ product }) {
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [validationModal, setValidationModal] = useState(null); // "size" | "color" | null
+  const [shareCopied, setShareCopied] = useState(false);
 
   const touchStartX = useRef(null);
   const touchStartY = useRef(null);
@@ -90,6 +91,23 @@ export default function ProductPageClient({ product }) {
     }
     touchStartX.current = null;
     touchStartY.current = null;
+  };
+
+  const handleShare = async () => {
+    const url = `https://www.kavanthebrand.com/products/${product.slug?.current || encodeURIComponent(product.name)}`;
+    const shareData = {
+      title: product.name,
+      text: `Check out ${product.name} on Kavan The Brand — ₦${product.price?.toLocaleString()}`,
+      url,
+    };
+    if (navigator.share) {
+      try { await navigator.share(shareData); } catch {}
+    } else {
+      navigator.clipboard.writeText(url).then(() => {
+        setShareCopied(true);
+        setTimeout(() => setShareCopied(false), 2500);
+      });
+    }
   };
 
   const handleAddToCart = () => {
@@ -232,9 +250,31 @@ export default function ProductPageClient({ product }) {
           <div className="flex flex-col justify-between space-y-4 sm:space-y-6">
             <div className="space-y-3 sm:space-y-4">
               <div>
-                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-primary font-playfair mb-1 sm:mb-2">
-                  {product.name}
-                </h1>
+                <div className="flex items-start justify-between gap-3 mb-1 sm:mb-2">
+                  <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-primary font-playfair leading-tight">
+                    {product.name}
+                  </h1>
+                  <button
+                    onClick={handleShare}
+                    title="Share this product"
+                    className="flex-shrink-0 mt-1 p-2 rounded-xl border border-slate-200 text-slate-400 hover:text-primary hover:border-primary/40 transition-colors relative"
+                  >
+                    {shareCopied ? (
+                      <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                      </svg>
+                    )}
+                    {shareCopied && (
+                      <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-poppins text-green-600 bg-white border border-green-200 px-2 py-0.5 rounded-full shadow-sm">
+                        Link copied!
+                      </span>
+                    )}
+                  </button>
+                </div>
                 <div className="flex items-baseline gap-3">
                   <p className="text-xl sm:text-2xl md:text-3xl font-bold text-primary font-poppins">
                     ₦{product.price?.toLocaleString()}
