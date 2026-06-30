@@ -23,6 +23,14 @@ const fmtDate = (ts) =>
     day: "numeric", month: "short", year: "numeric",
   }) ?? "N/A";
 
+const fmtDateTime = (ts) => {
+  const d = ts?.toDate?.() ?? (ts ? new Date(ts) : null);
+  if (!d) return "N/A";
+  return d.toLocaleDateString("en-NG", { day: "numeric", month: "short", year: "numeric" })
+    + " · "
+    + d.toLocaleTimeString("en-NG", { hour: "2-digit", minute: "2-digit", hour12: true });
+};
+
 // ─── Delivery tracker ────────────────────────────────────────────────────────
 
 function DeliveryTracker({ order, onUpdate, saving }) {
@@ -313,6 +321,7 @@ export default function AdminOrdersPage() {
                 <a href={`tel:${selectedOrder.customerPhone}`} className="text-sm font-semibold text-primary font-poppins mt-0.5 inline-block">
                   {selectedOrder.customerPhone}
                 </a>
+                <p className="text-xs text-slate-400 font-poppins mt-1">Placed {fmtDateTime(selectedOrder.createdAt)}</p>
               </div>
             </div>
 

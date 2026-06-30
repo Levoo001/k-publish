@@ -141,7 +141,7 @@ const NewsletterPopup = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-poppins text-sm"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-poppins text-base md:text-sm placeholder:text-xs placeholder:text-gray-300"
                 placeholder="Your full name"
               />
             </div>
@@ -160,7 +160,7 @@ const NewsletterPopup = () => {
                 value={formData.email}
                 onChange={handleInputChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-poppins text-sm"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-poppins text-base md:text-sm placeholder:text-xs placeholder:text-gray-300"
                 placeholder="your.email@example.com"
               />
             </div>

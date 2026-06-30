@@ -642,7 +642,7 @@ export default function Home({ products }) {
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               disabled={isSubmitting}
-              className="w-full px-4 py-3 border border-primary-700 rounded-xl focus:outline-none focus:border-white text-primary placeholder-primary-300 disabled:opacity-50 font-poppins backdrop-blur-sm bg-white/95"
+              className="w-full px-4 py-3 border border-primary-700 rounded-xl focus:outline-none focus:border-white text-base md:text-sm text-primary placeholder-primary-300 placeholder:text-xs disabled:opacity-50 font-poppins backdrop-blur-sm bg-white/95"
             />
             <input
               type="email"
@@ -650,7 +650,7 @@ export default function Home({ products }) {
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               disabled={isSubmitting}
-              className="w-full px-4 py-3 border border-primary-700 rounded-xl focus:outline-none focus:border-white text-primary placeholder-primary-300 disabled:opacity-50 font-poppins backdrop-blur-sm bg-white/95"
+              className="w-full px-4 py-3 border border-primary-700 rounded-xl focus:outline-none focus:border-white text-base md:text-sm text-primary placeholder-primary-300 placeholder:text-xs disabled:opacity-50 font-poppins backdrop-blur-sm bg-white/95"
               required
             />
             <button

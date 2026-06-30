@@ -14,7 +14,7 @@ import { useCartStore } from "@/store/cart";
 import { trackFacebookEvent } from "@/lib/facebookPixel";
 
 const inputClass =
-  "w-full px-4 py-3 text-[11px] font-poppins border border-slate-200 rounded-xl outline-none focus:border-primary/60 placeholder:text-sm placeholder:text-slate-300 transition-colors bg-white";
+  "w-full px-4 py-3 text-base md:text-sm font-poppins border border-slate-200 rounded-xl outline-none focus:border-primary/60 placeholder:text-xs placeholder:text-slate-300 transition-colors bg-white";
 
 const labelClass =
   "block text-[11px] uppercase tracking-widest text-slate-400 font-poppins mb-1.5";

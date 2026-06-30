@@ -53,7 +53,7 @@ export default function AdminLogin() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@kavanthebrand.com"
-              className="w-full text-sm font-poppins border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-primary/60 placeholder:text-slate-300 transition-colors"
+              className="w-full text-base md:text-sm font-poppins border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-primary/60 placeholder:text-xs placeholder:text-slate-300 transition-colors"
             />
           </div>
 
@@ -67,7 +67,7 @@ export default function AdminLogin() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full text-sm font-poppins border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-primary/60 placeholder:text-slate-300 transition-colors"
+              className="w-full text-base md:text-sm font-poppins border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-primary/60 placeholder:text-xs placeholder:text-slate-300 transition-colors"
             />
           </div>
 

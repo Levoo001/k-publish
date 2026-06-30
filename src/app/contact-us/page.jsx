@@ -64,7 +64,7 @@ const Page = () => {
   ];
 
   const inputClass = (field) =>
-    `w-full p-2.5 border rounded-lg focus:outline-none focus:ring-1 transition-all font-poppins text-sm ${
+    `w-full p-2.5 border rounded-lg focus:outline-none focus:ring-1 transition-all font-poppins text-base md:text-sm placeholder:text-xs placeholder:text-slate-300 ${
       errors[field]
         ? "border-red-300 focus:ring-red-200"
         : "border-slate-200 focus:border-primary focus:ring-primary/20"
