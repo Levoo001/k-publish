@@ -2,8 +2,38 @@ import {
   NIGERIAN_STATES,
   SHIPPING_RATES,
   INTERNATIONAL_ZONES,
+  DEFAULT_INTERNATIONAL_ZONE,
+  DHL_DOMESTIC_ZONE_BY_STATE,
+  DEFAULT_DOMESTIC_ZONE,
+  KG_PER_ITEM,
   getGUORate,
 } from "./shippingConfig";
+import {
+  DHL_EXPORT_RATES,
+  DHL_DOMESTIC_RATES,
+  DHL_MAX_KG,
+  lookupRate,
+} from "./dhlRates";
+
+const DOMESTIC_ZONE_INDEX = { A: 0, B: 1, C: 2 };
+
+// Chargeable weight for a cart. Every garment is billed at KG_PER_ITEM, so
+// each extra unit adds that much again.
+export const getCartWeightKg = (cartItems) =>
+  (cartItems || []).reduce((kg, item) => kg + (item?.quantity || 0) * KG_PER_ITEM, 0);
+
+// DHL publishes rates to DHL_MAX_KG and refers anything heavier to an
+// account manager. Rather than leaving a shopper with no way to check out,
+// quote the heaviest published break and flag that it needs confirming.
+const quoteDhl = (table, weightKg, zoneIndex) => {
+  const capped = Math.min(weightKg, DHL_MAX_KG);
+  const cost = lookupRate(table, capped, zoneIndex);
+  if (cost === null) return null;
+  return {
+    cost,
+    needsQuote: weightKg > DHL_MAX_KG,
+  };
+};
 
 export const calculateShippingRates = (country, state, cartItems) => {
   const rates = [];
@@ -11,6 +41,7 @@ export const calculateShippingRates = (country, state, cartItems) => {
     (total, item) => total + (item?.price || 0) * (item?.quantity || 0),
     0
   );
+  const weightKg = getCartWeightKg(cartItems);
 
   if (country.toLowerCase() === "nigeria") {
     // Domestic shipping
@@ -44,30 +75,48 @@ export const calculateShippingRates = (country, state, cartItems) => {
         }
       }
 
-      // DHL Nigeria rate
-      const dhlRate = SHIPPING_RATES.domestic["DHL Nigeria"][stateData.dhl];
-      rates.push({
-        provider: "DHL Nigeria",
-        service: "Express Delivery",
-        cost: dhlRate,
-        deliveryDays: "2-4 business days",
-        estimatedDelivery: calculateDeliveryDate(2, 4),
-        zone: stateData.dhl,
-      });
+      // DHL Nigeria — weight-based, from the published domestic rate card
+      const domesticZone =
+        DHL_DOMESTIC_ZONE_BY_STATE[state] || DEFAULT_DOMESTIC_ZONE;
+      const dhl = quoteDhl(
+        DHL_DOMESTIC_RATES,
+        weightKg,
+        DOMESTIC_ZONE_INDEX[domesticZone],
+      );
+      if (dhl) {
+        rates.push({
+          provider: "DHL Nigeria",
+          service: "Express Delivery",
+          cost: dhl.cost,
+          deliveryDays: "2-4 business days",
+          estimatedDelivery: calculateDeliveryDate(2, 4),
+          zone: `Zone ${domesticZone}`,
+          weightKg,
+          notes: dhl.needsQuote
+            ? `Over ${DHL_MAX_KG}kg — final shipping confirmed after ordering`
+            : "",
+        });
+      }
     }
   } else {
-    // International shipping - DHL only
-    const zone = INTERNATIONAL_ZONES[country] || "zone8";
-    const intlRate = SHIPPING_RATES.international["DHL International"][zone];
+    // International shipping - DHL only, weight-based
+    const zone = INTERNATIONAL_ZONES[country] || DEFAULT_INTERNATIONAL_ZONE;
+    const dhl = quoteDhl(DHL_EXPORT_RATES, weightKg, zone - 1);
 
-    rates.push({
-      provider: "DHL International",
-      service: "International Express",
-      cost: intlRate,
-      deliveryDays: "5-10 business days",
-      estimatedDelivery: calculateDeliveryDate(5, 10),
-      zone: zone,
-    });
+    if (dhl) {
+      rates.push({
+        provider: "DHL International",
+        service: "International Express",
+        cost: dhl.cost,
+        deliveryDays: "5-10 business days",
+        estimatedDelivery: calculateDeliveryDate(5, 10),
+        zone: `Zone ${zone}`,
+        weightKg,
+        notes: dhl.needsQuote
+          ? `Over ${DHL_MAX_KG}kg — final shipping confirmed after ordering`
+          : "",
+      });
+    }
   }
 
   // Sort rates by cost (cheapest first)

@@ -203,182 +203,146 @@ export const NIGERIAN_STATES = {
   // GIG Logistics Zones
   Lagos: {
     gig: "south-main",
-    dhl: "zone-b-lagos",
     guo: "western-states", // GUO available for Western states only
   },
   Abuja: {
     gig: "north",
-    dhl: "zone-a",
     guo: null, // NO GUO
   },
   Rivers: {
     gig: "south-main",
-    dhl: "zone-b-south",
     guo: null, // NO GUO
   },
   Delta: {
     gig: "south-main",
-    dhl: "zone-b-south",
     guo: null, // NO GUO
   },
   Anambra: {
     gig: "south-onforwarding",
-    dhl: "zone-b-south",
     guo: null, // NO GUO
   },
   Enugu: {
     gig: "south-onforwarding",
-    dhl: "zone-b-south",
     guo: null, // NO GUO
   },
   Imo: {
     gig: "south-onforwarding",
-    dhl: "zone-b-south",
     guo: null, // NO GUO
   },
   Ogun: {
     gig: "south-main",
-    dhl: "zone-b-lagos",
     guo: "western-states", // GUO available - same as Lagos
   },
   Oyo: {
     gig: "south-main",
-    dhl: "zone-b-lagos",
     guo: "western-states", // GUO available - same as Lagos
   },
   Kano: {
     gig: "north",
-    dhl: "zone-a",
     guo: null, // NO GUO
   },
   Kaduna: {
     gig: "north",
-    dhl: "zone-a",
     guo: null, // NO GUO
   },
   Edo: {
     gig: "south-main",
-    dhl: "zone-b-south",
     guo: "western-states", // GUO available - same as Lagos
   },
   Plateau: {
     gig: "north",
-    dhl: "zone-a",
     guo: null, // NO GUO
   },
   "Cross River": {
     gig: "special-cities",
-    dhl: "zone-b-south",
     guo: null, // NO GUO - You said GUO only for Western states
   },
   "Akwa Ibom": {
     gig: "special-cities",
-    dhl: "zone-b-south",
     guo: null, // NO GUO - You said GUO only for Western states
   },
   Ondo: {
     gig: "special-cities",
-    dhl: "zone-b-lagos",
     guo: "western-states", // GUO available - same as Lagos
   },
   Kwara: {
     gig: "north",
-    dhl: "zone-b-lagos",
     guo: "western-states", // GUO available - same as Lagos
   },
   Bayelsa: {
     gig: "special-cities",
-    dhl: "zone-b-south",
     guo: null, // NO GUO
   },
   Osun: {
     gig: "south-main",
-    dhl: "zone-b-lagos",
     guo: "western-states", // GUO available - same as Lagos
   },
   Benue: {
     gig: "north",
-    dhl: "zone-a",
     guo: null, // NO GUO
   },
   Nasarawa: {
     gig: "north",
-    dhl: "zone-a",
     guo: null, // NO GUO
   },
   Niger: {
     gig: "north",
-    dhl: "zone-a",
     guo: null, // NO GUO
   },
   Borno: {
     gig: "north",
-    dhl: "zone-a",
     guo: null, // NO GUO
   },
   Adamawa: {
     gig: "north",
-    dhl: "zone-a",
     guo: null, // NO GUO
   },
   Taraba: {
     gig: "north",
-    dhl: "zone-a",
     guo: null, // NO GUO
   },
   Gombe: {
     gig: "north",
-    dhl: "zone-a",
     guo: null, // NO GUO
   },
   Yobe: {
     gig: "north",
-    dhl: "zone-a",
     guo: null, // NO GUO
   },
   Zamfara: {
     gig: "north",
-    dhl: "zone-a",
     guo: null, // NO GUO
   },
   Kebbi: {
     gig: "north",
-    dhl: "zone-a",
     guo: null, // NO GUO
   },
   Sokoto: {
     gig: "north",
-    dhl: "zone-a",
     guo: null, // NO GUO
   },
   Katsina: {
     gig: "north",
-    dhl: "zone-a",
     guo: null, // NO GUO
   },
   Jigawa: {
     gig: "north",
-    dhl: "zone-a",
     guo: null, // NO GUO
   },
   Bauchi: {
     gig: "north",
-    dhl: "zone-a",
     guo: null, // NO GUO
   },
   Ekiti: {
     gig: "special-cities",
-    dhl: "zone-b-lagos",
     guo: "western-states", // GUO available - same as Lagos
   },
   Ebonyi: {
     gig: "south-onforwarding",
-    dhl: "zone-b-south",
     guo: null, // NO GUO
   },
   Abia: {
     gig: "south-onforwarding",
-    dhl: "zone-b-south",
     guo: null, // NO GUO
   },
 };
@@ -396,27 +360,9 @@ export const SHIPPING_RATES = {
       "western-states": 5000,
       "western-states-high-value": 6000,
     },
-    "DHL Nigeria": {
-      "zone-a": 5500,
-      "zone-a-remote": 7500,
-      "zone-b-lagos": 5500,
-      "zone-b-lagos-remote": 7500,
-      "zone-b-south": 12000,
-      "zone-b-south-remote": 14000,
-    },
   },
-  international: {
-    "DHL International": {
-      zone1: 65000,
-      zone2: 72000,
-      zone3: 79000,
-      zone4: 87000,
-      zone5: 93000,
-      zone6: 96000,
-      zone7: 104000,
-      zone8: 108000,
-    },
-  },
+  // DHL rates are no longer flat per zone — they are weight-based and live
+  // in ./dhlRates.js, keyed off the published rate card.
 };
 
 // Helper function to check if order value requires high-value shipping - UPDATED
@@ -449,227 +395,247 @@ export const GUO_WESTERN_STATES = [
   "Kwara",
 ];
 
-// International zones mapping - Updated with complete list from document
+// ── DHL zones ────────────────────────────────────────────────────────────
+// Country -> DHL zone (1-8), from the "CURRENT JULY 2026 C03" rate card
+// zoning page. Used to index DHL_EXPORT_RATES in ./dhlRates.
 export const INTERNATIONAL_ZONES = {
   // Zone 1
-  Guernsey: "zone1",
-  Ireland: "zone1",
-  Jersey: "zone1",
-  "United Kingdom": "zone1",
+  Ireland: 1,
+  "United Kingdom": 1,
 
-  // Zone 2 - West Africa
-  Benin: "zone2",
-  "Burkina Faso": "zone2",
-  Cameroon: "zone2",
-  "Cape Verde": "zone2",
-  "Central African Republic": "zone2",
-  Chad: "zone2",
-  "Cote D'Ivoire": "zone2",
-  Congo: "zone2",
-  "Congo, Democratic Republic": "zone2",
-  Gabon: "zone2",
-  Gambia: "zone2",
-  Ghana: "zone2",
-  Guinea: "zone2",
-  "Guinea-Bissau": "zone2",
-  Liberia: "zone2",
-  Mali: "zone2",
-  Niger: "zone2",
-  "Sao Tome and Principe": "zone2",
-  Senegal: "zone2",
-  "Sierra Leone": "zone2",
-  Togo: "zone2",
+  // Zone 2
+  Benin: 2,
+  "Burkina Faso": 2,
+  "Cabo Verde": 2,
+  Cameroon: 2,
+  "Central African Republic": 2,
+  Chad: 2,
+  Congo: 2,
+  "Equatorial Guinea": 2,
+  Gabon: 2,
+  Gambia: 2,
+  Ghana: 2,
+  Guinea: 2,
+  "Guinea-Bissau": 2,
+  Liberia: 2,
+  Mali: 2,
+  Niger: 2,
+  "Sao Tome and Principe": 2,
+  Senegal: 2,
+  "Sierra Leone": 2,
+  Togo: 2,
 
-  // Zone 3 - North America
-  Canada: "zone3",
-  Mexico: "zone3",
-  "United States": "zone3",
+  // Zone 3
+  Algeria: 3,
+  Angola: 3,
+  Botswana: 3,
+  Burundi: 3,
+  Comoros: 3,
+  Djibouti: 3,
+  Egypt: 3,
+  Eritrea: 3,
+  Eswatini: 3,
+  Ethiopia: 3,
+  Kenya: 3,
+  Lesotho: 3,
+  Libya: 3,
+  Madagascar: 3,
+  Malawi: 3,
+  Mauritania: 3,
+  Mauritius: 3,
+  Morocco: 3,
+  Mozambique: 3,
+  Namibia: 3,
+  Rwanda: 3,
+  Seychelles: 3,
+  Somalia: 3,
+  "South Africa": 3,
+  "South Sudan": 3,
+  Sudan: 3,
+  Tanzania: 3,
+  Tunisia: 3,
+  Uganda: 3,
+  Zambia: 3,
+  Zimbabwe: 3,
 
-  // Zone 4 - Europe
-  Albania: "zone4",
-  Andorra: "zone4",
-  Austria: "zone4",
-  Belarus: "zone4",
-  Belgium: "zone4",
-  "Bosnia and Herzegovina": "zone4",
-  Bulgaria: "zone4",
-  "Canary Island": "zone4",
-  Croatia: "zone4",
-  Cyprus: "zone4",
-  "Czech Republic": "zone4",
-  Denmark: "zone4",
-  Estonia: "zone4",
-  "Faroe Islands": "zone4",
-  Finland: "zone4",
-  France: "zone4",
-  Germany: "zone4",
-  Gibraltar: "zone4",
-  Greece: "zone4",
-  Greenland: "zone4",
-  Hungary: "zone4",
-  Iceland: "zone4",
-  Italy: "zone4",
-  Kosovo: "zone4",
-  Latvia: "zone4",
-  Liechtenstein: "zone4",
-  Lithuania: "zone4",
-  Luxembourg: "zone4",
-  Malta: "zone4",
-  Moldova: "zone4",
-  Monaco: "zone4",
-  Montenegro: "zone4",
-  Netherlands: "zone4",
-  "North Macedonia": "zone4",
-  Norway: "zone4",
-  Poland: "zone4",
-  Portugal: "zone4",
-  Romania: "zone4",
-  Russia: "zone4",
-  "San Marino": "zone4",
-  Serbia: "zone4",
-  Slovakia: "zone4",
-  Slovenia: "zone4",
-  Spain: "zone4",
-  Sweden: "zone4",
-  Switzerland: "zone4",
-  Turkey: "zone4",
-  Ukraine: "zone4",
+  // Zone 4
+  Canada: 4,
+  Mexico: 4,
+  "United States": 4,
 
-  // Zone 5 - Africa
-  Algeria: "zone5",
-  Angola: "zone5",
-  Botswana: "zone5",
-  Burundi: "zone5",
-  Comoros: "zone5",
-  Djibouti: "zone5",
-  Egypt: "zone5",
-  Eritrea: "zone5",
-  Ethiopia: "zone5",
-  Kenya: "zone5",
-  Lesotho: "zone5",
-  Libya: "zone5",
-  Madagascar: "zone5",
-  Malawi: "zone5",
-  Mauritania: "zone5",
-  Mauritius: "zone5",
-  Mayotte: "zone5",
-  Morocco: "zone5",
-  Mozambique: "zone5",
-  Namibia: "zone5",
-  "Reunion Island": "zone5",
-  Rwanda: "zone5",
-  Seychelles: "zone5",
-  Somalia: "zone5",
-  Somaliland: "zone5",
-  "South Africa": "zone5",
-  "South Sudan": "zone5",
-  Sudan: "zone5",
-  Swaziland: "zone5",
-  Tanzania: "zone5",
-  Tunisia: "zone5",
-  Uganda: "zone5",
-  Zambia: "zone5",
-  Zimbabwe: "zone5",
+  // Zone 5
+  Albania: 5,
+  Andorra: 5,
+  Austria: 5,
+  Belarus: 5,
+  Belgium: 5,
+  "Bosnia and Herzegovina": 5,
+  Bulgaria: 5,
+  Croatia: 5,
+  Cyprus: 5,
+  "Czech Republic": 5,
+  Denmark: 5,
+  Estonia: 5,
+  Finland: 5,
+  France: 5,
+  Germany: 5,
+  Greece: 5,
+  Hungary: 5,
+  Iceland: 5,
+  Italy: 5,
+  Kosovo: 5,
+  Latvia: 5,
+  Liechtenstein: 5,
+  Lithuania: 5,
+  Luxembourg: 5,
+  Malta: 5,
+  Moldova: 5,
+  Monaco: 5,
+  Montenegro: 5,
+  Netherlands: 5,
+  "North Macedonia": 5,
+  Norway: 5,
+  Poland: 5,
+  Portugal: 5,
+  Romania: 5,
+  Russia: 5,
+  "San Marino": 5,
+  Serbia: 5,
+  Slovakia: 5,
+  Slovenia: 5,
+  Spain: 5,
+  Sweden: 5,
+  Switzerland: 5,
+  Turkey: 5,
+  Ukraine: 5,
+  "Vatican City": 5,
 
-  // Zone 6 - Middle East
-  Afghanistan: "zone6",
-  Bahrain: "zone6",
-  Iran: "zone6",
-  Iraq: "zone6",
-  Israel: "zone6",
-  Jordan: "zone6",
-  Kuwait: "zone6",
-  Lebanon: "zone6",
-  Oman: "zone6",
-  Qatar: "zone6",
-  "Saudi Arabia": "zone6",
-  Syria: "zone6",
-  "United Arab Emirates": "zone6",
-  Yemen: "zone6",
+  // Zone 6
+  Afghanistan: 6,
+  Bahrain: 6,
+  Iran: 6,
+  Iraq: 6,
+  Israel: 6,
+  Jordan: 6,
+  Kuwait: 6,
+  Lebanon: 6,
+  Oman: 6,
+  Qatar: 6,
+  "Saudi Arabia": 6,
+  Syria: 6,
+  "United Arab Emirates": 6,
+  Yemen: 6,
 
-  // Zone 7 - Asia & Australia
-  Armenia: "zone7",
-  Australia: "zone7",
-  Azerbaijan: "zone7",
-  Bangladesh: "zone7",
-  Bhutan: "zone7",
-  Brunei: "zone7",
-  Cambodia: "zone7",
-  China: "zone7",
-  "East Timor": "zone7",
-  Georgia: "zone7",
-  "Hong Kong": "zone7",
-  India: "zone7",
-  Indonesia: "zone7",
-  Japan: "zone7",
-  Kazakhstan: "zone7",
-  "Korea, South": "zone7",
-  "Korea, North": "zone7",
-  Kyrgyzstan: "zone7",
-  Laos: "zone7",
-  Macau: "zone7",
-  Malaysia: "zone7",
-  Maldives: "zone7",
-  Mongolia: "zone7",
-  Myanmar: "zone7",
-  Nepal: "zone7",
-  Pakistan: "zone7",
-  Palau: "zone7",
-  Philippines: "zone7",
-  Singapore: "zone7",
-  "Sri Lanka": "zone7",
-  Taiwan: "zone7",
-  Tajikistan: "zone7",
-  Thailand: "zone7",
-  Turkmenistan: "zone7",
-  Uzbekistan: "zone7",
-  Vietnam: "zone7",
+  // Zone 7
+  Armenia: 7,
+  Australia: 7,
+  Azerbaijan: 7,
+  Bangladesh: 7,
+  Bhutan: 7,
+  Brunei: 7,
+  Cambodia: 7,
+  China: 7,
+  Georgia: 7,
+  India: 7,
+  Indonesia: 7,
+  Japan: 7,
+  Kazakhstan: 7,
+  "Korea, North": 7,
+  "Korea, South": 7,
+  Kyrgyzstan: 7,
+  Laos: 7,
+  Malaysia: 7,
+  Maldives: 7,
+  Mongolia: 7,
+  Myanmar: 7,
+  Nepal: 7,
+  Pakistan: 7,
+  Palau: 7,
+  Philippines: 7,
+  Singapore: 7,
+  "Sri Lanka": 7,
+  Taiwan: 7,
+  Tajikistan: 7,
+  Thailand: 7,
+  "Timor-Leste": 7,
+  Turkmenistan: 7,
+  Uzbekistan: 7,
+  Vietnam: 7,
 
-  // Zone 8 - Americas & Oceania
-  "American Samoa": "zone8",
-  Anguilla: "zone8",
-  "Antigua and Barbuda": "zone8",
-  Argentina: "zone8",
-  Aruba: "zone8",
-  Bahamas: "zone8",
-  Barbados: "zone8",
-  Belize: "zone8",
-  Bermuda: "zone8",
-  Bolivia: "zone8",
-  Bonaire: "zone8",
-  Brazil: "zone8",
-  "Cayman Islands": "zone8",
-  Chile: "zone8",
-  Colombia: "zone8",
-  "Cook Islands": "zone8",
-  "Costa Rica": "zone8",
-  Cuba: "zone8",
-  Dominica: "zone8",
-  "Dominican Republic": "zone8",
-  Ecuador: "zone8",
-  "El Salvador": "zone8",
-  "Falkland Islands": "zone8",
-  Fiji: "zone8",
-  "French Guiana": "zone8",
-  Grenada: "zone8",
-  Guadeloupe: "zone8",
-  Guam: "zone8",
-  Guatemala: "zone8",
-  Guyana: "zone8",
-  Haiti: "zone8",
-  Honduras: "zone8",
-  Jamaica: "zone8",
-  Kiribati: "zone8",
-  "Mariana Islands": "zone8",
-  "Marshall Islands": "zone8",
-  Martinique: "zone8",
-  Micronesia: "zone8",
-  Montserrat: "zone8",
-  Nauru: "zone8",
-  "New Caledonia": "zone8",
-  "New Zealand": "zone8",
-  Nicaragua: "zone8",
-  Niue: "zone8",
-  Panama: "zone8",
-  "Papua New Guinea": "zone8",
+  // Zone 8
+  "Antigua and Barbuda": 8,
+  Argentina: 8,
+  Bahamas: 8,
+  Barbados: 8,
+  Belize: 8,
+  Bolivia: 8,
+  Brazil: 8,
+  Chile: 8,
+  Colombia: 8,
+  "Costa Rica": 8,
+  Cuba: 8,
+  Dominica: 8,
+  "Dominican Republic": 8,
+  Ecuador: 8,
+  "El Salvador": 8,
+  Fiji: 8,
+  Grenada: 8,
+  Guatemala: 8,
+  Guyana: 8,
+  Haiti: 8,
+  Honduras: 8,
+  Jamaica: 8,
+  Kiribati: 8,
+  "Marshall Islands": 8,
+  Micronesia: 8,
+  Nauru: 8,
+  "New Zealand": 8,
+  Nicaragua: 8,
+  Panama: 8,
+  "Papua New Guinea": 8,
+  Paraguay: 8,
+  Peru: 8,
+  "Saint Kitts and Nevis": 8,
+  "Saint Lucia": 8,
+  "Saint Vincent and the Grenadines": 8,
+  Samoa: 8,
+  "Solomon Islands": 8,
+  Suriname: 8,
+  Tonga: 8,
+  "Trinidad and Tobago": 8,
+  Tuvalu: 8,
+  Uruguay: 8,
+  Vanuatu: 8,
+  Venezuela: 8,
+
+  // Not listed on DHL's zoning page; grouped with neighbouring
+  // territories so it still quotes rather than silently falling back to
+  // the dearest zone. Confirm with DHL before relying on it.
+  Palestine: 6,
 };
+
+// Fallback when a country somehow is not in the table above. Zone 8 is the
+// most expensive, so an unknown destination over-quotes rather than
+// under-quotes and leaves us short.
+export const DEFAULT_INTERNATIONAL_ZONE = 8;
+
+// Nigeria domestic zone (A/B/C) by destination state.
+//
+// DHL bills domestic on A/B/C while its zoning page names service areas
+// (Lagos, Port Harcourt, Abuja, Warri, Kaduna, Rest of Nigeria). The card
+// does not print the service-area -> A/B/C mapping, so this encodes the
+// standard shape for a Lagos-origin shipper: A within Lagos, B to the
+// other staffed service areas, C everywhere else.
+export const DHL_DOMESTIC_ZONE_BY_STATE = {
+  Lagos: "A",
+  Rivers: "B",   // Port Harcourt
+  Abuja: "B",    // FCT
+  Delta: "B",    // Warri
+  Kaduna: "B",
+};
+export const DEFAULT_DOMESTIC_ZONE = "C"; // Rest of Nigeria
+
+// Assumed shipped weight per garment, in kg, including packaging. DHL bills
+// the higher of actual and volumetric weight, so this stands in for both.
+// Every extra unit in the cart adds this much again.
+export const KG_PER_ITEM = 2;
