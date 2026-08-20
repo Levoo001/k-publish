@@ -1,6 +1,7 @@
 import { client } from "@/sanity/lib/client";
 import { productQuery } from "@/sanity/lib/queries";
 import { notFound } from "next/navigation";
+import { matchesCategory } from "@/lib/productCategory";
 import CollectionClient from "./CollectionClient";
 
 export const revalidate = 60;
@@ -51,26 +52,25 @@ const JUMPSUIT_NAMES = ["Salama Jumpsuit"];
 
 function filterByCategory(products, category) {
   return products.filter((p) => {
-    if (p.categories?.includes(category)) return true;
+    const tags = p.categories || [];
 
-    const name = p.name?.toLowerCase() || "";
+    // Curated lists — these deliberately include products that carry no
+    // category tag yet, so a tag OR a listed name qualifies.
     switch (category) {
-      case "blouse":
-        return name.includes("blouse");
-      case "dresses":
-      case "dressess":
-        return name.includes("dress");
-      case "co-ords":
-        return !name.includes("dress") && !name.includes("belt");
       case "bestsellers":
-        return BESTSELLER_NAMES.includes(p.name);
+        return tags.includes("bestsellers") || BESTSELLER_NAMES.includes(p.name);
       case "pants":
-        return PANTS_NAMES.includes(p.name);
+        return tags.includes("pants") || PANTS_NAMES.includes(p.name);
       case "jumpsuits":
-        return JUMPSUIT_NAMES.includes(p.name);
+        return tags.includes("jumpsuits") || JUMPSUIT_NAMES.includes(p.name);
       default:
-        return false;
+        break;
     }
+
+    // Everything else: an explicit tag decides, and only untagged products
+    // fall back to the legacy name heuristic. (Shared with the static
+    // collection pages so the two can't drift apart again.)
+    return matchesCategory(p, category);
   });
 }
 

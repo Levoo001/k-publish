@@ -4,10 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/image";
 import { getCardImage } from "@/lib/productImage";
+import { filterByCategory } from "@/lib/productCategory";
 
 export default function BlouseClient({ products }) {
-  const blouses =
-    products?.filter((p) => p.name?.toLowerCase().includes("blouse")) || [];
+  const blouses = filterByCategory(products, "blouse");
 
   return (
     <main className="min-h-screen bg-white">

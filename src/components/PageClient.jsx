@@ -64,12 +64,15 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
       (v) => v.images?.length > 0,
     );
     if (variants.length === 0) {
-      return [{ key: product._id, product, image: images[0] }];
+      return [{ key: product._id, product, image: images[0], color: null }];
     }
     return variants.map((v, i) => ({
       key: `${product._id}-${v.color}-${i}`,
       product,
       image: images[i] || images[0],
+      // Carried through to the product page so the colour the shopper
+      // clicked is the one preselected when they land there.
+      color: v.color,
     }));
   });
   const totalSlides = Math.ceil(cardItems.length / 2);
@@ -106,7 +109,7 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
                           <div
                             key={item.key}
                             className="group cursor-pointer transform hover:-translate-y-1 transition-all duration-500"
-                            onClick={() => onProductClick(item.product)}
+                            onClick={() => onProductClick(item.product, item.color)}
                           >
                             <div className="relative aspect-[3/4] overflow-hidden mb-4 bg-white rounded-lg">
                               <Image
@@ -182,7 +185,7 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
               <div
                 key={item.key}
                 className="group cursor-pointer transform hover:-translate-y-1 transition-all duration-500"
-                onClick={() => onProductClick(item.product)}
+                onClick={() => onProductClick(item.product, item.color)}
               >
                 <div className="relative aspect-[3/4] overflow-hidden mb-4 bg-white rounded-lg">
                   <Image
@@ -308,20 +311,12 @@ function shuffleArray(arr) {
 }
 
 // Randomize the full product grid instead of following Sanity's
-// displayOrder, but keep Joy collection pieces weighted to the top —
-// roughly 2 Joy items for every 1 non-Joy item.
+// displayOrder, but show the whole Joy collection first — everything else
+// follows after it. Both groups are shuffled within themselves.
 function shuffleWithJoyPriority(products) {
   const joy = shuffleArray(products.filter((p) => p.collection === "joy"));
   const rest = shuffleArray(products.filter((p) => p.collection !== "joy"));
-  const result = [];
-  let ji = 0;
-  let ri = 0;
-  while (ji < joy.length || ri < rest.length) {
-    if (ji < joy.length) result.push(joy[ji++]);
-    if (ji < joy.length) result.push(joy[ji++]);
-    if (ri < rest.length) result.push(rest[ri++]);
-  }
-  return result;
+  return [...joy, ...rest];
 }
 
 export default function Home({ products }) {
@@ -346,7 +341,9 @@ export default function Home({ products }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Get specific products for each section
-  const joyProducts = products.filter((product) => product.collection === "joy");
+  const joyProducts = products.filter(
+    (product) => product.collection === "joy",
+  );
   const bestsellerProduct = products.find(
     (product) => product.name === "The Amarachi Set",
   );
@@ -359,9 +356,7 @@ export default function Home({ products }) {
   const blouseProduct = products.find((product) =>
     product.name?.toLowerCase().includes("blouse"),
   );
-  const pantsProduct = products.find(
-    (product) => product.name === "Udo Pants",
-  );
+  const pantsProduct = products.find((product) => product.name === "Udo Pants");
   const jumpsuitProduct = products.find(
     (product) => product.name === "Salama Jumpsuit",
   );
@@ -462,9 +457,10 @@ export default function Home({ products }) {
     }
   };
 
-  const handleProductClick = (product) => {
+  const handleProductClick = (product, color) => {
     const slug = product.slug?.current || encodeURIComponent(product.name);
-    router.push(`/products/${slug}`);
+    const query = color ? `?color=${encodeURIComponent(color)}` : "";
+    router.push(`/products/${slug}${query}`);
   };
 
   const handleCloseModal = () => {
@@ -500,8 +496,8 @@ export default function Home({ products }) {
 
           <div className="absolute left-4 bottom-4 inset-0 flex items-end justify-start text-white z-20 lg:pl-12 lg:pb-12 pointer-events-none">
             <div className="pointer-events-auto">
-              <h1 className="text-lg md:text-xl lg:text-2xl uppercase font-playfair drop-shadow-md">
-                THE JOY
+              <h1 className="text-xl lg:text-2xl uppercase font-playfair drop-shadow-md">
+                JOY
               </h1>
 
               <Link

@@ -4,16 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/image";
 import { getCardImage } from "@/lib/productImage";
-
-const EXTRA_DRESS_NAMES = ["Nwanyioma"];
+import { filterByCategory } from "@/lib/productCategory";
 
 export default function DressessClient({ products }) {
-  const dresses =
-    products?.filter(
-      (p) =>
-        p.name?.toLowerCase().includes("dress") ||
-        EXTRA_DRESS_NAMES.includes(p.name),
-    ) || [];
+  const dresses = filterByCategory(products, "dresses");
 
   return (
     <main className="min-h-screen bg-white">

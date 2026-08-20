@@ -11,7 +11,18 @@ import { urlFor } from "@/sanity/lib/image";
 import { trackFacebookEvent } from "@/lib/facebookPixel";
 import { getCardImage, getPosterCount } from "@/lib/productImage";
 
-const DEFAULT_SIZES = ["8", "10", "12", "14", "16", "18", "20", "22", "24"];
+const DEFAULT_SIZES = [
+  "6",
+  "8",
+  "10",
+  "12",
+  "14",
+  "16",
+  "18",
+  "20",
+  "22",
+  "24",
+];
 
 export default function ProductPageClient({ product }) {
   const router = useRouter();
@@ -63,6 +74,26 @@ export default function ProductPageClient({ product }) {
     );
   };
 
+  // The homepage shows one card per colour and links through as
+  // /products/<slug>?color=<colour>, so the shopper lands on the exact
+  // colour they clicked. Read it after mount rather than with
+  // useSearchParams(), which would force this statically generated page
+  // behind a Suspense boundary and drop its content from the prerendered
+  // HTML (bad for SEO).
+  useEffect(() => {
+    if (!product) return;
+    const requested = new URLSearchParams(window.location.search).get("color");
+    if (!requested) return;
+    // Only accept a colour this product actually offers, so a hand-edited
+    // URL can't put the page into a state the swatches can't reach.
+    const match = product.colors?.find(
+      (c) => c?.toLowerCase() === requested.toLowerCase(),
+    );
+    if (!match) return;
+    setSelectedColor(match);
+    if (product.allowMultipleColors === true) setSelectedColors([match]);
+  }, [product]);
+
   useEffect(() => {
     if (!product) return;
     trackFacebookEvent("ViewContent", {
@@ -92,48 +123,50 @@ export default function ProductPageClient({ product }) {
     );
   }
 
+  const isUsableImage = (img) => typeof img === "string" || !!img?.asset;
+  const imageRef = (img) => (typeof img === "string" ? img : img?.asset?._ref);
+
   const getImages = () => {
-    if (selectedColor && product.colorVariants?.length) {
-      const variant = product.colorVariants.find(
-        (v) => v.color === selectedColor,
-      );
-      if (variant?.images?.length) {
-        return variant.images
-          .filter((img) => typeof img === "string" || img?.asset)
-          .map((img) =>
-            typeof img === "string"
-              ? img
-              : urlFor(img)
-                  .width(1200)
-                  .height(1600)
-                  .quality(95)
-                  .format("jpg")
-                  .fit("fill")
-                  .bg("FFFFFF")
-                  .url(),
-          );
-      }
-    }
     // Joy-collection products get a background-removed "poster" shot per
     // color variant duplicated on the homepage (image[0], image[1], ...) —
     // skip that many leading images so those posters don't also show up in
     // this page's gallery. Every other product keeps the original behavior
     // of just skipping the one cover image.
-    return (product.image || [])
-      .filter((img) => typeof img === "string" || img?.asset)
-      .slice(getPosterCount(product))
-      .map((img) =>
-        typeof img === "string"
-          ? img
-          : urlFor(img)
-              .width(1200)
-              .height(1600)
-              .quality(95)
-              .format("jpg")
-              .fit("fill")
-              .bg("FFFFFF")
-              .url(),
-      );
+    const gallery = (product.image || [])
+      .filter(isUsableImage)
+      .slice(getPosterCount(product));
+
+    // Picking a colour re-orders the gallery rather than filtering it: that
+    // colour's shots move to the front (so the shopper opens on the colour
+    // they chose) while every other photo stays available behind them. A
+    // colour's variant can hold shots that aren't in the main gallery, so
+    // those come along too and nothing is hidden.
+    const variant = selectedColor
+      ? product.colorVariants?.find((v) => v.color === selectedColor)
+      : null;
+    const lead = (variant?.images || []).filter(isUsableImage);
+
+    const ordered = lead.length
+      ? [
+          ...lead,
+          ...gallery.filter(
+            (img) => !lead.some((l) => imageRef(l) === imageRef(img)),
+          ),
+        ]
+      : gallery;
+
+    return ordered.map((img) =>
+      typeof img === "string"
+        ? img
+        : urlFor(img)
+            .width(1200)
+            .height(1600)
+            .quality(95)
+            .format("jpg")
+            .fit("fill")
+            .bg("FFFFFF")
+            .url(),
+    );
   };
 
   const images = getImages();

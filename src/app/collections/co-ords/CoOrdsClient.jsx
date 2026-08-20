@@ -4,19 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/image";
 import { getCardImage } from "@/lib/productImage";
-
-// Products that pass the "not a dress" rule below but belong to a
-// different collection, so they're kept out of Co-ords explicitly.
-const EXCLUDED_NAMES = ["Salama Jumpsuit", "Nwanyioma"];
+import { filterByCategory } from "@/lib/productCategory";
 
 export default function CoOrdsClient({ products }) {
-  const coords =
-    products?.filter(
-      (p) =>
-        !p.name?.toLowerCase().includes("dress") &&
-        !p.name?.toLowerCase().includes("belt") &&
-        !EXCLUDED_NAMES.includes(p.name),
-    ) || [];
+  const coords = filterByCategory(products, "co-ords");
 
   return (
     <main className="min-h-screen bg-white">
