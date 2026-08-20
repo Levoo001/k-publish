@@ -577,7 +577,7 @@ export default function CheckoutPage() {
             <hr className="border-slate-100" />
 
             {/* Policy */}
-            <label className="flex items-start gap-3 cursor-pointer">
+            <label className="flex items-start gap-2 cursor-pointer">
               <div className="relative mt-0.5 flex-shrink-0">
                 <input
                   type="checkbox"
@@ -586,7 +586,7 @@ export default function CheckoutPage() {
                   className="sr-only"
                 />
                 <div
-                  className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${agreeToPolicy ? "bg-primary border-primary" : "border-slate-300"}`}
+                  className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-colors ${agreeToPolicy ? "bg-primary border-primary" : "border-slate-300"}`}
                 >
                   {agreeToPolicy && (
                     <svg
@@ -605,7 +605,7 @@ export default function CheckoutPage() {
                   )}
                 </div>
               </div>
-              <span className="text-sm text-slate-600 font-poppins leading-relaxed">
+              <span className="text-xs text-slate-600 font-poppins leading-relaxed">
                 I agree to the{" "}
                 <Link
                   href="/delivery-policy"

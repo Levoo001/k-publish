@@ -1,4 +1,6 @@
-// src/sanity/schemaTypes/product.js
+// studio-kavan/schemaTypes/product.js
+// This is the ONLY product schema. It defines every field editors see in
+// Sanity Studio, and is what `npx sanity deploy` publishes.
 import {defineField, defineType} from 'sanity'
 
 export const product = defineType({
@@ -25,6 +27,37 @@ export const product = defineType({
         source: 'name',
       },
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'collection',
+      title: 'Shop Collection',
+      type: 'string',
+      description: 'Which named collection does this product belong to? Shown on the Shop page.',
+      options: {
+        list: [
+          {title: 'Joy', value: 'joy'},
+          {title: 'Bloom', value: 'bloom'},
+          {title: 'Rebirth', value: 'rebirth'},
+        ],
+        layout: 'radio',
+      },
+    }),
+    defineField({
+      name: 'categories',
+      title: 'Categories',
+      type: 'array',
+      description: 'Assign this product to one or more collections.',
+      of: [{type: 'string'}],
+      options: {
+        list: [
+          {title: 'Bestsellers', value: 'bestsellers'},
+          {title: 'Dresses', value: 'dresses'},
+          {title: 'Blouse', value: 'blouse'},
+          {title: 'Co-ords', value: 'co-ords'},
+          {title: 'Pants', value: 'pants'},
+          {title: 'Jumpsuits', value: 'jumpsuits'},
+        ],
+      },
     }),
     defineField({
       name: 'image',
@@ -71,6 +104,14 @@ export const product = defineType({
           {title: 'Ivory', value: 'ivory'},
           {title: 'Mint', value: 'mint'},
           {title: 'Burgundy', value: 'burgundy'},
+          {title: 'Olive Green', value: 'olive green'},
+          {title: 'Dusty Teal', value: 'dusty teal'},
+          {title: 'Soft Lilac', value: 'soft lilac'},
+          {title: 'Mustard', value: 'mustard'},
+          {title: 'Cream', value: 'cream'},
+          {title: 'Camel', value: 'camel'},
+          {title: 'Butter Yellow', value: 'butter yellow'},
+          {title: 'Off-White', value: 'off-white'},
         ],
       },
     }),
@@ -111,6 +152,14 @@ export const product = defineType({
                   {title: 'Ivory', value: 'ivory'},
                   {title: 'Mint', value: 'mint'},
                   {title: 'Burgundy', value: 'burgundy'},
+                  {title: 'Olive Green', value: 'olive green'},
+                  {title: 'Dusty Teal', value: 'dusty teal'},
+                  {title: 'Soft Lilac', value: 'soft lilac'},
+                  {title: 'Mustard', value: 'mustard'},
+                  {title: 'Cream', value: 'cream'},
+                  {title: 'Camel', value: 'camel'},
+                  {title: 'Butter Yellow', value: 'butter yellow'},
+                  {title: 'Off-White', value: 'off-white'},
                 ],
               },
             }),
@@ -120,12 +169,56 @@ export const product = defineType({
               type: 'array',
               of: [{type: 'image'}],
             }),
+            defineField({
+              name: 'stockNote',
+              title: 'Stock Note',
+              type: 'string',
+              description:
+                "Optional short note shown to shoppers when this color is selected, e.g. 'Only 3 left in Green'. Leave blank for normal stock levels.",
+            }),
           ],
           preview: {
             select: {title: 'color', media: 'images.0'},
           },
         },
       ],
+    }),
+    defineField({
+      name: 'allowMultipleColors',
+      title: 'Allow Multiple Colors',
+      type: 'boolean',
+      initialValue: false,
+      description:
+        "Turn on for 'pick your top colour(s)' products (e.g. one skirt available with several top colours). Customers can select more than one colour instead of exactly one. Leave off for normal products — nothing changes for those.",
+    }),
+    defineField({
+      name: 'extraColorPrice',
+      title: 'Extra Price Per Additional Color',
+      type: 'number',
+      description:
+        'Only used when Allow Multiple Colors is on. Extra amount added to the price for each additional colour selected beyond the first.',
+    }),
+    defineField({
+      name: 'hasAddOn',
+      title: 'Has Optional Add-on',
+      type: 'boolean',
+      initialValue: false,
+      description:
+        "Turn on when this product has an optional priced extra a customer can add at checkout (e.g. a jumpsuit with a detachable belt). Leave off for normal products — nothing changes for those.",
+    }),
+    defineField({
+      name: 'addOnName',
+      title: 'Add-on Name',
+      type: 'string',
+      description:
+        'Only used when Has Optional Add-on is on. Shown to shoppers as a checkbox label, e.g. "Detachable Belt".',
+    }),
+    defineField({
+      name: 'addOnPrice',
+      title: 'Add-on Price',
+      type: 'number',
+      description:
+        'Only used when Has Optional Add-on is on. Extra amount added to the price when the shopper checks the add-on box.',
     }),
   ],
 })

@@ -14,9 +14,15 @@ const PRODUCT_FIELDS = `
   collection,
   inStock,
   displayOrder,
+  allowMultipleColors,
+  extraColorPrice,
+  hasAddOn,
+  addOnName,
+  addOnPrice,
   colorVariants[] {
     color,
-    images
+    images,
+    stockNote
   }
 `;
 

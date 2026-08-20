@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { IoVolumeHighSharp, IoVolumeMute } from "react-icons/io5";
 import { urlFor } from "@/sanity/lib/image";
+import { getCardImage } from "@/lib/productImage";
 import useEmblaCarousel from "embla-carousel-react";
 import Link from "next/link";
 import { subscribeToNewsletter } from "../services/newsletterService";
@@ -52,9 +53,26 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
     emblaApi.on("select", onSelect);
   }, [emblaApi, onInit, onSelect]);
 
-  // Show all products
-  const displayProducts = products;
-  const totalSlides = Math.ceil(displayProducts.length / 2);
+  // One card per color variant so each color gets its own standalone image
+  // tile — every tile for a product still opens that same product's page.
+  const cardItems = products.flatMap((product) => {
+    // Skip image slots with no uploaded asset — urlFor() throws on those.
+    const images = (product.image || []).filter(
+      (img) => typeof img === "string" || img?.asset,
+    );
+    const variants = (product.colorVariants || []).filter(
+      (v) => v.images?.length > 0,
+    );
+    if (variants.length === 0) {
+      return [{ key: product._id, product, image: images[0] }];
+    }
+    return variants.map((v, i) => ({
+      key: `${product._id}-${v.color}-${i}`,
+      product,
+      image: images[i] || images[0],
+    }));
+  });
+  const totalSlides = Math.ceil(cardItems.length / 2);
 
   return (
     <section className="bg-white">
@@ -70,11 +88,11 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
                   style={{ flex: "0 0 100%" }}
                 >
                   <div className="grid grid-cols-2 gap-4 md:gap-8 px-2">
-                    {displayProducts
+                    {cardItems
                       .slice(slideIndex * 2, slideIndex * 2 + 2)
-                      .map((product) => {
-                        const displayImage = product.image[0]
-                          ? urlFor(product.image[0])
+                      .map((item) => {
+                        const displayImage = item.image
+                          ? urlFor(item.image)
                               .width(600)
                               .height(800)
                               .quality(90)
@@ -86,14 +104,14 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
 
                         return (
                           <div
-                            key={product._id}
+                            key={item.key}
                             className="group cursor-pointer transform hover:-translate-y-1 transition-all duration-500"
-                            onClick={() => onProductClick(product)}
+                            onClick={() => onProductClick(item.product)}
                           >
                             <div className="relative aspect-[3/4] overflow-hidden mb-4 bg-white rounded-lg">
                               <Image
                                 src={displayImage}
-                                alt={product.name}
+                                alt={item.product.name}
                                 fill
                                 className="object-cover group-hover:scale-105 transition-transform duration-700"
                                 sizes="50vw"
@@ -102,10 +120,10 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
                             </div>
                             <div className="text-center">
                               <h3 className="font-light text-sm mb-1 text-primary-900 line-clamp-1 font-playfair">
-                                {product.name}
+                                {item.product.name}
                               </h3>
                               <p className="text-sm font-medium text-primary font-poppins">
-                                ₦{product.price.toLocaleString()}
+                                ₦{item.product.price.toLocaleString()}
                               </p>
                             </div>
                           </div>
@@ -148,9 +166,9 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
 
         {/* Desktop: Static Grid (lg+) */}
         <div className="hidden lg:grid lg:grid-cols-4 xl:grid-cols-5 gap-6 px-2 py-4">
-          {displayProducts.map((product) => {
-            const displayImage = product.image[0]
-              ? urlFor(product.image[0])
+          {cardItems.map((item) => {
+            const displayImage = item.image
+              ? urlFor(item.image)
                   .width(600)
                   .height(800)
                   .quality(90)
@@ -162,14 +180,14 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
 
             return (
               <div
-                key={product._id}
+                key={item.key}
                 className="group cursor-pointer transform hover:-translate-y-1 transition-all duration-500"
-                onClick={() => onProductClick(product)}
+                onClick={() => onProductClick(item.product)}
               >
                 <div className="relative aspect-[3/4] overflow-hidden mb-4 bg-white rounded-lg">
                   <Image
                     src={displayImage}
-                    alt={product.name}
+                    alt={item.product.name}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
                     sizes="(max-width: 1280px) 25vw, 20vw"
@@ -177,10 +195,10 @@ const FeaturedCollectionsCarousel = ({ products, onProductClick }) => {
                 </div>
                 <div className="text-center">
                   <h3 className="font-light text-sm mb-1 text-primary-900 line-clamp-1 font-playfair">
-                    {product.name}
+                    {item.product.name}
                   </h3>
                   <p className="text-sm font-medium text-primary font-poppins">
-                    ₦{product.price.toLocaleString()}
+                    ₦{item.product.price.toLocaleString()}
                   </p>
                 </div>
               </div>
@@ -208,11 +226,13 @@ const BottomCardsCarousel = ({ products, startIndex = 0 }) => {
     return () => clearInterval(interval);
   }, [emblaApi]);
 
-  // Get all first images from products
-  const allFirstImages = products.map((product) => ({
-    image: product.image[1],
-    productName: product.name,
-  }));
+  // Get all first images from products, skipping any with no usable image
+  const allFirstImages = products
+    .map((product) => ({
+      image: getCardImage(product),
+      productName: product.name,
+    }))
+    .filter((item) => item.image);
 
   // Start from different positions based on startIndex
   const reorderedImages = [
@@ -252,17 +272,22 @@ const BottomCardsCarousel = ({ products, startIndex = 0 }) => {
 
 // Static Product Card Component (for Bestsellers and Co-ords)
 const StaticProductCard = ({ product }) => {
+  const cardImage = getCardImage(product);
   return (
     <div className="aspect-[3/3.9] relative rounded-2xl overflow-hidden shadow-luxury group">
       <Image
-        src={urlFor(product.image[1] || product.image[0])
-          .width(800)
-          .height(1040)
-          .quality(90)
-          .format("jpg")
-          .fit("fill")
-          .bg("FFFFFF")
-          .url()}
+        src={
+          cardImage
+            ? urlFor(cardImage)
+                .width(800)
+                .height(1040)
+                .quality(90)
+                .format("jpg")
+                .fit("fill")
+                .bg("FFFFFF")
+                .url()
+            : "/fallback.jpg"
+        }
         alt={product.name}
         fill
         className="object-cover"
@@ -273,11 +298,47 @@ const StaticProductCard = ({ product }) => {
   );
 };
 
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Randomize the full product grid instead of following Sanity's
+// displayOrder, but keep Joy collection pieces weighted to the top —
+// roughly 2 Joy items for every 1 non-Joy item.
+function shuffleWithJoyPriority(products) {
+  const joy = shuffleArray(products.filter((p) => p.collection === "joy"));
+  const rest = shuffleArray(products.filter((p) => p.collection !== "joy"));
+  const result = [];
+  let ji = 0;
+  let ri = 0;
+  while (ji < joy.length || ri < rest.length) {
+    if (ji < joy.length) result.push(joy[ji++]);
+    if (ji < joy.length) result.push(joy[ji++]);
+    if (ri < rest.length) result.push(rest[ri++]);
+  }
+  return result;
+}
+
 export default function Home({ products }) {
   const router = useRouter();
   const [isMuted, setIsMuted] = useState(true);
   const [videoError, setVideoError] = useState(false);
   const videoRef = useRef(null);
+  const secondVideoRef = useRef(null);
+  const [secondVideoInView, setSecondVideoInView] = useState(false);
+
+  // Randomized (Joy-first) order for the full product grid. Starts as the
+  // server-rendered order so hydration matches, then shuffles client-side
+  // right after mount.
+  const [gridProducts, setGridProducts] = useState(products);
+  useEffect(() => {
+    setGridProducts(shuffleWithJoyPriority(products));
+  }, [products]);
 
   // Newsletter state
   const [formData, setFormData] = useState({ name: "", email: "" });
@@ -285,6 +346,7 @@ export default function Home({ products }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Get specific products for each section
+  const joyProducts = products.filter((product) => product.collection === "joy");
   const bestsellerProduct = products.find(
     (product) => product.name === "The Amarachi Set",
   );
@@ -296,6 +358,12 @@ export default function Home({ products }) {
   );
   const blouseProduct = products.find((product) =>
     product.name?.toLowerCase().includes("blouse"),
+  );
+  const pantsProduct = products.find(
+    (product) => product.name === "Udo Pants",
+  );
+  const jumpsuitProduct = products.find(
+    (product) => product.name === "Salama Jumpsuit",
   );
 
   // Video loading
@@ -314,6 +382,41 @@ export default function Home({ products }) {
       video.removeEventListener("error", handleError);
     };
   }, []);
+
+  // Second video: hold off downloading it until it nears the viewport.
+  // `preload` is only a hint and autoplay overrides it, so the source is
+  // withheld from the DOM instead.
+  useEffect(() => {
+    const video = secondVideoRef.current;
+    if (!video || secondVideoInView) return;
+
+    if (typeof IntersectionObserver === "undefined") {
+      setSecondVideoInView(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setSecondVideoInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "300px" },
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, [secondVideoInView]);
+
+  // Once the source is attached, pick it up and start playing
+  useEffect(() => {
+    const video = secondVideoRef.current;
+    if (!video || !secondVideoInView) return;
+
+    video.load();
+    video.play().catch(() => {});
+  }, [secondVideoInView]);
 
   const toggleMute = () => {
     if (videoRef.current) {
@@ -380,14 +483,14 @@ export default function Home({ products }) {
             playsInline
             className="w-full h-full object-cover lg:object-contain bg-black"
             preload="auto"
-            poster="/fallback.jpg"
+            poster="/joy-poster.jpg"
           >
             <source src="/vid.mp4" type="video/mp4" />
           </video>
 
           {videoError && (
             <Image
-              src="/fallback.jpg"
+              src="/joy-poster.jpg"
               alt="Kavan The Brand"
               fill
               className="object-cover lg:object-contain bg-black"
@@ -398,17 +501,17 @@ export default function Home({ products }) {
           <div className="absolute left-4 bottom-4 inset-0 flex items-end justify-start text-white z-20 lg:pl-12 lg:pb-12 pointer-events-none">
             <div className="pointer-events-auto">
               <h1 className="text-lg md:text-xl lg:text-2xl uppercase font-playfair drop-shadow-md">
-                THE BLOOM
+                THE JOY
               </h1>
 
               <Link
                 href="/shop"
-                className="py-2 flex items-center gap-2 text-white hover:text-primary-200 transition-colors drop-shadow-md"
+                className="py-2 flex items-center gap-2 text-white hover:text-primary-200 transition-colors drop-shadow-md text-sm"
               >
                 <span className="border-b border-white hover:border-primary-200 transition-colors font-poppins">
                   Order Now
                 </span>
-                <HiOutlineArrowLongRight size={30} />
+                <HiOutlineArrowLongRight size={24} />
               </Link>
             </div>
           </div>
@@ -428,31 +531,29 @@ export default function Home({ products }) {
       </section>
 
       <FeaturedCollectionsCarousel
-        products={products}
+        products={joyProducts}
         onProductClick={handleProductClick}
       />
 
       {/* SECONDARY VIDEO SECTION */}
       <section className="relative w-full aspect-[4/5] lg:h-[70vh] lg:aspect-auto overflow-hidden bg-black my-10">
         <video
+          ref={secondVideoRef}
           autoPlay
           muted
           loop
           playsInline
           className="w-full h-full object-cover lg:object-contain bg-black"
-          preload="auto"
-          poster="/fallback2.jpg"
+          preload="metadata"
+          poster="/joy-poster2.jpg"
           onError={(e) => {
             e.currentTarget.style.display = "none";
           }}
         >
-          <source
-            src="/vid2.mp4"
-            type="video/mp4"
-          />
+          {secondVideoInView && <source src="/vid2.mp4" type="video/mp4" />}
         </video>
         <Image
-          src="/fallback2.jpg"
+          src="/joy-poster2.jpg"
           alt="Kavan The Brand"
           fill
           className="object-cover -z-10"
@@ -464,18 +565,17 @@ export default function Home({ products }) {
         <div className="container mx-auto px-4 max-w-7xl">
           {/* 2 items per row on mobile, 3 on md, 4 on lg, 5 on xl */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-8">
-            {products.map((product) => {
-              const displayImage =
-                product.image[1] || product.image[0]
-                  ? urlFor(product.image[1] || product.image[0])
-                      .width(800)
-                      .height(1000)
-                      .quality(90)
-                      .format("jpg")
-                      .fit("fill")
-                      .bg("FFFFFF")
-                      .url()
-                  : "/fallback.jpg";
+            {gridProducts.map((product) => {
+              const displayImage = getCardImage(product)
+                ? urlFor(getCardImage(product))
+                    .width(800)
+                    .height(1000)
+                    .quality(90)
+                    .format("jpg")
+                    .fit("fill")
+                    .bg("FFFFFF")
+                    .url()
+                : "/fallback.jpg";
 
               return (
                 <div
@@ -598,6 +698,50 @@ export default function Home({ products }) {
                 </div>
               )}
             </div>
+
+            {/* Pants Column */}
+            <div className="space-y-4">
+              {pantsProduct && (
+                <div className="relative group">
+                  <StaticProductCard product={pantsProduct} />
+                  <Link
+                    href="/collections/pants"
+                    className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
+                  >
+                    <div className="space-y-1">
+                      <div className="text-left text-white text-sm font-semibold font-poppins">
+                        Pants
+                      </div>
+                      <button className="text-white font-semibold text-xs w-fit border-b border-white hover:border-primary-200 transition-colors font-poppins">
+                        Shop Now
+                      </button>
+                    </div>
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Jumpsuits Column */}
+            <div className="space-y-4 mt-8 lg:mt-0">
+              {jumpsuitProduct && (
+                <div className="relative group">
+                  <StaticProductCard product={jumpsuitProduct} />
+                  <Link
+                    href="/collections/jumpsuits"
+                    className="absolute inset-0 flex flex-col justify-end p-4 cursor-pointer rounded-2xl z-10"
+                  >
+                    <div className="space-y-1">
+                      <div className="text-left text-white text-sm font-semibold font-poppins">
+                        Jumpsuits
+                      </div>
+                      <button className="text-white font-semibold text-xs w-fit border-b border-white hover:border-primary-200 transition-colors font-poppins">
+                        Shop Now
+                      </button>
+                    </div>
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Bottom Two Cards with Carousel - No Links */}
@@ -640,7 +784,9 @@ export default function Home({ products }) {
               type="text"
               placeholder="Your full name"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               disabled={isSubmitting}
               className="w-full px-4 py-3 border border-primary-700 rounded-xl focus:outline-none focus:border-white text-base md:text-sm text-primary placeholder-primary-300 placeholder:text-xs disabled:opacity-50 font-poppins backdrop-blur-sm bg-white/95"
             />
@@ -648,7 +794,9 @@ export default function Home({ products }) {
               type="email"
               placeholder="Enter your email address"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
               disabled={isSubmitting}
               className="w-full px-4 py-3 border border-primary-700 rounded-xl focus:outline-none focus:border-white text-base md:text-sm text-primary placeholder-primary-300 placeholder:text-xs disabled:opacity-50 font-poppins backdrop-blur-sm bg-white/95"
               required

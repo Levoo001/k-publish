@@ -3,10 +3,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/image";
+import { getCardImage } from "@/lib/productImage";
+
+// Products that pass the "not a dress" rule below but belong to a
+// different collection, so they're kept out of Co-ords explicitly.
+const EXCLUDED_NAMES = ["Salama Jumpsuit", "Nwanyioma"];
 
 export default function CoOrdsClient({ products }) {
   const coords =
-    products?.filter((p) => !p.name?.toLowerCase().includes("dress")) || [];
+    products?.filter(
+      (p) =>
+        !p.name?.toLowerCase().includes("dress") &&
+        !p.name?.toLowerCase().includes("belt") &&
+        !EXCLUDED_NAMES.includes(p.name),
+    ) || [];
 
   return (
     <main className="min-h-screen bg-white">
@@ -21,11 +31,10 @@ export default function CoOrdsClient({ products }) {
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
           {coords.map((product) => {
             const slug = product.slug?.current || encodeURIComponent(product.name);
-            const displayImage =
-              product.image?.[1] || product.image?.[0]
-                ? urlFor(product.image?.[1] || product.image?.[0])
-                    .width(600).height(800).quality(90).format("jpg").fit("fill").bg("FFFFFF").url()
-                : "/fallback.jpg";
+            const displayImage = getCardImage(product)
+              ? urlFor(getCardImage(product))
+                  .width(600).height(800).quality(90).format("jpg").fit("fill").bg("FFFFFF").url()
+              : "/fallback.jpg";
 
             return (
               <Link key={product._id} href={`/products/${slug}`} className="group cursor-pointer">

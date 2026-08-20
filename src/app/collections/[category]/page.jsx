@@ -26,21 +26,13 @@ const CATEGORY_META = {
     title: "Co-ords",
     description: "Perfectly matched sets for an effortless look.",
   },
-  sets: {
-    title: "Sets",
-    description: "Curated sets that do the pairing for you.",
+  pants: {
+    title: "Pants",
+    description: "Tailored trousers for effortless movement.",
   },
-  skirts: {
-    title: "Skirts",
-    description: "From midi to mini — every silhouette covered.",
-  },
-  "new-arrivals": {
-    title: "New Arrivals",
-    description: "Fresh from the atelier — our newest pieces.",
-  },
-  sale: {
-    title: "Sale",
-    description: "Luxury at a better price. Limited time.",
+  jumpsuits: {
+    title: "Jumpsuits",
+    description: "One-piece style, zero compromise.",
   },
 };
 
@@ -52,6 +44,10 @@ const BESTSELLER_NAMES = [
   "Urenna Pant-Set",
   "Grace Midi-skirt Set",
 ];
+
+const PANTS_NAMES = ["Udo Pants", "Urenna Pant-Set", "The Amara Set"];
+
+const JUMPSUIT_NAMES = ["Salama Jumpsuit"];
 
 function filterByCategory(products, category) {
   return products.filter((p) => {
@@ -65,9 +61,13 @@ function filterByCategory(products, category) {
       case "dressess":
         return name.includes("dress");
       case "co-ords":
-        return !name.includes("dress");
+        return !name.includes("dress") && !name.includes("belt");
       case "bestsellers":
         return BESTSELLER_NAMES.includes(p.name);
+      case "pants":
+        return PANTS_NAMES.includes(p.name);
+      case "jumpsuits":
+        return JUMPSUIT_NAMES.includes(p.name);
       default:
         return false;
     }

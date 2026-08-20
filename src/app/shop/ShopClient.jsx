@@ -5,6 +5,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { urlFor } from "@/sanity/lib/image";
+import { getCardImage } from "@/lib/productImage";
 export default function ShopClient({ products }) {
   const router = useRouter();
 
@@ -19,7 +20,9 @@ export default function ShopClient({ products }) {
   const isRebirth = (p) =>
     p.collection === "rebirth" ||
     (!p.collection && REBIRTH_NAMES.includes(p.name?.toLowerCase().trim()));
-  const bloomCollection = products.filter((p) => !isRebirth(p));
+  const isJoy = (p) => p.collection === "joy";
+  const joyCollection = products.filter(isJoy);
+  const bloomCollection = products.filter((p) => !isJoy(p) && !isRebirth(p));
   const rebirthCollection = products.filter(isRebirth);
 
   const handleProductClick = (product) => {
@@ -27,10 +30,106 @@ export default function ShopClient({ products }) {
     router.push(`/products/${slug}`);
   };
 
+  const renderProducts = (collection) => (
+    <section className="container mx-auto px-2 max-w-7xl py-12">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+        {collection.map((product) => (
+          <div
+            key={product._id}
+            className="group cursor-pointer transform hover:-translate-y-2 transition-all duration-300 shadow-lg rounded-xl group-hover:shadow-luxury"
+            onClick={() => handleProductClick(product)}
+          >
+            <div className="relative aspect-[3/4] overflow-hidden mb-4 rounded-t-xl transition-all duration-300">
+              <Image
+                src={
+                  getCardImage(product)
+                    ? urlFor(getCardImage(product))
+                        .width(600)
+                        .height(800)
+                        .quality(90)
+                        .format("jpg")
+                        .fit("fill")
+                        .bg("FFFFFF")
+                        .url()
+                    : "/fallback.jpg"
+                }
+                alt={product.name}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              />
+            </div>
+
+            <div className="text-center p-2 space-y-2">
+              <h3 className="font-light text-base md:text-lg text-primary line-clamp-2 font-playfair">
+                {product.name}
+              </h3>
+              <p className="text-lg font-bold text-primary font-poppins">
+                ₦{product.price?.toLocaleString()}
+              </p>
+
+              <button
+                className="md:hidden w-full bg-primary text-white py-2 rounded-lg text-sm font-medium mt-2 font-poppins"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleProductClick(product);
+                }}
+              >
+                View Details
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+
   return (
     <main className="min-h-screen bg-white">
+      {/* Joy Collection Section */}
+      <section className="bg-gradient-to-r from-primary-50 to-white py-8">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="">
+            <h1 className="text-3xl md:text-5xl font-playfair mb-3 text-primary text-center">
+              The Joy Collection
+            </h1>
+            <div className="space-y-2 text-slate-700 leading-snug font-poppins max-w-2xl mx-auto text-center text-sm md:text-base">
+              <p>
+                JOY was born during a season when joy felt difficult to reach.
+              </p>
+              <p>
+                While creating this collection, I found myself going through a
+                deeply trying period. I had prayed for things to change, but
+                they didn’t change in the way I hoped. Somewhere in that season,
+                I realised what I wanted most was joy — not happiness dependent
+                on circumstances, but something deeper.
+              </p>
+              <p>
+                Because we were already creating these pieces, that feeling
+                began to shape the collection.
+              </p>
+              <p>
+                JOY explores that emotion in different forms: through colour,
+                movement, ruffles, fringe, crochet, beadwork, texture and
+                silhouettes that allow a woman to feel free, feminine and fully
+                present.
+              </p>
+              <p className="italic text-xs md:text-sm">
+                Because joy doesn’t always arrive looking the same.
+              </p>
+              <div className="bg-primary text-white p-3 italic mt-2 rounded text-xs md:text-sm">
+                <p>And when it comes knocking, we hope you recognise it.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Joy Collection Products Grid */}
+      {joyCollection.length > 0 && renderProducts(joyCollection)}
+
       {/* Bloom Collection Section */}
-      <section className="bg-gradient-to-r from-white to-primary-50 py-8">
+      <section className="bg-gradient-to-r from-white to-primary-50 py-8 mt-6 border-t border-slate-200">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="">
             <h1 className="text-3xl md:text-5xl font-playfair mb-3 text-primary text-center">
@@ -61,57 +160,7 @@ export default function ShopClient({ products }) {
       </section>
 
       {/* Bloom Collection Products Grid */}
-      <section className="container mx-auto px-2 max-w-7xl py-12">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-          {bloomCollection.map((product) => (
-            <div
-              key={product._id}
-              className="group cursor-pointer transform hover:-translate-y-2 transition-all duration-300 shadow-lg rounded-xl group-hover:shadow-luxury"
-              onClick={() => handleProductClick(product)}
-            >
-              <div className="relative aspect-[3/4] overflow-hidden mb-4 rounded-t-xl transition-all duration-300">
-                <Image
-                  src={
-                    product.image?.[1] || product.image?.[0]
-                      ? urlFor(product.image?.[1] || product.image?.[0])
-                          .width(600)
-                          .height(800)
-                          .quality(90)
-                          .format("jpg")
-                          .fit("fill")
-                          .bg("FFFFFF")
-                          .url()
-                      : "/fallback.jpg"
-                  }
-                  alt={product.name}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                />
-              </div>
-
-              <div className="text-center p-2 space-y-2">
-                <h3 className="font-light text-base md:text-lg text-primary line-clamp-2 font-playfair">
-                  {product.name}
-                </h3>
-                <p className="text-lg font-bold text-primary font-poppins">
-                  ₦{product.price?.toLocaleString()}
-                </p>
-
-                <button
-                  className="md:hidden w-full bg-primary text-white py-2 rounded-lg text-sm font-medium mt-2 font-poppins"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleProductClick(product);
-                  }}
-                >
-                  View Details
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      {renderProducts(bloomCollection)}
 
       {/* Rebirth Collection Section */}
       <section className="bg-gradient-to-r from-primary-50 to-white py-8 mt-6 border-t border-slate-200">
@@ -156,58 +205,7 @@ export default function ShopClient({ products }) {
       </section>
 
       {/* Rebirth Collection Products Grid */}
-      <section className="container mx-auto px-2 max-w-7xl py-12">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-          {rebirthCollection.map((product) => (
-            <div
-              key={product._id}
-              className="group cursor-pointer transform hover:-translate-y-2 transition-all duration-300 shadow-lg rounded-xl group-hover:shadow-luxury"
-              onClick={() => handleProductClick(product)}
-            >
-              <div className="relative aspect-[3/4] overflow-hidden mb-4 rounded-t-xl transition-all duration-300">
-                <Image
-                  src={
-                    product.image?.[1] || product.image?.[0]
-                      ? urlFor(product.image?.[1] || product.image?.[0])
-                          .width(600)
-                          .height(800)
-                          .quality(90)
-                          .format("jpg")
-                          .fit("fill")
-                          .bg("FFFFFF")
-                          .url()
-                      : "/fallback.jpg"
-                  }
-                  alt={product.name}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                />
-              </div>
-
-              <div className="text-center p-2 space-y-2">
-                <h3 className="font-light text-base md:text-lg text-primary line-clamp-2 font-playfair">
-                  {product.name}
-                </h3>
-                <p className="text-lg font-bold text-primary font-poppins">
-                  ₦{product.price?.toLocaleString()}
-                </p>
-
-                <button
-                  className="md:hidden w-full bg-primary text-white py-2 rounded-lg text-sm font-medium mt-2 font-poppins"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleProductClick(product);
-                  }}
-                >
-                  View Details
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
+      {renderProducts(rebirthCollection)}
     </main>
   );
 }

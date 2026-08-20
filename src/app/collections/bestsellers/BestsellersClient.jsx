@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/image";
+import { getCardImage } from "@/lib/productImage";
 
 const BESTSELLER_NAMES = [
   "the chisom dress",
@@ -31,11 +32,10 @@ export default function BestsellersClient({ products }) {
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
           {bestsellers.map((product) => {
             const slug = product.slug?.current || encodeURIComponent(product.name);
-            const displayImage =
-              product.image?.[1] || product.image?.[0]
-                ? urlFor(product.image?.[1] || product.image?.[0])
-                    .width(600).height(800).quality(90).format("jpg").fit("fill").bg("FFFFFF").url()
-                : "/fallback.jpg";
+            const displayImage = getCardImage(product)
+              ? urlFor(getCardImage(product))
+                  .width(600).height(800).quality(90).format("jpg").fit("fill").bg("FFFFFF").url()
+              : "/fallback.jpg";
 
             return (
               <Link key={product._id} href={`/products/${slug}`} className="group cursor-pointer">
