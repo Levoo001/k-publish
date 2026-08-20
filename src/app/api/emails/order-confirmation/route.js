@@ -190,8 +190,8 @@ function generateOrderConfirmationEmail(orderData) {
           <tr>
             <td>
               <div style="font-weight:600;color:#111;margin-bottom:2px;">${item.name}</div>
-              ${item.selectedSize && item.selectedSize !== "N/A" ? `<span style="color:#aaa;font-size:11px;">Size: ${item.selectedSize}</span>` : ""}
-              ${item.color && item.color !== "N/A" ? `<span style="color:#aaa;font-size:11px;">${item.selectedSize && item.selectedSize !== "N/A" ? " &nbsp;·&nbsp; " : ""}Colour: ${item.color}</span>` : ""}
+              ${item.size && item.size !== "Not specified" ? `<span style="color:#aaa;font-size:11px;">Size: ${item.size}</span>` : ""}
+              ${item.color && item.color !== "Not specified" ? `<span style="color:#aaa;font-size:11px;">${item.size && item.size !== "Not specified" ? " &nbsp;·&nbsp; " : ""}Colour: ${item.color}</span>` : ""}
             </td>
             <td style="text-align:center;color:#888;">${item.quantity}</td>
             <td style="text-align:right;color:#333;">&#8358;${(item.price || 0).toLocaleString()}</td>
@@ -308,8 +308,8 @@ function generateAdminNotificationEmail(orderData) {
               ${(orderData.items || []).map((item) => `
               <tr>
                 <td>${item.name}</td>
-                <td>${item.selectedSize || "—"}</td>
-                <td>${item.color || "—"}</td>
+                <td>${item.size && item.size !== "Not specified" ? item.size : "—"}</td>
+                <td>${item.color && item.color !== "Not specified" ? item.color : "—"}</td>
                 <td>${item.quantity}</td>
                 <td>₦${(item.price || 0).toLocaleString()}</td>
               </tr>`).join("")}
