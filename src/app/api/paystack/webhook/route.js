@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import { saveOrder } from "@/lib/firestoreService";
+import { validateCoupon } from "@/lib/coupons";
 
 export async function POST(request) {
   const rawBody = await request.text();
@@ -31,6 +32,30 @@ export async function POST(request) {
   else if (data.channel === "mobile_money") paymentMethod = "Mobile Money";
   else if (data.channel === "qr") paymentMethod = "QR Code";
 
+  const subtotal = Number(data.metadata?.subtotal) || 0;
+  const claimedCouponCode = data.metadata?.coupon_code;
+
+  // Never trust the client-supplied discount_amount: re-derive it here so a
+  // tampered/expired/over-used code can't land in the order record or count
+  // as a legitimate redemption.
+  let couponCode = null;
+  let discountAmount = 0;
+  if (claimedCouponCode) {
+    try {
+      const coupon = await validateCoupon(claimedCouponCode, subtotal);
+      if (coupon.valid) {
+        couponCode = coupon.code;
+        discountAmount = coupon.discountAmount;
+      }
+    } catch (err) {
+      console.error("Coupon re-validation failed in webhook:", err);
+      // Payment already succeeded — never let this block saving the order.
+      // Fall back to the client-claimed values rather than losing the order.
+      couponCode = String(claimedCouponCode).trim().toUpperCase();
+      discountAmount = Number(data.metadata?.discount_amount) || 0;
+    }
+  }
+
   const orderData = {
     customerEmail: data.customer?.email || getField("customer_email"),
     customerName: getField("customer_name"),
@@ -47,7 +72,9 @@ export async function POST(request) {
     shippingFee: Number(getField("shipping_fee")) || 0,
 
     items: data.metadata?.items || [],
-    subtotal: Number(data.metadata?.subtotal) || 0,
+    subtotal,
+    couponCode,
+    discountAmount,
     totalAmount: Number(data.metadata?.total) || data.amount / 100,
 
     paymentMethod,

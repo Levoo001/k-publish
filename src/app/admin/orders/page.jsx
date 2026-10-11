@@ -385,6 +385,12 @@ export default function AdminOrdersPage() {
                   <span>Subtotal</span>
                   <span>{fmt(selectedOrder.subtotal)}</span>
                 </div>
+                {selectedOrder.discountAmount > 0 && (
+                  <div className="flex justify-between font-poppins text-sm text-green-600">
+                    <span>Discount {selectedOrder.couponCode ? `(${selectedOrder.couponCode})` : ""}</span>
+                    <span>−{fmt(selectedOrder.discountAmount)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between font-poppins text-sm text-slate-500">
                   <span>Shipping {selectedOrder.shippingProvider ? `· ${selectedOrder.shippingProvider}` : ""}</span>
                   <span>{fmt(selectedOrder.shippingFee)}</span>

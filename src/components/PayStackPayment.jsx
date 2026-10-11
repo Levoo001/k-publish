@@ -111,6 +111,8 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, onClose }) => {
         metadata: {
           items: metadata?.items || [],
           subtotal: metadata?.subtotal || 0,
+          coupon_code: metadata?.coupon_code || "",
+          discount_amount: metadata?.discount_amount || 0,
           total: metadata?.total || 0,
           item_count: metadata?.item_count || 0,
           custom_fields: [
@@ -449,6 +451,14 @@ const PayStackPayment = ({ email, amount, metadata, onSuccess, onClose }) => {
                     {formatter.format(metadata?.subtotal || 0)}
                   </span>
                 </p>
+                {metadata?.discount_amount > 0 && (
+                  <p className="flex justify-between">
+                    <span>Discount {metadata?.coupon_code ? `(${metadata.coupon_code})` : ""}:</span>
+                    <span className="text-green-400">
+                      −{formatter.format(metadata.discount_amount)}
+                    </span>
+                  </p>
+                )}
                 <p className="flex justify-between">
                   <span>Shipping Fee:</span>
                   <span className="text-white">

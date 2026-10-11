@@ -29,6 +29,8 @@ export const saveOrder = async (orderData) => {
 
     items: Array.isArray(orderData.items) ? orderData.items : [],
     subtotal: Number(orderData.subtotal) || 0,
+    couponCode: orderData.couponCode || null,
+    discountAmount: Number(orderData.discountAmount) || 0,
     totalAmount: Number(orderData.totalAmount) || 0,
 
     paymentMethod: orderData.paymentMethod || "Card Payment",
