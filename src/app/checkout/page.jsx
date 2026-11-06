@@ -25,6 +25,7 @@ export default function CheckoutPage() {
 
   const [shippingRates, setShippingRates] = useState([]);
   const [selectedShipping, setSelectedShipping] = useState(null);
+  const [freeShippingUntil, setFreeShippingUntil] = useState(null);
   const [isCalculating, setIsCalculating] = useState(false);
   const [formData, setFormData] = useState({
     country: "Nigeria",
@@ -91,13 +92,20 @@ export default function CheckoutPage() {
   }, []);
 
   useEffect(() => {
+    fetch("/api/shipping-promotion")
+      .then((res) => res.json())
+      .then((data) => setFreeShippingUntil(data.freeLocalShippingUntil || null))
+      .catch(() => setFreeShippingUntil(null));
+  }, []);
+
+  useEffect(() => {
     if (formData.country && formData.state && cartItems.length > 0) {
       calculateShipping();
     } else {
       setShippingRates([]);
       setSelectedShipping(null);
     }
-  }, [formData.country, formData.state, cartItems]);
+  }, [formData.country, formData.state, cartItems, freeShippingUntil]);
 
   useEffect(() => {
     if (hasTrackedCheckoutRef.current || cartItems.length === 0) return;
@@ -113,11 +121,18 @@ export default function CheckoutPage() {
   const calculateShipping = async () => {
     setIsCalculating(true);
     try {
-      const rates = calculateShippingRates(
+      const baseRates = calculateShippingRates(
         formData.country,
         formData.state,
         cartItems,
       );
+      const isFree =
+        formData.country.toLowerCase() === "nigeria" &&
+        freeShippingUntil &&
+        new Date(freeShippingUntil).getTime() > Date.now();
+      const rates = isFree
+        ? baseRates.map((r) => ({ ...r, originalCost: r.cost, cost: 0 }))
+        : baseRates;
       setShippingRates(rates);
       if (rates.length > 0) setSelectedShipping(rates[0]);
     } catch {
@@ -215,6 +230,16 @@ export default function CheckoutPage() {
 
   const handlePayment = async () => {
     if (!isCheckoutReady || isProcessing) return;
+
+    if (
+      selectedShipping?.originalCost !== undefined &&
+      new Date(freeShippingUntil).getTime() <= Date.now()
+    ) {
+      setFreeShippingUntil(null);
+      alert("The free delivery promotion has ended. Shipping has been updated.");
+      return;
+    }
+
     setIsProcessing(true);
 
     // Re-confirm the coupon server-side right before charging, so a code
@@ -595,6 +620,17 @@ export default function CheckoutPage() {
                 </div>
               ) : shippingRates.length > 0 ? (
                 <div className="space-y-2">
+                  {shippingRates[0]?.originalCost !== undefined && (
+                    <p className="text-xs text-green-700 bg-green-50 border border-green-200 rounded-xl px-3 py-2 font-poppins">
+                      Free delivery anywhere in Nigeria until{" "}
+                      {new Date(freeShippingUntil).toLocaleString("en-NG", {
+                        day: "numeric",
+                        month: "short",
+                        hour: "numeric",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                  )}
                   {shippingRates.map((rate, i) => {
                     const active =
                       selectedShipping?.provider === rate.provider &&
@@ -628,9 +664,18 @@ export default function CheckoutPage() {
                           </div>
                         </div>
                         <p
-                          className={`text-sm font-bold font-poppins ${active ? "text-primary" : "text-slate-700"}`}
+                          className={`text-sm font-bold font-poppins text-right ${active ? "text-primary" : "text-slate-700"}`}
                         >
-                          {fmt(rate.cost)}
+                          {rate.originalCost !== undefined ? (
+                            <>
+                              <span className="block text-xs font-normal text-slate-400 line-through">
+                                {fmt(rate.originalCost)}
+                              </span>
+                              Free
+                            </>
+                          ) : (
+                            fmt(rate.cost)
+                          )}
                         </p>
                       </button>
                     );
@@ -828,7 +873,11 @@ export default function CheckoutPage() {
                 <div className="flex justify-between text-sm font-poppins text-slate-500">
                   <span>Shipping</span>
                   <span>
-                    {selectedShipping ? fmt(selectedShipping.cost) : "—"}
+                    {!selectedShipping
+                      ? "—"
+                      : selectedShipping.originalCost !== undefined
+                        ? "Free"
+                        : fmt(selectedShipping.cost)}
                   </span>
                 </div>
                 {selectedShipping && (
